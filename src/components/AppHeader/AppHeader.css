@@ -2,17 +2,21 @@
   width: 100%;
   background: #1C1C21;
   box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
+}
+
+.header__nav {
+  display: grid;
+  grid-template-columns: 30% auto 30%;
+  width: 80vw;
+  margin: 0 auto;
   min-height: 88px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
 }
 
 .header__logo {
   margin: 0;
   padding: 0;
-  margin-left: -175px;
+  justify-self: center;
+  align-self: center;
 }
 
 .header__nav-list {
@@ -22,6 +26,7 @@
   list-style: none;
   display: flex;
   flex-direction: row;
+  align-self: center;
 }
 
 .header__nav-item {
@@ -39,4 +44,6 @@
   flex-direction: row;
   gap: 8px;
   cursor: pointer;
+  justify-self: right;
+  align-self: center;
 }
