@@ -6,8 +6,8 @@
 
 .header__nav {
   display: grid;
-  grid-template-columns: 30% auto 30%;
-  width: 80vw;
+  grid-template-columns: 35% auto 35%;
+  width: 67vw;
   margin: 0 auto;
   min-height: 88px;
 }
@@ -35,8 +35,9 @@
   flex-direction: row;
   background: #1C1C21;
   border-radius: 40px;
-  gap: 8px;
   cursor: pointer;
+  text-decoration: none;
+  gap: 8px;
 }
 
 .header__personal-area {

@@ -1,3 +1,17 @@
+
+/* для Chrome/Edge/Safari */
+*::-webkit-scrollbar {
+  height: 12px;
+  width: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: #2F2F37;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+  border-radius: 5px;
+}
+
 .page {
   margin: 0 auto;
   max-width: 1920px;
@@ -15,6 +29,10 @@
 }
 
 .main {
-  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
   flex: 1;
+  display: grid;
+  grid-template-columns: 600px 600px;
+  column-gap: 40px;
 }

@@ -1,0 +1,52 @@
+.constructor {
+  border: 1px solid rgb(0, 81, 255);
+}
+
+.constructor__cards {
+  max-height: 464px;
+  overflow: scroll;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: space-around;
+}
+
+.constructor__card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 8px;
+  align-items: center;
+}
+
+.constructor__card:last-child {
+  margin-bottom: 0;
+}
+
+.constructor-element_pos_top,
+.constructor-element_pos_bottom {
+  box-sizing: border-box;
+  margin-left: 30px;
+}
+
+.constructor__footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 40px;
+}
+
+.constructor__footer_price {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.constructor__footer_price-icon {
+  width: 36px;
+  height: 36px;
+}

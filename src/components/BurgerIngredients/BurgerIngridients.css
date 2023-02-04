@@ -1,0 +1,12 @@
+.ingridients {
+  border: 1px solid red;
+}
+
+.ingridients__header {
+  margin: 40px 0 20px 0;
+  padding: 0;
+}
+
+.ingridients__nav {
+  display: flex;
+}

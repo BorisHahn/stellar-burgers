@@ -1,4 +1,5 @@
 import './AppHeader.css';
+import { NavLink } from 'react-router-dom';
 import {
   Logo,
   BurgerIcon,
@@ -11,18 +12,26 @@ const AppHeader = () => {
   return (
     <header className='header'>
       <div className='header__nav'>
-        <ul className='header__nav-list'>
-          <li className='header__nav-item'>
-            <BurgerIcon type='primary' />
-            <p className='text text_type_main-default'>Конструктор</p>
-          </li>
-          <li className='header__nav-item'>
-            <ListIcon type='secondary' />
-            <p className='text text_type_main-default text_color_inactive'>
-              Лента заказов
-            </p>
-          </li>
-        </ul>
+        <nav className='header__nav-list'>
+          <NavLink to='/' className='header__nav-item'>
+            {({ isActive }) => (
+              <>
+                <BurgerIcon type={isActive ? 'primary' : 'secondary'} />
+                <p className='text text_type_main-default text_color_active'>Конструктор</p>
+              </>
+            )}
+          </NavLink>
+          <NavLink to='orders' className='header__nav-item'>
+            {({ isActive }) => (
+              <>
+                <ListIcon type={isActive ? 'primary' : 'secondary'} />
+                <p className='text text_type_main-default text_color_inactive'>
+                  Лента заказов
+                </p>
+              </>
+            )}
+          </NavLink>
+        </nav>
         <span className='header__logo'>
           <Logo />
         </span>
