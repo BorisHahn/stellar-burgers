@@ -26,7 +26,7 @@ const App = () => {
     <div className='page'>
       <AppHeader />
       <div className='main'>
-        <BurgerIngridients />
+        <BurgerIngridients ingredients={ingredients}/>
         <BurgerConstructor ingredients={ingredients} />
       </div>
     </div>

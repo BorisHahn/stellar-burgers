@@ -6,6 +6,8 @@ import {
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import bunImage from '../../utils/const';
+import PropTypes from 'prop-types';
+import ingredientsPropTypes from '../../utils/types/ingridientsTypes';
 const classNames = require('classnames');
 
 const BurgerConstructor = ({ ingredients }) => {
@@ -27,7 +29,7 @@ const BurgerConstructor = ({ ingredients }) => {
             type='top'
             isLocked={true}
             text='Краторная булка N-200i (верх)'
-            price={200}
+            price={20}
             thumbnail={bunImage}
           />
         </div>
@@ -39,15 +41,18 @@ const BurgerConstructor = ({ ingredients }) => {
             type='bottom'
             isLocked={true}
             text='Краторная булка N-200i (низ)'
-            price={200}
+            price={20}
             thumbnail={bunImage}
           />
         </div>
       </div>
       <div className={classNames('constructor__footer', 'mr-4')}>
         <span className='constructor__footer_price'>
-          <p className='text text_type_digits-medium'>610</p>
-          <CurrencyIcon className="constructor__footer_price-icon" type='primary' />
+          <p className='text text_type_main-medium'>610</p>
+          <CurrencyIcon
+            className='constructor__footer_price-icon'
+            type='primary'
+          />
         </span>
         <Button htmlType='button' type='primary' size='medium'>
           Оформить заказ
@@ -55,6 +60,10 @@ const BurgerConstructor = ({ ingredients }) => {
       </div>
     </section>
   );
+};
+
+BurgerConstructor.propTypes = {
+  ingredients: PropTypes.arrayOf(ingredientsPropTypes).isRequired,
 };
 
 export default BurgerConstructor;
