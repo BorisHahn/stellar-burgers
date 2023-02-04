@@ -17,7 +17,15 @@ const AppHeader = () => {
             {({ isActive }) => (
               <>
                 <BurgerIcon type={isActive ? 'primary' : 'secondary'} />
-                <p className='text text_type_main-default text_color_active'>Конструктор</p>
+                <p
+                  className={classNames(
+                    isActive
+                      ? 'text text_type_main-default header__nav-item_const'
+                      : 'text text_type_main-default text_color_inactive',
+                  )}
+                >
+                  Конструктор
+                </p>
               </>
             )}
           </NavLink>
@@ -25,7 +33,13 @@ const AppHeader = () => {
             {({ isActive }) => (
               <>
                 <ListIcon type={isActive ? 'primary' : 'secondary'} />
-                <p className='text text_type_main-default text_color_inactive'>
+                <p
+                  className={classNames(
+                    isActive
+                      ? 'text text_type_main-default header__nav-item_const'
+                      : 'text text_type_main-default text_color_inactive',
+                  )}
+                >
                   Лента заказов
                 </p>
               </>
@@ -35,14 +49,22 @@ const AppHeader = () => {
         <span className='header__logo'>
           <Logo />
         </span>
-        <div
-          className={classNames('pl-5 pr-5 pb-4 pt-4', 'header__personal-area')}
-        >
-          <ProfileIcon type='secondary' />
-          <p className='text text_type_main-default text_color_inactive'>
-            Личный кабинет
-          </p>
-        </div>
+        <NavLink to='profile' className='header__personal-area'>
+          {({ isActive }) => (
+            <>
+              <ProfileIcon type={isActive ? 'primary' : 'secondary'} />
+              <p
+                className={classNames(
+                  isActive
+                    ? 'text text_type_main-default header__nav-item_const'
+                    : 'text text_type_main-default text_color_inactive',
+                )}
+              >
+                Личный кабинет
+              </p>
+            </>
+          )}
+        </NavLink>
       </div>
     </header>
   );

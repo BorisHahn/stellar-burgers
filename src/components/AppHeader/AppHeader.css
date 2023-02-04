@@ -41,10 +41,17 @@
 }
 
 .header__personal-area {
+  padding: 16px 20px;
   display: flex;
   flex-direction: row;
   gap: 8px;
   cursor: pointer;
   justify-self: right;
   align-self: center;
+  text-decoration: none;
+}
+
+.header__nav-item_const {
+  text-decoration: none;
+  color: #F2F2F3;
 }
