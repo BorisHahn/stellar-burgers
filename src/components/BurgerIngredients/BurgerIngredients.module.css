@@ -1,23 +1,29 @@
 
-.burger-ingridients__title {
+.title {
   margin: 40px 0 20px 0;
   padding: 0;
 }
 
-.burger-ingridients__nav {
+.navigation {
   display: flex;
 }
 
-.burger-ingridients__menu-buns,
-.burger-ingridients__menu-sauce,
-.burger-ingridients__menu-main {
+.buns {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 24px;
   row-gap: 32px;
 }
 
-.burger-ingridients__menu {
+.sauce {
+  composes: buns;
+}
+
+.main {
+  composes: buns;
+}
+
+.menu {
   max-height: 664px;
   overflow: scroll;
   overflow-x: hidden;

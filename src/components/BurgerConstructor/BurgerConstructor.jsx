@@ -1,4 +1,4 @@
-import './BurgerConstructor.css';
+import style from './BurgerConstructor.module.css';
 import {
   DragIcon,
   ConstructorElement,
@@ -7,23 +7,25 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import bunImage from '../../utils/const';
 import PropTypes from 'prop-types';
-import ingredientsPropTypes from '../../utils/types/ingridientsTypes';
+import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
 const classNames = require('classnames');
 
 const BurgerConstructor = ({ ingredients }) => {
-  const ingredientsCards = ingredients.map((item, index) => {
-    const { name, price, image } = item;
-    return (
-      <div className={classNames('constructor__card', 'mb-4 mr-2')} key={index}>
-        <DragIcon type='primary' />
-        <ConstructorElement text={name} price={price} thumbnail={image} />
-      </div>
-    );
-  });
+  const ingredientsCards = ingredients
+    .filter((ingr) => ingr.type !== 'bun')
+    .map((item, index) => {
+      const { name, price, image } = item;
+      return (
+        <div className={classNames(style.card, 'mb-4 mr-2')} key={index}>
+          <DragIcon type='primary' />
+          <ConstructorElement text={name} price={price} thumbnail={image} />
+        </div>
+      );
+    });
   return (
     <section className='constructor'>
       <div className='ml-4 mt-25 mb-10'>
-        <div className={classNames('constructor__card', 'mb-4 mr-4')}>
+        <div className={classNames(style.card)}>
           <ConstructorElement
             className='constructor__card_top'
             type='top'
@@ -33,10 +35,10 @@ const BurgerConstructor = ({ ingredients }) => {
             thumbnail={bunImage}
           />
         </div>
-        <div className={classNames('constructor__cards', 'mb-4 mt-4')}>
+        <div className={classNames(style.cards, 'mb-4 mt-4')}>
           {ingredientsCards}
         </div>
-        <div className={classNames('constructor__card', 'mb-4 mr-4')}>
+        <div className={classNames(style.card)}>
           <ConstructorElement
             type='bottom'
             isLocked={true}
@@ -46,8 +48,8 @@ const BurgerConstructor = ({ ingredients }) => {
           />
         </div>
       </div>
-      <div className={classNames('constructor__footer', 'mr-4')}>
-        <span className='constructor__footer_price'>
+      <div className={classNames(style.footer, 'mr-4')}>
+        <span className={style.price}>
           <p className='text text_type_main-medium'>610</p>
           <CurrencyIcon
             className='constructor__footer_price-icon'

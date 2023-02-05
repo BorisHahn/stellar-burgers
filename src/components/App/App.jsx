@@ -3,17 +3,21 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import AppHeader from '../AppHeader/AppHeader';
 import BurgerConstructor from '../BurgerConstructor/BurgerConstructor';
-import BurgerIngridients from '../BurgerIngredients/BurgerIngridients';
+import BurgerIngredients from '../BurgerIngredients/BurgerIngredients';
 
 const App = () => {
   const [ingredients, setIngredients] = useState([]);
 
   const getIngredients = () => {
     fetch('https://norma.nomoreparties.space/api/ingredients')
-      .then((response) => response.json())
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        }
+        return Promise.reject(`Ошибка ${response.status}`);
+      })
       .then((res) => {
-        setIngredients([...res.data])
-        console.log(res);
+        setIngredients([...res.data]);
       })
       .catch((e) => console.error(e));
   };
@@ -23,13 +27,13 @@ const App = () => {
   }, []);
 
   return (
-    <div className='page'>
+    <main className='page'>
       <AppHeader />
       <div className='main'>
-        <BurgerIngridients ingredients={ingredients}/>
+        <BurgerIngredients ingredients={ingredients} />
         <BurgerConstructor ingredients={ingredients} />
       </div>
-    </div>
+    </main>
   );
 };
 
