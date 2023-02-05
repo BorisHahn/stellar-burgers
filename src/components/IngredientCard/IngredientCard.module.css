@@ -24,3 +24,11 @@
 .name {
   text-align: center;
 }
+
+.price {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}

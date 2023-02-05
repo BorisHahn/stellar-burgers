@@ -11,7 +11,7 @@ const IngridientCard = ({ card }) => {
       <div className={styles.imageWrapper}>
         <img className={styles.image} src={image_large}></img>
       </div>
-      <span className='constructor__footer_price'>
+      <span className={styles.price}>
         <p className='text text_type_main-medium'>{price}</p>
         <CurrencyIcon
           className='constructor__footer_price-icon'
