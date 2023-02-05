@@ -1,5 +1,5 @@
 import React from 'react';
-import './App.css';
+import style from './App.module.css';
 import { useState, useEffect } from 'react';
 import AppHeader from '../AppHeader/AppHeader';
 import BurgerConstructor from '../BurgerConstructor/BurgerConstructor';
@@ -27,13 +27,13 @@ const App = () => {
   }, []);
 
   return (
-    <main className='page'>
+    <div className={style.page}>
       <AppHeader />
-      <div className='main'>
+      <main className={style.main}>
         <BurgerIngredients ingredients={ingredients} />
         <BurgerConstructor ingredients={ingredients} />
-      </div>
-    </main>
+      </main>
+    </div>
   );
 };
 

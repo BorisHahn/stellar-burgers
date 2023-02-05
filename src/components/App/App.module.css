@@ -1,14 +1,13 @@
-
 /* для Chrome/Edge/Safari */
 *::-webkit-scrollbar {
   height: 12px;
   width: 8px;
 }
 *::-webkit-scrollbar-track {
-  background: #2F2F37;
+  background: #2f2f37;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: #8585AD;
+  background-color: #8585ad;
 }
 
 .page {

@@ -1,4 +1,4 @@
-import './AppHeader.css';
+import style from './AppHeader.module.css';
 import { NavLink } from 'react-router-dom';
 import {
   Logo,
@@ -10,17 +10,17 @@ const classNames = require('classnames');
 
 const AppHeader = () => {
   return (
-    <header className='header'>
-      <div className='header__nav'>
-        <nav className='header__nav-list'>
-          <NavLink to='/' className='header__nav-item'>
+    <header className={style.header}>
+      <div className={style.nav}>
+        <nav className={style.list}>
+          <NavLink to='/' className={style.item}>
             {({ isActive }) => (
               <>
                 <BurgerIcon type={isActive ? 'primary' : 'secondary'} />
                 <p
                   className={classNames(
                     isActive
-                      ? 'text text_type_main-default header__nav-item_const'
+                      ? `text text_type_main-default ${style.text}`
                       : 'text text_type_main-default text_color_inactive',
                   )}
                 >
@@ -29,14 +29,14 @@ const AppHeader = () => {
               </>
             )}
           </NavLink>
-          <NavLink to='orders' className='header__nav-item'>
+          <NavLink to='orders' className={style.item}>
             {({ isActive }) => (
               <>
                 <ListIcon type={isActive ? 'primary' : 'secondary'} />
                 <p
                   className={classNames(
                     isActive
-                      ? 'text text_type_main-default header__nav-item_const'
+                      ? `text text_type_main-default ${style.text}`
                       : 'text text_type_main-default text_color_inactive',
                   )}
                 >
@@ -46,17 +46,17 @@ const AppHeader = () => {
             )}
           </NavLink>
         </nav>
-        <span className='header__logo'>
+        <span className={style.logo}>
           <Logo />
         </span>
-        <NavLink to='profile' className='header__personal-area'>
+        <NavLink to='profile' className={style.profile}>
           {({ isActive }) => (
             <>
               <ProfileIcon type={isActive ? 'primary' : 'secondary'} />
               <p
                 className={classNames(
                   isActive
-                    ? 'text text_type_main-default header__nav-item_const'
+                    ? `text text_type_main-default ${style.text} `
                     : 'text text_type_main-default text_color_inactive',
                 )}
               >
