@@ -1,0 +1,30 @@
+
+.title {
+  margin: 40px 0 20px 0;
+  padding: 0;
+}
+
+.navigation {
+  display: flex;
+}
+
+.buns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 24px;
+  row-gap: 32px;
+}
+
+.sauce {
+  composes: buns;
+}
+
+.main {
+  composes: buns;
+}
+
+.menu {
+  max-height: 664px;
+  overflow: scroll;
+  overflow-x: hidden;
+}

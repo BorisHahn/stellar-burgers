@@ -1,0 +1,36 @@
+/* для Chrome/Edge/Safari */
+*::-webkit-scrollbar {
+  height: 12px;
+  width: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: #2f2f37;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #8585ad;
+}
+
+.page {
+  margin: 0 auto;
+  max-width: 1920px;
+  min-height: 100vh;
+  background-color: #131316;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+}
+
+.main {
+  max-width: 1240px;
+  margin: 0 auto;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 600px 600px;
+  column-gap: 40px;
+}
