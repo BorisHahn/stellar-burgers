@@ -11,7 +11,11 @@ import PropTypes from 'prop-types';
 import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
 const classNames = require('classnames');
 
-const BurgerConstructor = ({ ingredients }) => {
+const BurgerConstructor = ({ ingredients, handleOpenOrderModal }) => {
+  const handleOpenCard = () => {
+    handleOpenOrderModal();
+  };
+
   const ingredientsCards = ingredients
     .filter((ingr) => ingr.type !== 'bun')
     .map((item, index) => {
@@ -26,7 +30,8 @@ const BurgerConstructor = ({ ingredients }) => {
 
   const totalPrice = useMemo(() => {
     const result = ingredients
-      .filter((ingr) => ingr.type !== 'bun').reduce((acc, item) => acc + item.price, 0);
+      .filter((ingr) => ingr.type !== 'bun')
+      .reduce((acc, item) => acc + item.price, 0);
     return result;
   }, [ingredientsCards]);
 
@@ -64,7 +69,12 @@ const BurgerConstructor = ({ ingredients }) => {
             type='primary'
           />
         </span>
-        <Button htmlType='button' type='primary' size='medium'>
+        <Button
+          htmlType='button'
+          type='primary'
+          size='medium'
+          onClick={handleOpenCard}
+        >
           Оформить заказ
         </Button>
       </div>
@@ -74,6 +84,7 @@ const BurgerConstructor = ({ ingredients }) => {
 
 BurgerConstructor.propTypes = {
   ingredients: PropTypes.arrayOf(ingredientsPropTypes).isRequired,
+  handleOpenOrderModal: PropTypes.func,
 };
 
 export default BurgerConstructor;

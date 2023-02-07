@@ -4,12 +4,12 @@ import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 const classNames = require('classnames');
 
-const IngridientCard = ({ card, handleOpen}) => {
+const IngridientCard = ({ card, handleOpen }) => {
   const { name, price, image_large } = card;
 
   const onClick = () => {
     handleOpen(card);
-  }
+  };
 
   return (
     <div className={styles.card} onClick={onClick}>
@@ -32,6 +32,7 @@ const IngridientCard = ({ card, handleOpen}) => {
 
 IngridientCard.propTypes = {
   card: ingredientsPropTypes.isRequired,
+  handleOpen: PropTypes.func,
 };
 
 export default IngridientCard;

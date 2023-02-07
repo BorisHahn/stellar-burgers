@@ -14,8 +14,8 @@ const BurgerIngredients = ({ ingredients, handleOpenModal }) => {
   const refMain = useRef();
 
   const handleOpenCard = (card) => {
-    handleOpenModal(card)
-  }
+    handleOpenModal(card);
+  };
 
   function handleScroleTo(ref) {
     ref.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
@@ -30,7 +30,13 @@ const BurgerIngredients = ({ ingredients, handleOpenModal }) => {
 
   function getCards(array) {
     const newArray = array.map((item) => {
-      return <IngredientCard key={item._id} card={item} handleOpen={handleOpenCard}/>;
+      return (
+        <IngredientCard
+          key={item._id}
+          card={item}
+          handleOpen={handleOpenCard}
+        />
+      );
     });
     return newArray;
   }
@@ -120,6 +126,7 @@ const BurgerIngredients = ({ ingredients, handleOpenModal }) => {
 
 BurgerIngredients.propTypes = {
   ingredients: PropTypes.arrayOf(ingredientsPropTypes).isRequired,
+  handleOpenModal: PropTypes.func,
 };
 
 export default BurgerIngredients;
