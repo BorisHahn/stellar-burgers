@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 const classNames = require('classnames');
 
 const IngredientDetails = ({ item }) => {
+  console.log(item);
   return (
     <div className={styles.infoCard}>
       <div className={classNames(styles.imageWrapper, 'mb-4')}>
@@ -91,7 +92,7 @@ const IngredientDetails = ({ item }) => {
 };
 
 IngredientDetails.propTypes = {
-  item: ingredientsPropTypes.isRequired,
+  item: PropTypes.string,
 };
 
 export default IngredientDetails;
