@@ -4,10 +4,15 @@ import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 const classNames = require('classnames');
 
-const IngridientCard = ({ card }) => {
+const IngridientCard = ({ card, handleOpen}) => {
   const { name, price, image_large } = card;
+
+  const onClick = () => {
+    handleOpen(card);
+  }
+
   return (
-    <div className={styles.card}>
+    <div className={styles.card} onClick={onClick}>
       <div className={styles.imageWrapper}>
         <img className={styles.image} src={image_large}></img>
       </div>

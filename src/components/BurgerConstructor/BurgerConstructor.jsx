@@ -1,4 +1,5 @@
 import style from './BurgerConstructor.module.css';
+import { useMemo } from 'react';
 import {
   DragIcon,
   ConstructorElement,
@@ -22,6 +23,13 @@ const BurgerConstructor = ({ ingredients }) => {
         </div>
       );
     });
+
+  const totalPrice = useMemo(() => {
+    const result = ingredients
+      .filter((ingr) => ingr.type !== 'bun').reduce((acc, item) => acc + item.price, 0);
+    return result;
+  }, [ingredientsCards]);
+
   return (
     <section className='constructor'>
       <div className='ml-4 mt-25 mb-10'>
@@ -50,7 +58,7 @@ const BurgerConstructor = ({ ingredients }) => {
       </div>
       <div className={classNames(style.footer, 'mr-4')}>
         <span className={style.price}>
-          <p className='text text_type_main-medium'>610</p>
+          <p className='text text_type_main-medium'>{totalPrice}</p>
           <CurrencyIcon
             className='constructor__footer_price-icon'
             type='primary'
