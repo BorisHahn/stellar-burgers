@@ -9,7 +9,7 @@
   left: 0;
   visibility: visible;
   opacity: 1;
-  transition: opacity 0.5s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .hiddenWrapper {

@@ -4,7 +4,6 @@ import { useState, useRef } from 'react';
 import IngredientCard from '../IngredientCard/IngredientCard';
 import PropTypes from 'prop-types';
 import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
-import { tab } from '@testing-library/user-event/dist/tab';
 const classNames = require('classnames');
 
 const BurgerIngredients = ({ ingredients, handleOpenModal }) => {

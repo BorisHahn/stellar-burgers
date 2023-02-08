@@ -1,4 +1,5 @@
 import * as ReactDOM from 'react-dom';
+import { useEffect } from 'react';
 import styles from './Modal.module.css';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import ModalOverlay from '../ModalOverlay/ModalOverlay';
@@ -7,6 +8,20 @@ const classNames = require('classnames');
 const portal = document.getElementById('modals');
 
 const Modal = ({ children, onClose, modalIsOpen, title }) => {
+
+  const handleCloseByEsc = (e) => {
+    if (e.code === 'Escape') {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('keyup', handleCloseByEsc);
+    return () =>
+      window.removeEventListener('keyup', handleCloseByEsc);
+  });
+
+
   return ReactDOM.createPortal(
     <div
       className={classNames(
@@ -30,13 +45,13 @@ const Modal = ({ children, onClose, modalIsOpen, title }) => {
               !title && styles.hide,
             )}
           >
-            Детали ингредиента
+            {title}
           </h1>
 
           <CloseIcon
             type='primary'
             className={styles.close}
-            onClick={() => onClose()}
+            onClick={onClose}
           />
         </div>
         {children}

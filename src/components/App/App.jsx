@@ -12,7 +12,7 @@ const App = () => {
   const [ingredients, setIngredients] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [orderModalIsOpen, setOrderModalIsOpen] = useState(false);
-  const [currentIngredient, setCurrentIngredient] = useState('');
+  const [currentIngredient, setCurrentIngredient] = useState({});
 
   const getIngredients = () => {
     fetch('https://norma.nomoreparties.space/api/ingredients')
@@ -32,12 +32,6 @@ const App = () => {
     getIngredients();
   }, []);
 
-  useEffect(() => {
-    window.addEventListener('keyup', handleCloseByEsc);
-    return () =>
-      window.removeEventListener('keyup', handleCloseByEsc);
-  }, [orderModalIsOpen, modalIsOpen]);
-
   const handleOpenModal = (item) => {
     setCurrentIngredient(item);
     setModalIsOpen(true);
@@ -45,12 +39,6 @@ const App = () => {
 
   const handleOpenOrderModal = () => {
     setOrderModalIsOpen(true);
-  };
-
-  const handleCloseByEsc = (e) => {
-    if (e.code === 'Escape') {
-      handleCloseModal();
-    }
   };
 
   const handleCloseModal = () => {
