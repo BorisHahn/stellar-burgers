@@ -1,4 +1,5 @@
 import style from './BurgerConstructor.module.css';
+import { useMemo } from 'react';
 import {
   DragIcon,
   ConstructorElement,
@@ -10,7 +11,11 @@ import PropTypes from 'prop-types';
 import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
 const classNames = require('classnames');
 
-const BurgerConstructor = ({ ingredients }) => {
+const BurgerConstructor = ({ ingredients, handleOpenOrderModal }) => {
+  const handleOpenCard = () => {
+    handleOpenOrderModal();
+  };
+
   const ingredientsCards = ingredients
     .filter((ingr) => ingr.type !== 'bun')
     .map((item, index) => {
@@ -22,6 +27,14 @@ const BurgerConstructor = ({ ingredients }) => {
         </div>
       );
     });
+
+  const totalPrice = useMemo(() => {
+    const result = ingredients
+      .filter((ingr) => ingr.type !== 'bun')
+      .reduce((acc, item) => acc + item.price, 0);
+    return result;
+  }, [ingredientsCards]);
+
   return (
     <section className='constructor'>
       <div className='ml-4 mt-25 mb-10'>
@@ -50,13 +63,18 @@ const BurgerConstructor = ({ ingredients }) => {
       </div>
       <div className={classNames(style.footer, 'mr-4')}>
         <span className={style.price}>
-          <p className='text text_type_main-medium'>610</p>
+          <p className='text text_type_main-medium'>{totalPrice}</p>
           <CurrencyIcon
             className='constructor__footer_price-icon'
             type='primary'
           />
         </span>
-        <Button htmlType='button' type='primary' size='medium'>
+        <Button
+          htmlType='button'
+          type='primary'
+          size='medium'
+          onClick={handleOpenCard}
+        >
           Оформить заказ
         </Button>
       </div>
@@ -66,6 +84,7 @@ const BurgerConstructor = ({ ingredients }) => {
 
 BurgerConstructor.propTypes = {
   ingredients: PropTypes.arrayOf(ingredientsPropTypes).isRequired,
+  handleOpenOrderModal: PropTypes.func,
 };
 
 export default BurgerConstructor;

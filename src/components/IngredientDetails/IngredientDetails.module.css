@@ -1,0 +1,25 @@
+.infoCard {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.imageWrapper {
+  height: 240px;
+  width: 480px;
+}
+
+.name {
+  font-size: 24px;
+  line-height: 30px;
+}
+
+.table {
+  text-align: center;
+  border-spacing: 40px 4px;
+}
+
+.value {
+  font-size: 18px;
+}
