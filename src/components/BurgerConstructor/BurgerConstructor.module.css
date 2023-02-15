@@ -37,3 +37,8 @@
   align-items: center;
   gap: 8px;
 }
+
+.top,
+.bottom {
+  margin-left: 15px;
+}
