@@ -1,3 +1,4 @@
+import React from 'react';
 import style from './App.module.css';
 import { useState, useEffect } from 'react';
 import AppHeader from '../AppHeader/AppHeader';

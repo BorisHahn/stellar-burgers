@@ -12,7 +12,7 @@ class Api {
   }
 
   makeAnOrder(data) {
-    return fetch(this._baseUrl + '/api/orders', {
+    return fetch(this._baseUrl + '/orders', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
