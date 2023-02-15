@@ -1,12 +1,12 @@
 import style from './BurgerConstructor.module.css';
-import { useMemo, useState, useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import {
   DragIcon,
   ConstructorElement,
   CurrencyIcon,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import bunImage from '../../utils/const';
+import { bunImage } from '../../utils/const';
 import PropTypes from 'prop-types';
 import { Context, OrderContext } from '../../context/Context';
 const classNames = require('classnames');
@@ -87,7 +87,10 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
           .map((item, index) => {
             if (index === order.length - 1) {
               return (
-                <div className={classNames(style.card, style.bottom)} key={index}>
+                <div
+                  className={classNames(style.card, style.bottom)}
+                  key={index}
+                >
                   <ConstructorElement
                     className='constructor__card_top'
                     type='bottom'

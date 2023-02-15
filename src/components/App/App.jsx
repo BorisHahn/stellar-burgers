@@ -1,4 +1,3 @@
-import React from 'react';
 import style from './App.module.css';
 import { useState, useEffect } from 'react';
 import AppHeader from '../AppHeader/AppHeader';
@@ -7,6 +6,7 @@ import BurgerIngredients from '../BurgerIngredients/BurgerIngredients';
 import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import OrderDetails from '../OrderDetails/OrderDetails';
 import Modal from '../Modal/Modal';
+import api from '../../utils/Api';
 import {
   Context,
   OrderContext,
@@ -26,13 +26,8 @@ const App = () => {
   }, []);
 
   const getIngredients = () => {
-    fetch('https://norma.nomoreparties.space/api/ingredients')
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(`Ошибка ${response.status}`);
-      })
+    api
+      .getIngredients()
       .then((res) => {
         setIngredients([...res.data]);
       })
@@ -40,19 +35,8 @@ const App = () => {
   };
 
   const makeAnOrder = () => {
-    fetch('https://norma.nomoreparties.space/api/orders', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ ingredients: order.map((item) => item._id) }),
-    })
-      .then((response) => {
-        if (response.ok) {
-          return response.json();
-        }
-        return Promise.reject(`Ошибка ${response.status}`);
-      })
+    api
+      .makeAnOrder({ ingredients: order.map((item) => item._id) })
       .then((res) => {
         setNumberOfOrder(res.order.number);
       })
@@ -77,11 +61,8 @@ const App = () => {
     <div className={style.page}>
       <AppHeader />
       <main className={style.main}>
-        <BurgerIngredients
-          ingredients={ingredients}
-          handleOpenModal={handleOpenModal}
-        />
         <Context.Provider value={ingredients}>
+          <BurgerIngredients handleOpenModal={handleOpenModal} />
           <OrderContext.Provider value={order}>
             <BurgerConstructor
               handleOpenOrderModal={handleOpenOrderModal}
