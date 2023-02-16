@@ -1,9 +1,9 @@
 import style from './BurgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef } from 'react';
+import { useSelector } from 'react-redux';
 import IngredientCard from '../IngredientCard/IngredientCard';
 import PropTypes from 'prop-types';
-import { Context } from '../../context/Context';
 const classNames = require('classnames');
 
 const BurgerIngredients = ({ handleOpenModal }) => {
@@ -11,8 +11,8 @@ const BurgerIngredients = ({ handleOpenModal }) => {
   const refBun = useRef();
   const refSauce = useRef();
   const refMain = useRef();
-  const ingredients = useContext(Context);
-  
+  const { allIngredients } = useSelector((state) => state.ingredients);
+
   const handleOpenCard = (card) => {
     handleOpenModal(card);
   };
@@ -24,9 +24,9 @@ const BurgerIngredients = ({ handleOpenModal }) => {
   function filterByType(array, type) {
     return array.filter((e) => e.type === type);
   }
-  const arrayOfBuns = filterByType(ingredients, 'bun');
-  const arrayOfSauce = filterByType(ingredients, 'sauce');
-  const arrayOfMain = filterByType(ingredients, 'main');
+  const arrayOfBuns = filterByType(allIngredients, 'bun');
+  const arrayOfSauce = filterByType(allIngredients, 'sauce');
+  const arrayOfMain = filterByType(allIngredients, 'main');
 
   function getCards(array) {
     const newArray = array.map((item) => {

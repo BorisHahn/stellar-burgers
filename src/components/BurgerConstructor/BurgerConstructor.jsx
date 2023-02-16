@@ -8,11 +8,12 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { bunImage } from '../../utils/const';
 import PropTypes from 'prop-types';
-import { Context, OrderContext } from '../../context/Context';
+import { OrderContext } from '../../context/Context';
+import { useSelector } from 'react-redux';
 const classNames = require('classnames');
 
 const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
-  const ingredients = useContext(Context);
+  const { allIngredients } = useSelector((state) => state.ingredients);
   const order = useContext(OrderContext);
   const handleOpenCard = () => {
     handleOpenOrderModal();
@@ -20,30 +21,30 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
   };
 
   useEffect(() => {
-    createOrder();
-  }, [ingredients]);
+    // createOrder();
+  }, [allIngredients]);
 
   const createOrder = () => {
     let copyIngredients = Object.assign([]);
-    if (ingredients.length === 0) return;
-    const buns = ingredients.filter((ingr) => ingr.type == 'bun');
+    if (allIngredients.length === 0) return;
+    const buns = allIngredients.filter((ingr) => ingr.type == 'bun');
     copyIngredients.unshift(buns[1]);
     copyIngredients.push(buns[1]);
-    const filtred = ingredients.filter((ingr) => ingr.type !== 'bun');
+    const filtred = allIngredients.filter((ingr) => ingr.type !== 'bun');
     copyIngredients.splice(1, 0, ...filtred);
     setOrder([...copyIngredients]);
   };
 
-  const totalPrice = () => {
-    return order
-      .filter((item) => item != null)
-      .reduce((acc, item) => acc + item.price, 0);
-  };
+  // const totalPrice = () => {
+  //   return order
+  //     .filter((item) => item != null)
+  //     .reduce((acc, item) => acc + item.price, 0);
+  // };
 
   return (
     <section className='constructor'>
       <div className='ml-4 mt-25 mb-10'>
-        {order
+        {/* {order
           .filter((item) => item != null)
           .map((item, index) => {
             if (index === 0) {
@@ -102,11 +103,11 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
                 </div>
               );
             }
-          })}
+          })} */}
       </div>
       <div className={classNames(style.footer, 'mr-4')}>
         <span className={style.price}>
-          <p className='text text_type_main-medium'>{totalPrice()}</p>
+          {/* <p className='text text_type_main-medium'>{totalPrice()}</p> */}
           <CurrencyIcon
             className='constructor__footer_price-icon'
             type='primary'
