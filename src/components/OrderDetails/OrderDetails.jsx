@@ -1,7 +1,11 @@
 import styles from './OrderDetails.module.css';
+import { useContext } from 'react';
+import { NumberOfOrderContext } from '../../context/Context';
 const classNames = require('classnames');
 
+
 const OrderDetails = () => {
+  const number = useContext(NumberOfOrderContext);
   return (
     <div className={styles.orderCard}>
       <p
@@ -11,7 +15,7 @@ const OrderDetails = () => {
           'mb-8',
         )}
       >
-        034536
+        {number}
       </p>
       <p
         className={classNames(

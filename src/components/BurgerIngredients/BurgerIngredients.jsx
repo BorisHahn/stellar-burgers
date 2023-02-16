@@ -1,17 +1,18 @@
 import style from './BurgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
 import IngredientCard from '../IngredientCard/IngredientCard';
 import PropTypes from 'prop-types';
-import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
+import { Context } from '../../context/Context';
 const classNames = require('classnames');
 
-const BurgerIngredients = ({ ingredients, handleOpenModal }) => {
+const BurgerIngredients = ({ handleOpenModal }) => {
   const [current, setCurrent] = useState('Булки');
   const refBun = useRef();
   const refSauce = useRef();
   const refMain = useRef();
-
+  const ingredients = useContext(Context);
+  
   const handleOpenCard = (card) => {
     handleOpenModal(card);
   };
@@ -124,7 +125,6 @@ const BurgerIngredients = ({ ingredients, handleOpenModal }) => {
 };
 
 BurgerIngredients.propTypes = {
-  ingredients: PropTypes.arrayOf(ingredientsPropTypes).isRequired,
   handleOpenModal: PropTypes.func,
 };
 

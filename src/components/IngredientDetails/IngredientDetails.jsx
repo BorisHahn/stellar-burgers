@@ -7,7 +7,7 @@ const IngredientDetails = ({ item }) => {
   return (
     <div className={styles.infoCard}>
       <div className={classNames(styles.imageWrapper, 'mb-4')}>
-        <img className={styles.image} src={item.image_large}></img>
+        <img className={styles.image} src={item.image_large} alt={item.name}></img>
       </div>
       <p
         className={classNames(

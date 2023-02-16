@@ -1,3 +1,3 @@
 const bunImage = 'https://code.s3.yandex.net/react/code/bun-02.png';
-
-export default bunImage;
+const mainURL = 'https://norma.nomoreparties.space/api';
+export {bunImage, mainURL};

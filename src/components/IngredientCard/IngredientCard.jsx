@@ -14,7 +14,7 @@ const IngridientCard = ({ card, handleOpen }) => {
   return (
     <div className={styles.card} onClick={onClick}>
       <div className={styles.imageWrapper}>
-        <img className={styles.image} src={image_large}></img>
+        <img className={styles.image} src={image_large} alt={name}></img>
       </div>
       <span className={styles.price}>
         <p className='text text_type_main-medium'>{price}</p>
