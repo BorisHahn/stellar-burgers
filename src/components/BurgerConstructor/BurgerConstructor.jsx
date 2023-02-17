@@ -7,33 +7,46 @@ import {
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { bunImage } from '../../utils/const';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { OrderContext } from '../../context/Context';
 import { useSelector } from 'react-redux';
+import { useDrop } from 'react-dnd';
+import { addConstructorElements } from '../../redux/slices/ingredientsSlice';
 const classNames = require('classnames');
 
 const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
-  const { allIngredients } = useSelector((state) => state.ingredients);
-  const order = useContext(OrderContext);
-  const handleOpenCard = () => {
-    handleOpenOrderModal();
-    makeAnOrder();
-  };
+  const { constructorElements } = useSelector((state) => state.ingredients);
+  console.log(constructorElements);
+  const dispatch = useDispatch();
+  const [{ isHover }, dropTarget] = useDrop({
+    accept: 'ingredients',
+    drop(card) {
+      dispatch(addConstructorElements(card));
+    },
+    collect: (monitor) => ({
+      isHover: monitor.isOver(),
+    }),
+  });
+  // const order = useContext(OrderContext);
+  // const handleOpenCard = () => {
+  //   handleOpenOrderModal();
+  //   makeAnOrder();
+  // };
 
-  useEffect(() => {
-    // createOrder();
-  }, [allIngredients]);
+  // useEffect(() => {
+  //   createOrder();
+  // }, [allIngredients]);
 
-  const createOrder = () => {
-    let copyIngredients = Object.assign([]);
-    if (allIngredients.length === 0) return;
-    const buns = allIngredients.filter((ingr) => ingr.type == 'bun');
-    copyIngredients.unshift(buns[1]);
-    copyIngredients.push(buns[1]);
-    const filtred = allIngredients.filter((ingr) => ingr.type !== 'bun');
-    copyIngredients.splice(1, 0, ...filtred);
-    setOrder([...copyIngredients]);
-  };
+  // const createOrder = () => {
+  //   let copyIngredients = Object.assign([]);
+  //   if (allIngredients.length === 0) return;
+  //   const buns = allIngredients.filter((ingr) => ingr.type == 'bun');
+  //   copyIngredients.unshift(buns[1]);
+  //   copyIngredients.push(buns[1]);
+  //   const filtred = allIngredients.filter((ingr) => ingr.type !== 'bun');
+  //   copyIngredients.splice(1, 0, ...filtred);
+  //   setOrder([...copyIngredients]);
+  // };
 
   // const totalPrice = () => {
   //   return order
@@ -43,8 +56,12 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
 
   return (
     <section className='constructor'>
-      <div className='ml-4 mt-25 mb-10'>
-        {/* {order
+      <div
+        className={classNames('ml-4 mt-25 mb-10', isHover ? style.wrapper : '')}
+        style={{ height: '100%' }}
+        ref={dropTarget}
+      >
+        {constructorElements
           .filter((item) => item != null)
           .map((item, index) => {
             if (index === 0) {
@@ -63,7 +80,7 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
             }
           })}
         <div className={classNames(style.cards, 'mb-4 mt-4')}>
-          {order
+          {constructorElements
             .filter((item) => item != null)
             .map((item, index) => {
               if (item.type !== 'bun') {
@@ -83,10 +100,10 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
               }
             })}
         </div>
-        {order
+        {constructorElements
           .filter((item) => item != null)
           .map((item, index) => {
-            if (index === order.length - 1) {
+            if (index === constructorElements.length - 1) {
               return (
                 <div
                   className={classNames(style.card, style.bottom)}
@@ -103,7 +120,7 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
                 </div>
               );
             }
-          })} */}
+          })}
       </div>
       <div className={classNames(style.footer, 'mr-4')}>
         <span className={style.price}>
@@ -117,7 +134,7 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
           htmlType='button'
           type='primary'
           size='medium'
-          onClick={handleOpenCard}
+          // onClick={handleOpenCard}
         >
           Оформить заказ
         </Button>

@@ -2,17 +2,22 @@ import styles from './IngredientCard.module.css';
 import PropTypes from 'prop-types';
 import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useDrag } from 'react-dnd';
 const classNames = require('classnames');
 
 const IngridientCard = ({ card, handleOpen }) => {
   const { name, price, image_large } = card;
+  const [, dragRef] = useDrag({
+    type: 'ingredients',
+    item: card,
+  });
 
   const onClick = () => {
     handleOpen(card);
   };
 
   return (
-    <div className={styles.card} onClick={onClick}>
+    <div className={styles.card} onClick={onClick} ref={dragRef}>
       <div className={styles.imageWrapper}>
         <img className={styles.image} src={image_large} alt={name}></img>
       </div>

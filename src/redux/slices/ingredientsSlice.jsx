@@ -1,15 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import {mainURL} from '../../utils/const';
+import { mainURL } from '../../utils/const';
 
 export const getIngredients = createAsyncThunk(
   'ingredients/getIngredients',
-  async () => {
+  async (thunkAPI) => {
     const response = await fetch(`${mainURL}/ingredients`);
     if (response.ok) {
-      return response.json();
+      const data = await response.json();
+      return data;
     }
   },
 );
+
+
 const initialState = {
   allIngredients: [],
   constructorElements: [],
@@ -22,7 +25,15 @@ const initialState = {
 const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    addCurrentIngredient: (state, action) => {
+      state.ingredientDetails = action.payload;
+    },
+
+    addConstructorElements: (state, action) => {
+      state.constructorElements.push(action.payload);
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getIngredients.pending, (state) => {
@@ -30,7 +41,7 @@ const ingredientsSlice = createSlice({
         state.error = null;
       })
       .addCase(getIngredients.fulfilled, (state, action) => {
-        state.allIngredients = [action.payload.data];
+        state.allIngredients = action.payload.data;
         state.loadingStatus = 'idle';
         state.error = null;
       })
@@ -41,4 +52,6 @@ const ingredientsSlice = createSlice({
   },
 });
 
+export const { addCurrentIngredient, addConstructorElements } =
+  ingredientsSlice.actions;
 export default ingredientsSlice.reducer;

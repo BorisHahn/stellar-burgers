@@ -1,3 +1,6 @@
+.wrapper {
+  border: 2px solid lightgreen;
+}
 
 .cards {
   max-height: 464px;
