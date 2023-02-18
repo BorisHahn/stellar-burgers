@@ -6,17 +6,20 @@ import {
   CurrencyIcon,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { bunImage } from '../../utils/const';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
-import { addConstructorElements } from '../../redux/slices/ingredientsSlice';
+import {
+  addConstructorElements,
+  removeConstructorElements,
+  makeAnOrder,
+} from '../../redux/slices/ingredientsSlice';
 const classNames = require('classnames');
 
-const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
+const BurgerConstructor = ({ handleOpenOrderModal }) => {
   const { constructorElements } = useSelector((state) => state.ingredients);
-  console.log(constructorElements);
+
   const dispatch = useDispatch();
   const [{ isHover }, dropTarget] = useDrop({
     accept: 'ingredients',
@@ -27,11 +30,11 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
       isHover: monitor.isOver(),
     }),
   });
-  // const order = useContext(OrderContext);
-  // const handleOpenCard = () => {
-  //   handleOpenOrderModal();
-  //   makeAnOrder();
-  // };
+
+  const handleOpenCard = () => {
+    handleOpenOrderModal();
+    dispatch(makeAnOrder());
+  };
 
   // useEffect(() => {
   //   createOrder();
@@ -48,83 +51,85 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
   //   setOrder([...copyIngredients]);
   // };
 
-  // const totalPrice = () => {
-  //   return order
-  //     .filter((item) => item != null)
-  //     .reduce((acc, item) => acc + item.price, 0);
-  // };
+  const totalPrice = () => {
+    return constructorElements
+      .filter((item) => item != null)
+      .reduce((acc, item) => {
+        return acc + item.price;
+      }, 0);
+  };
 
   return (
     <section className='constructor'>
       <div
-        className={classNames('ml-4 mt-25 mb-10', isHover ? style.wrapper : '')}
-        style={{ height: '100%' }}
+        className={classNames('pl-4 mt-25 mb-10', style.wrapper, isHover ? style.wrapperHide : '')}
+        style={{ minHeight: '664px' }}
         ref={dropTarget}
       >
         {constructorElements
-          .filter((item) => item != null)
+          .filter((item, index) => item != null && index === 0)
           .map((item, index) => {
-            if (index === 0) {
-              return (
-                <div className={classNames(style.card, style.top)} key={index}>
-                  <ConstructorElement
-                    className='constructor__card_top'
-                    type='top'
-                    isLocked={true}
-                    text={item.name + ' (верх)'}
-                    price={item.price}
-                    thumbnail={bunImage}
-                  />
-                </div>
-              );
-            }
+            return (
+              <div className={classNames(style.card, style.top)} key={index}>
+                <ConstructorElement
+                  className='constructor__card_top'
+                  type='top'
+                  isLocked={true}
+                  text={item.name + ' (верх)'}
+                  price={item.price}
+                  thumbnail={item.image}
+                />
+              </div>
+            );
           })}
         <div className={classNames(style.cards, 'mb-4 mt-4')}>
           {constructorElements
-            .filter((item) => item != null)
+            .filter((item) => item != null && item.type !== 'bun')
             .map((item, index) => {
-              if (item.type !== 'bun') {
-                return (
-                  <div
-                    className={classNames(style.card, 'mb-4 mr-2')}
-                    key={index}
-                  >
-                    <DragIcon type='primary' />
-                    <ConstructorElement
-                      text={item.name}
-                      price={item.price}
-                      thumbnail={item.image}
-                    />
-                  </div>
-                );
-              }
-            })}
-        </div>
-        {constructorElements
-          .filter((item) => item != null)
-          .map((item, index) => {
-            if (index === constructorElements.length - 1) {
               return (
                 <div
-                  className={classNames(style.card, style.bottom)}
+                  className={classNames(style.card, 'mb-4 mr-2')}
                   key={index}
                 >
+                  <DragIcon type='primary' />
                   <ConstructorElement
-                    className='constructor__card_top'
-                    type='bottom'
-                    isLocked={true}
-                    text={item.name + ' (низ)'}
+                    text={item.name}
                     price={item.price}
-                    thumbnail={bunImage}
+                    thumbnail={item.image}
+                    handleClose={() =>
+                      dispatch(
+                        removeConstructorElements(
+                          constructorElements.indexOf(item),
+                        ),
+                      )
+                    }
                   />
                 </div>
               );
-            }
+            })}
+        </div>
+        {constructorElements
+          .filter(
+            (item, index, arr) => item != null && index === arr.length - 1,
+          )
+          .map((item, index) => {
+            return (
+              <div className={classNames(style.card, style.bottom)} key={index}>
+                <ConstructorElement
+                  className='constructor__card_top'
+                  type='bottom'
+                  isLocked={true}
+                  text={item.name + ' (низ)'}
+                  price={item.price}
+                  thumbnail={item.image}
+                />
+              </div>
+            );
           })}
       </div>
       <div className={classNames(style.footer, 'mr-4')}>
         <span className={style.price}>
-          {/* <p className='text text_type_main-medium'>{totalPrice()}</p> */}
+          <p className='text text_type_main-medium'>{totalPrice()}</p>
           <CurrencyIcon
             className='constructor__footer_price-icon'
             type='primary'
@@ -134,7 +139,7 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
           htmlType='button'
           type='primary'
           size='medium'
-          // onClick={handleOpenCard}
+          onClick={handleOpenCard}
         >
           Оформить заказ
         </Button>

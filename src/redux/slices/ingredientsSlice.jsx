@@ -3,7 +3,7 @@ import { mainURL } from '../../utils/const';
 
 export const getIngredients = createAsyncThunk(
   'ingredients/getIngredients',
-  async (thunkAPI) => {
+  async () => {
     const response = await fetch(`${mainURL}/ingredients`);
     if (response.ok) {
       const data = await response.json();
@@ -12,6 +12,22 @@ export const getIngredients = createAsyncThunk(
   },
 );
 
+export const makeAnOrder = createAsyncThunk(
+  'ingredients/makeAnOrder',
+  async (data) => {
+    const response = await fetch(`${mainURL}/orders`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+  },
+);
 
 const initialState = {
   allIngredients: [],
@@ -31,7 +47,20 @@ const ingredientsSlice = createSlice({
     },
 
     addConstructorElements: (state, action) => {
-      state.constructorElements.push(action.payload);
+      if (action.payload.type === 'bun') {
+        state.constructorElements = [
+          action.payload,
+          ...state.constructorElements.filter((item) => item.type !== 'bun'),
+          action.payload,
+        ];
+      } else {
+        state.constructorElements.splice(1, 0, action.payload);
+      }
+    },
+    removeConstructorElements: (state, action) => {
+      state.constructorElements = state.constructorElements.filter(
+        (item, index) => index !== action.payload,
+      );
     },
   },
   extraReducers: (builder) => {
@@ -48,10 +77,27 @@ const ingredientsSlice = createSlice({
       .addCase(getIngredients.rejected, (state, action) => {
         state.loadingStatus = 'failed';
         state.error = action.error;
+      })
+      .addCase(makeAnOrder.pending, (state) => {
+        state.loadingStatus = 'loading';
+        state.error = null;
+      })
+      .addCase(makeAnOrder.fulfilled, (state, action) => {
+        state.order = action.payload;
+        state.constructorElements = [];
+        state.loadingStatus = 'idle';
+        state.error = null;
+      })
+      .addCase(makeAnOrder.rejected, (state, action) => {
+        state.loadingStatus = 'failed';
+        state.error = action.error;
       });
   },
 });
 
-export const { addCurrentIngredient, addConstructorElements } =
-  ingredientsSlice.actions;
+export const {
+  addCurrentIngredient,
+  addConstructorElements,
+  removeConstructorElements,
+} = ingredientsSlice.actions;
 export default ingredientsSlice.reducer;

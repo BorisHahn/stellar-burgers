@@ -1,5 +1,13 @@
+
 .wrapper {
-  border: 2px solid lightgreen;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  display: hidden;
+}
+
+.wrapperHide {
+  border: 2px solid #4c4cff;
+  display: block;
 }
 
 .cards {
