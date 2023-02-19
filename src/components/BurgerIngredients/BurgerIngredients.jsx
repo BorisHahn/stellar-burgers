@@ -1,17 +1,28 @@
 import style from './BurgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import IngredientCard from '../IngredientCard/IngredientCard';
 import PropTypes from 'prop-types';
+import { useInView } from 'react-intersection-observer';
 const classNames = require('classnames');
 
 const BurgerIngredients = ({ handleOpenModal }) => {
-  const [current, setCurrent] = useState('Булки');
+  const [current, setCurrent] = useState('');
   const refBun = useRef();
   const refSauce = useRef();
   const refMain = useRef();
   const { allIngredients } = useSelector((state) => state.ingredients);
+
+  const { ref: inViewRef, inView } = useInView();
+  
+  const setRefs = useCallback(
+    (node) => {
+      refMain.current = node;
+      inViewRef(node);
+    },
+    [inViewRef],
+  );
 
   const handleOpenCard = (card) => {
     handleOpenModal(card);
@@ -73,7 +84,7 @@ const BurgerIngredients = ({ handleOpenModal }) => {
         </Tab>
         <Tab
           value='Начинки'
-          active={current === 'Начинки'}
+          active={current === 'Начинки' || inView}
           onClick={() => {
             handleScroleTo(refMain);
             setCurrent('Начинки');
@@ -83,41 +94,48 @@ const BurgerIngredients = ({ handleOpenModal }) => {
         </Tab>
       </nav>
       <div className={classNames(style.menu, 'mt-10')}>
-        <h2
-          ref={refBun}
-          className={classNames(
-            'text text_type_main-medium',
-            'burger-ingridients__menu-title',
-          )}
-        >
-          Булки
-        </h2>
-        <div className={classNames(style.buns, 'pl-4 pt-6 pb-10')}>
-          {cardOfBuns}
+        <div ref={setRefs}>
+          <h2
+            ref={refBun}
+            className={classNames(
+              'text text_type_main-medium',
+              'burger-ingridients__menu-title',
+            )}
+          >
+            Булки
+          </h2>
+          <div className={classNames(style.buns, 'pl-4 pt-6 pb-10')}>
+            {cardOfBuns}
+          </div>
         </div>
-        <h2
-          ref={refSauce}
-          className={classNames(
-            'text text_type_main-medium',
-            'burger-ingridients__menu-title',
-          )}
-        >
-          Соусы
-        </h2>
-        <div className={classNames(style.sauce, 'ml-4 mt-6 mb-10')}>
-          {cardOfSauce}
+        <div ref={setRefs}>
+          <h2
+            ref={refSauce}
+            className={classNames(
+              'text text_type_main-medium',
+              'burger-ingridients__menu-title',
+            )}
+          >
+            Соусы
+          </h2>
+          <div className={classNames(style.sauce, 'ml-4 mt-6 mb-10')}>
+            {cardOfSauce}
+          </div>
         </div>
-        <h2
-          ref={refMain}
-          className={classNames(
-            'text text_type_main-medium',
-            'burger-ingridients__menu-title',
-          )}
-        >
-          Начинки
-        </h2>
-        <div className={classNames(style.main, 'ml-4 mt-6 mb-10')}>
-          {cardOfMain}
+        <div ref={setRefs}>
+          <h2
+            ref={refMain}
+            className={classNames(
+              'text text_type_main-medium',
+              'burger-ingridients__menu-title',
+            )}
+          >
+            Начинки
+          </h2>
+
+          <div className={classNames(style.main, 'ml-4 mt-6 mb-10')}>
+            {cardOfMain}
+          </div>
         </div>
       </div>
     </section>

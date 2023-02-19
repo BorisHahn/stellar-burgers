@@ -33,7 +33,7 @@ const initialState = {
   allIngredients: [],
   constructorElements: [],
   ingredientDetails: {},
-  order: { igredients: [] },
+  order: {},
   loadingStatus: 'idle',
   error: null,
 };
@@ -47,14 +47,21 @@ const ingredientsSlice = createSlice({
     },
 
     addConstructorElements: (state, action) => {
-      if (action.payload.type === 'bun') {
-        state.constructorElements = [
-          action.payload,
-          ...state.constructorElements.filter((item) => item.type !== 'bun'),
-          action.payload,
-        ];
+      if (
+        state.constructorElements.length === 0 &&
+        action.payload.type !== 'bun'
+      ) {
+        alert('Положите сперва булку!');
       } else {
-        state.constructorElements.splice(1, 0, action.payload);
+        if (action.payload.type === 'bun') {
+          state.constructorElements = [
+            action.payload,
+            ...state.constructorElements.filter((item) => item.type !== 'bun'),
+            action.payload,
+          ];
+        } else {
+          state.constructorElements.splice(1, 0, action.payload);
+        }
       }
     },
     removeConstructorElements: (state, action) => {

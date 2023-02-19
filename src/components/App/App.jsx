@@ -19,20 +19,10 @@ const App = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [orderModalIsOpen, setOrderModalIsOpen] = useState(false);
   const [order, setOrder] = useState([]);
-  const [numberOfOrder, setNumberOfOrder] = useState(null);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getIngredients());
   }, []);
-
-  // const makeAnOrder = () => {
-  //   api
-  //     .makeAnOrder({ ingredients: order.map((item) => item._id) })
-  //     .then((res) => {
-  //       setNumberOfOrder(res.order.number);
-  //     })
-  //     .catch((e) => console.error(e));
-  // };
 
   const handleOpenModal = (item) => {
     dispatch(addCurrentIngredient(item));

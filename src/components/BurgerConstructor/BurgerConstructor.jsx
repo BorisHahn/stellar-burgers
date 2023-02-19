@@ -19,6 +19,7 @@ const classNames = require('classnames');
 
 const BurgerConstructor = ({ handleOpenOrderModal }) => {
   const { constructorElements } = useSelector((state) => state.ingredients);
+  const { order } = useSelector((state) => state.ingredients);
 
   const dispatch = useDispatch();
   const [{ isHover }, dropTarget] = useDrop({
@@ -32,24 +33,13 @@ const BurgerConstructor = ({ handleOpenOrderModal }) => {
   });
 
   const handleOpenCard = () => {
-    handleOpenOrderModal();
-    dispatch(makeAnOrder());
+    const order = constructorElements.map((item) => item._id);
+    dispatch(
+      makeAnOrder({
+        ingredients: [...order],
+      }),
+    ).then(() => handleOpenOrderModal());
   };
-
-  // useEffect(() => {
-  //   createOrder();
-  // }, [allIngredients]);
-
-  // const createOrder = () => {
-  //   let copyIngredients = Object.assign([]);
-  //   if (allIngredients.length === 0) return;
-  //   const buns = allIngredients.filter((ingr) => ingr.type == 'bun');
-  //   copyIngredients.unshift(buns[1]);
-  //   copyIngredients.push(buns[1]);
-  //   const filtred = allIngredients.filter((ingr) => ingr.type !== 'bun');
-  //   copyIngredients.splice(1, 0, ...filtred);
-  //   setOrder([...copyIngredients]);
-  // };
 
   const totalPrice = () => {
     return constructorElements
@@ -62,7 +52,11 @@ const BurgerConstructor = ({ handleOpenOrderModal }) => {
   return (
     <section className='constructor'>
       <div
-        className={classNames('pl-4 mt-25 mb-10', style.wrapper, isHover ? style.wrapperHide : '')}
+        className={classNames(
+          'pl-4 mt-25 mb-10',
+          style.wrapper,
+          isHover ? style.wrapperHide : '',
+        )}
         style={{ minHeight: '664px' }}
         ref={dropTarget}
       >
@@ -127,6 +121,7 @@ const BurgerConstructor = ({ handleOpenOrderModal }) => {
             );
           })}
       </div>
+
       <div className={classNames(style.footer, 'mr-4')}>
         <span className={style.price}>
           <p className='text text_type_main-medium'>{totalPrice()}</p>
