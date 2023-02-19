@@ -1,0 +1,12 @@
+.card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  gap: 8px;
+  align-items: center;
+  cursor: pointer;
+}
+
+.card:last-child {
+  margin-bottom: 0;
+}
