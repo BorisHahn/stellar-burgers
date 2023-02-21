@@ -51,7 +51,7 @@ const ingredientsSlice = createSlice({
         state.constructorElements.length === 0 &&
         action.payload.type !== 'bun'
       ) {
-        alert('Положите сперва булку!');
+        return;
       } else {
         if (action.payload.type === 'bun') {
           state.constructorElements = [
@@ -68,6 +68,14 @@ const ingredientsSlice = createSlice({
       state.constructorElements = state.constructorElements.filter(
         (item, index) => index !== action.payload,
       );
+    },
+
+    replaceConstructorElements: (state, action) => {
+      const { dragIndex, hoverIndex } = action.payload;
+      const ingredients = state.constructorElements;
+      const dragCard = ingredients[dragIndex];
+      ingredients.splice(dragIndex, 1);
+      ingredients.splice(hoverIndex, 0, dragCard);
     },
   },
   extraReducers: (builder) => {
@@ -106,5 +114,6 @@ export const {
   addCurrentIngredient,
   addConstructorElements,
   removeConstructorElements,
+  replaceConstructorElements,
 } = ingredientsSlice.actions;
 export default ingredientsSlice.reducer;

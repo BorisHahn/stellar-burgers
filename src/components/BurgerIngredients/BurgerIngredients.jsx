@@ -4,25 +4,19 @@ import { useState, useRef, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import IngredientCard from '../IngredientCard/IngredientCard';
 import PropTypes from 'prop-types';
+import IntersectionWrapper from '../IntersectionWrapper/IntersectionWrapper';
 import { useInView } from 'react-intersection-observer';
 const classNames = require('classnames');
 
 const BurgerIngredients = ({ handleOpenModal }) => {
-  const [current, setCurrent] = useState('');
   const refBun = useRef();
   const refSauce = useRef();
   const refMain = useRef();
+  const refIndegrients = useRef();
   const { allIngredients } = useSelector((state) => state.ingredients);
-
-  const { ref: inViewRef, inView } = useInView();
-  
-  const setRefs = useCallback(
-    (node) => {
-      refMain.current = node;
-      inViewRef(node);
-    },
-    [inViewRef],
-  );
+  const [inViewBun, setInViewBun] = useState(true);
+  const [inViewSauce, setInViewSauce] = useState(false);
+  const [inViewMain, setInViewMain] = useState(false);
 
   const handleOpenCard = (card) => {
     handleOpenModal(card);
@@ -64,37 +58,34 @@ const BurgerIngredients = ({ handleOpenModal }) => {
       <nav className={classNames(style.navigation)}>
         <Tab
           value='Булки'
-          active={current === 'Булки'}
+          active={inViewBun}
           onClick={() => {
             handleScroleTo(refBun);
-            setCurrent('Булки');
           }}
         >
           Булки
         </Tab>
         <Tab
           value='Соусы'
-          active={current === 'Соусы'}
+          active={inViewSauce}
           onClick={() => {
             handleScroleTo(refSauce);
-            setCurrent('Соусы');
           }}
         >
           Соусы
         </Tab>
         <Tab
           value='Начинки'
-          active={current === 'Начинки' || inView}
+          active={inViewMain}
           onClick={() => {
             handleScroleTo(refMain);
-            setCurrent('Начинки');
           }}
         >
           Начинки
         </Tab>
       </nav>
-      <div className={classNames(style.menu, 'mt-10')}>
-        <div ref={setRefs}>
+      <div ref={refIndegrients} className={classNames(style.menu, 'mt-10')}>
+        <IntersectionWrapper name='A' onChange={setInViewBun} threshold={0.8}>
           <h2
             ref={refBun}
             className={classNames(
@@ -107,36 +98,36 @@ const BurgerIngredients = ({ handleOpenModal }) => {
           <div className={classNames(style.buns, 'pl-4 pt-6 pb-10')}>
             {cardOfBuns}
           </div>
-        </div>
-        <div ref={setRefs}>
-          <h2
-            ref={refSauce}
-            className={classNames(
-              'text text_type_main-medium',
-              'burger-ingridients__menu-title',
-            )}
-          >
-            Соусы
-          </h2>
+        </IntersectionWrapper>
+
+        <h2
+          ref={refSauce}
+          className={classNames(
+            'text text_type_main-medium',
+            'burger-ingridients__menu-title',
+          )}
+        >
+          Соусы
+        </h2>
+        <IntersectionWrapper name='B' onChange={setInViewSauce} threshold={0.7}>
           <div className={classNames(style.sauce, 'ml-4 mt-6 mb-10')}>
             {cardOfSauce}
           </div>
-        </div>
-        <div ref={setRefs}>
-          <h2
-            ref={refMain}
-            className={classNames(
-              'text text_type_main-medium',
-              'burger-ingridients__menu-title',
-            )}
-          >
-            Начинки
-          </h2>
-
+        </IntersectionWrapper>
+        <h2
+          ref={refMain}
+          className={classNames(
+            'text text_type_main-medium',
+            'burger-ingridients__menu-title',
+          )}
+        >
+          Начинки
+        </h2>
+        <IntersectionWrapper name='C' onChange={setInViewMain} threshold={0.2}>
           <div className={classNames(style.main, 'ml-4 mt-6 mb-10')}>
             {cardOfMain}
           </div>
-        </div>
+        </IntersectionWrapper>
       </div>
     </section>
   );

@@ -5,6 +5,7 @@ import {
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDispatch } from 'react-redux';
+import { nanoid } from 'nanoid';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
@@ -82,7 +83,13 @@ const BurgerConstructor = ({ handleOpenOrderModal }) => {
               {constructorElements
                 .filter((item) => item != null && item.type !== 'bun')
                 .map((item, index) => {
-                  return <FillingCard item={item} key={index} index={index} />;
+                  return (
+                    <FillingCard
+                      item={item}
+                      key={nanoid()}
+                      index={constructorElements.indexOf(item)}
+                    />
+                  );
                 })}
             </div>
             {constructorElements
