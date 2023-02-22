@@ -10,15 +10,17 @@ import BurgerIngredients from '../BurgerIngredients/BurgerIngredients';
 import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import OrderDetails from '../OrderDetails/OrderDetails';
 import Modal from '../Modal/Modal';
+import { useSelector } from 'react-redux';
 import {
   getIngredients,
   addCurrentIngredient,
+  cleanOrderAndCurrent,
 } from '../../redux/slices/ingredientsSlice';
 
 const App = () => {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [orderModalIsOpen, setOrderModalIsOpen] = useState(false);
-  const [order, setOrder] = useState([]);
+  const { ingredientDetails } = useSelector((state) => state.ingredients);
+  const { order } = useSelector((state) => state.ingredients);
+  
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getIngredients());
@@ -26,16 +28,10 @@ const App = () => {
 
   const handleOpenModal = (item) => {
     dispatch(addCurrentIngredient(item));
-    setModalIsOpen(true);
-  };
-
-  const handleOpenOrderModal = () => {
-    setOrderModalIsOpen(true);
   };
 
   const handleCloseModal = () => {
-    setModalIsOpen(false);
-    setOrderModalIsOpen(false);
+    dispatch(cleanOrderAndCurrent());
   };
 
   return (
@@ -43,22 +39,15 @@ const App = () => {
       <AppHeader />
       <DndProvider backend={HTML5Backend}>
         <main className={style.main}>
-          <BurgerIngredients handleOpenModal={handleOpenModal} />
-          <BurgerConstructor
-            handleOpenOrderModal={handleOpenOrderModal}
-            setOrder={setOrder}
-          />
+          <BurgerIngredients handleOpenModal={handleOpenModal}/>
+          <BurgerConstructor />
         </main>
       </DndProvider>
-      <Modal
-        modalIsOpen={modalIsOpen}
-        onClose={handleCloseModal}
-        title='Детали ингредиента'
-      >
+      <Modal onClose={handleCloseModal} isOpen={ingredientDetails} title='Детали ингредиента'>
         <IngredientDetails />
       </Modal>
 
-      <Modal modalIsOpen={orderModalIsOpen} onClose={handleCloseModal}>
+      <Modal onClose={handleCloseModal} isOpen={order}>
         <OrderDetails />
       </Modal>
     </div>

@@ -13,7 +13,7 @@ const IngridientCard = ({ card, handleOpen }) => {
   const { name, price, image_large } = card;
 
   const { constructorElements } = useSelector((state) => state.ingredients);
-  let counter = constructorElements.filter(
+  const counter = constructorElements.filter(
     (item) => item._id === card._id,
   ).length;
 

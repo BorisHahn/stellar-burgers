@@ -4,11 +4,12 @@ import {
   CurrencyIcon,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
 import { useDrop } from 'react-dnd';
+import { bun } from '../../utils/const';
 import {
   addConstructorElements,
   makeAnOrder,
@@ -16,7 +17,7 @@ import {
 import FillingCard from '../FillingCard/FillingCard';
 const classNames = require('classnames');
 
-const BurgerConstructor = ({ handleOpenOrderModal }) => {
+const BurgerConstructor = () => {
   const { constructorElements } = useSelector((state) => state.ingredients);
 
   const dispatch = useDispatch();
@@ -36,16 +37,16 @@ const BurgerConstructor = ({ handleOpenOrderModal }) => {
       makeAnOrder({
         ingredients: [...order],
       }),
-    ).then(() => handleOpenOrderModal());
+    );
   };
 
-  const totalPrice = () => {
+  const totalPrice = useMemo(() => {
     return constructorElements
       .filter((item) => item != null)
       .reduce((acc, item) => {
         return acc + item.price;
       }, 0);
-  };
+  }, [constructorElements]);
 
   return (
     <section className={style.constructor}>
@@ -81,7 +82,7 @@ const BurgerConstructor = ({ handleOpenOrderModal }) => {
               })}
             <div className={classNames(style.cards, 'mb-4 mt-4')}>
               {constructorElements
-                .filter((item) => item != null && item.type !== 'bun')
+                .filter((item) => item != null && item.type !== bun)
                 .map((item, index) => {
                   return (
                     <FillingCard
@@ -123,7 +124,7 @@ const BurgerConstructor = ({ handleOpenOrderModal }) => {
 
       <div className={classNames(style.footer, 'mr-4')}>
         <span className={style.price}>
-          <p className='text text_type_main-medium'>{totalPrice()}</p>
+          <p className='text text_type_main-medium'>{totalPrice}</p>
           <CurrencyIcon
             className='constructor__footer_price-icon'
             type='primary'
@@ -140,12 +141,6 @@ const BurgerConstructor = ({ handleOpenOrderModal }) => {
       </div>
     </section>
   );
-};
-
-BurgerConstructor.propTypes = {
-  handleOpenOrderModal: PropTypes.func,
-  makeAnOrder: PropTypes.func,
-  setOrder: PropTypes.func,
 };
 
 export default BurgerConstructor;

@@ -1,11 +1,11 @@
 import style from './BurgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import IngredientCard from '../IngredientCard/IngredientCard';
+import { bun, sauce, main } from '../../utils/const';
 import PropTypes from 'prop-types';
 import IntersectionWrapper from '../IntersectionWrapper/IntersectionWrapper';
-import { useInView } from 'react-intersection-observer';
 const classNames = require('classnames');
 
 const BurgerIngredients = ({ handleOpenModal }) => {
@@ -29,9 +29,18 @@ const BurgerIngredients = ({ handleOpenModal }) => {
   function filterByType(array, type) {
     return array.filter((e) => e.type === type);
   }
-  const arrayOfBuns = filterByType(allIngredients, 'bun');
-  const arrayOfSauce = filterByType(allIngredients, 'sauce');
-  const arrayOfMain = filterByType(allIngredients, 'main');
+  const arrayOfBuns = useMemo(
+    () => filterByType(allIngredients, bun),
+    [allIngredients, bun],
+  );
+  const arrayOfSauce = useMemo(
+    () => filterByType(allIngredients, sauce),
+    [allIngredients, sauce],
+  );
+  const arrayOfMain = useMemo(
+    () => filterByType(allIngredients, main),
+    [allIngredients, main],
+  );
 
   function getCards(array) {
     const newArray = array.map((item) => {

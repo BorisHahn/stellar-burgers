@@ -1,7 +1,5 @@
 import styles from './IngredientDetails.module.css';
-import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
 import { useSelector } from 'react-redux';
-import PropTypes from 'prop-types';
 const classNames = require('classnames');
 
 const IngredientDetails = () => {
@@ -11,8 +9,8 @@ const IngredientDetails = () => {
       <div className={classNames(styles.imageWrapper, 'mb-4')}>
         <img
           className={styles.image}
-          src={ingredientDetails.image_large}
-          alt={ingredientDetails.name}
+          src={ingredientDetails?.image_large}
+          alt={ingredientDetails?.name}
         ></img>
       </div>
       <p
@@ -22,7 +20,7 @@ const IngredientDetails = () => {
           'mb-8',
         )}
       >
-        {ingredientDetails.name}
+        {ingredientDetails?.name}
       </p>
       <table className={classNames(styles.table, 'mb-15')}>
         <tbody>
@@ -56,7 +54,7 @@ const IngredientDetails = () => {
                   styles.value,
                 )}
               >
-                {ingredientDetails.calories}
+                {ingredientDetails?.calories}
               </p>
             </td>
             <td>
@@ -66,7 +64,7 @@ const IngredientDetails = () => {
                   styles.value,
                 )}
               >
-                {ingredientDetails.proteins}
+                {ingredientDetails?.proteins}
               </p>
             </td>
             <td>
@@ -76,7 +74,7 @@ const IngredientDetails = () => {
                   styles.value,
                 )}
               >
-                {ingredientDetails.fat}
+                {ingredientDetails?.fat}
               </p>
             </td>
             <td>
@@ -86,7 +84,7 @@ const IngredientDetails = () => {
                   styles.value,
                 )}
               >
-                {ingredientDetails.carbohydrates}
+                {ingredientDetails?.carbohydrates}
               </p>
             </td>
           </tr>

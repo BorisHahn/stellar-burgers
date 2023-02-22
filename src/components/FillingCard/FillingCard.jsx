@@ -2,6 +2,7 @@ import style from './FillingCard.module.css';
 import PropTypes from 'prop-types';
 import { useRef } from 'react';
 import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
+import { bun } from '../../utils/const';
 import { useDrag, useDrop } from 'react-dnd';
 import {
   DragIcon,
@@ -58,7 +59,7 @@ const FillingCard = ({ item, index }) => {
     }),
   });
   const opacity = isDragging ? 0 : 1;
-  if (item.type !== 'bun') drag(drop(ref));
+  if (item.type !== bun) drag(drop(ref));
   const preventDefault = (e) => e.preventDefault();
 
   return (
