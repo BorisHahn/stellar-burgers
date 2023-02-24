@@ -1,13 +1,17 @@
 import styles from './IngredientDetails.module.css';
-import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 const classNames = require('classnames');
 
-const IngredientDetails = ({ item }) => {
+const IngredientDetails = () => {
+  const { ingredientDetails } = useSelector((state) => state.ingredients);
   return (
     <div className={styles.infoCard}>
       <div className={classNames(styles.imageWrapper, 'mb-4')}>
-        <img className={styles.image} src={item.image_large} alt={item.name}></img>
+        <img
+          className={styles.image}
+          src={ingredientDetails?.image_large}
+          alt={ingredientDetails?.name}
+        ></img>
       </div>
       <p
         className={classNames(
@@ -16,7 +20,7 @@ const IngredientDetails = ({ item }) => {
           'mb-8',
         )}
       >
-        {item.name}
+        {ingredientDetails?.name}
       </p>
       <table className={classNames(styles.table, 'mb-15')}>
         <tbody>
@@ -50,7 +54,7 @@ const IngredientDetails = ({ item }) => {
                   styles.value,
                 )}
               >
-                {item.calories}
+                {ingredientDetails?.calories}
               </p>
             </td>
             <td>
@@ -60,7 +64,7 @@ const IngredientDetails = ({ item }) => {
                   styles.value,
                 )}
               >
-                {item.proteins}
+                {ingredientDetails?.proteins}
               </p>
             </td>
             <td>
@@ -70,7 +74,7 @@ const IngredientDetails = ({ item }) => {
                   styles.value,
                 )}
               >
-                {item.fat}
+                {ingredientDetails?.fat}
               </p>
             </td>
             <td>
@@ -80,7 +84,7 @@ const IngredientDetails = ({ item }) => {
                   styles.value,
                 )}
               >
-                {item.carbohydrates}
+                {ingredientDetails?.carbohydrates}
               </p>
             </td>
           </tr>
@@ -88,10 +92,6 @@ const IngredientDetails = ({ item }) => {
       </table>
     </div>
   );
-};
-
-IngredientDetails.propTypes = {
-  item: ingredientsPropTypes.isRequired,
 };
 
 export default IngredientDetails;

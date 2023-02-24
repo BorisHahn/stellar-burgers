@@ -7,8 +7,7 @@ import PropTypes from 'prop-types';
 const classNames = require('classnames');
 const portal = document.getElementById('modals');
 
-const Modal = ({ children, onClose, modalIsOpen, title }) => {
-
+const Modal = ({ children, onClose, isOpen, title }) => {
   const handleCloseByEsc = (e) => {
     if (e.code === 'Escape') {
       onClose();
@@ -17,24 +16,19 @@ const Modal = ({ children, onClose, modalIsOpen, title }) => {
 
   useEffect(() => {
     window.addEventListener('keyup', handleCloseByEsc);
-    return () =>
-      window.removeEventListener('keyup', handleCloseByEsc);
+    return () => window.removeEventListener('keyup', handleCloseByEsc);
   });
-
 
   return ReactDOM.createPortal(
     <div
-      className={classNames(
-        styles.wrapper,
-        !modalIsOpen && styles.hiddenWrapper,
-      )}
+      className={classNames(styles.wrapper, !isOpen && styles.hiddenWrapper)}
     >
-      <ModalOverlay onClose={onClose} isOpen={modalIsOpen} />
+      <ModalOverlay onClose={onClose} isOpen={isOpen} />
       <div
         className={classNames(
           'pt-10 pl-10 pr-10',
           styles.modal,
-          modalIsOpen && styles.opened,
+          isOpen && styles.opened,
         )}
       >
         <div className={styles.header}>
@@ -64,7 +58,7 @@ const Modal = ({ children, onClose, modalIsOpen, title }) => {
 Modal.propTypes = {
   children: PropTypes.element,
   onClose: PropTypes.func,
-  modalIsOpen: PropTypes.bool,
+  isOpen: PropTypes.object,
   title: PropTypes.string,
 };
 

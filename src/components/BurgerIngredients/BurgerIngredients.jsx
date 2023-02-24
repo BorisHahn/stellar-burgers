@@ -1,18 +1,23 @@
 import style from './BurgerIngredients.module.css';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 import IngredientCard from '../IngredientCard/IngredientCard';
+import { bun, sauce, main } from '../../utils/const';
 import PropTypes from 'prop-types';
-import { Context } from '../../context/Context';
+import IntersectionWrapper from '../IntersectionWrapper/IntersectionWrapper';
 const classNames = require('classnames');
 
 const BurgerIngredients = ({ handleOpenModal }) => {
-  const [current, setCurrent] = useState('Булки');
   const refBun = useRef();
   const refSauce = useRef();
   const refMain = useRef();
-  const ingredients = useContext(Context);
-  
+  const refIndegrients = useRef();
+  const { allIngredients } = useSelector((state) => state.ingredients);
+  const [inViewBun, setInViewBun] = useState(true);
+  const [inViewSauce, setInViewSauce] = useState(false);
+  const [inViewMain, setInViewMain] = useState(false);
+
   const handleOpenCard = (card) => {
     handleOpenModal(card);
   };
@@ -24,9 +29,18 @@ const BurgerIngredients = ({ handleOpenModal }) => {
   function filterByType(array, type) {
     return array.filter((e) => e.type === type);
   }
-  const arrayOfBuns = filterByType(ingredients, 'bun');
-  const arrayOfSauce = filterByType(ingredients, 'sauce');
-  const arrayOfMain = filterByType(ingredients, 'main');
+  const arrayOfBuns = useMemo(
+    () => filterByType(allIngredients, bun),
+    [allIngredients, bun],
+  );
+  const arrayOfSauce = useMemo(
+    () => filterByType(allIngredients, sauce),
+    [allIngredients, sauce],
+  );
+  const arrayOfMain = useMemo(
+    () => filterByType(allIngredients, main),
+    [allIngredients, main],
+  );
 
   function getCards(array) {
     const newArray = array.map((item) => {
@@ -53,48 +67,48 @@ const BurgerIngredients = ({ handleOpenModal }) => {
       <nav className={classNames(style.navigation)}>
         <Tab
           value='Булки'
-          active={current === 'Булки'}
+          active={inViewBun}
           onClick={() => {
             handleScroleTo(refBun);
-            setCurrent('Булки');
           }}
         >
           Булки
         </Tab>
         <Tab
           value='Соусы'
-          active={current === 'Соусы'}
+          active={inViewSauce}
           onClick={() => {
             handleScroleTo(refSauce);
-            setCurrent('Соусы');
           }}
         >
           Соусы
         </Tab>
         <Tab
           value='Начинки'
-          active={current === 'Начинки'}
+          active={inViewMain}
           onClick={() => {
             handleScroleTo(refMain);
-            setCurrent('Начинки');
           }}
         >
           Начинки
         </Tab>
       </nav>
-      <div className={classNames(style.menu, 'mt-10')}>
-        <h2
-          ref={refBun}
-          className={classNames(
-            'text text_type_main-medium',
-            'burger-ingridients__menu-title',
-          )}
-        >
-          Булки
-        </h2>
-        <div className={classNames(style.buns, 'pl-4 pt-6 pb-10')}>
-          {cardOfBuns}
-        </div>
+      <div ref={refIndegrients} className={classNames(style.menu, 'mt-10')}>
+        <IntersectionWrapper name='A' onChange={setInViewBun} threshold={0.8}>
+          <h2
+            ref={refBun}
+            className={classNames(
+              'text text_type_main-medium',
+              'burger-ingridients__menu-title',
+            )}
+          >
+            Булки
+          </h2>
+          <div className={classNames(style.buns, 'pl-4 pt-6 pb-10')}>
+            {cardOfBuns}
+          </div>
+        </IntersectionWrapper>
+
         <h2
           ref={refSauce}
           className={classNames(
@@ -104,9 +118,11 @@ const BurgerIngredients = ({ handleOpenModal }) => {
         >
           Соусы
         </h2>
-        <div className={classNames(style.sauce, 'ml-4 mt-6 mb-10')}>
-          {cardOfSauce}
-        </div>
+        <IntersectionWrapper name='B' onChange={setInViewSauce} threshold={0.7}>
+          <div className={classNames(style.sauce, 'ml-4 mt-6 mb-10')}>
+            {cardOfSauce}
+          </div>
+        </IntersectionWrapper>
         <h2
           ref={refMain}
           className={classNames(
@@ -116,9 +132,11 @@ const BurgerIngredients = ({ handleOpenModal }) => {
         >
           Начинки
         </h2>
-        <div className={classNames(style.main, 'ml-4 mt-6 mb-10')}>
-          {cardOfMain}
-        </div>
+        <IntersectionWrapper name='C' onChange={setInViewMain} threshold={0.2}>
+          <div className={classNames(style.main, 'ml-4 mt-6 mb-10')}>
+            {cardOfMain}
+          </div>
+        </IntersectionWrapper>
       </div>
     </section>
   );

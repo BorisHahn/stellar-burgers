@@ -2,7 +2,7 @@ import style from './ModalOverlay.module.css';
 import PropTypes from 'prop-types';
 const classNames = require('classnames');
 
-const ModalOverlay = ({ isOpen, onClose }) => {
+const ModalOverlay = ({ onClose, isOpen }) => {
   return (
     <div
       className={classNames(isOpen && style.overlay)}
@@ -12,7 +12,7 @@ const ModalOverlay = ({ isOpen, onClose }) => {
 };
 
 ModalOverlay.propTypes = {
-  isOpen: PropTypes.bool,
+  isOpen: PropTypes.object,
   onClose: PropTypes.func,
 };
 

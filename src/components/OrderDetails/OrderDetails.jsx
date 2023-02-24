@@ -1,11 +1,12 @@
 import styles from './OrderDetails.module.css';
 import { useContext } from 'react';
 import { NumberOfOrderContext } from '../../context/Context';
+import { useSelector } from 'react-redux';
 const classNames = require('classnames');
 
-
 const OrderDetails = () => {
-  const number = useContext(NumberOfOrderContext);
+  const { order } = useSelector((state) => state.ingredients);
+
   return (
     <div className={styles.orderCard}>
       <p
@@ -15,7 +16,7 @@ const OrderDetails = () => {
           'mb-8',
         )}
       >
-        {number}
+        {order?.order?.number}
       </p>
       <p
         className={classNames(

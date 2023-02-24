@@ -1,112 +1,130 @@
 import style from './BurgerConstructor.module.css';
-import { useContext, useEffect } from 'react';
 import {
-  DragIcon,
   ConstructorElement,
   CurrencyIcon,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { bunImage } from '../../utils/const';
-import PropTypes from 'prop-types';
-import { Context, OrderContext } from '../../context/Context';
+import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
+import { nanoid } from 'nanoid';
+import { useSelector } from 'react-redux';
+import { useDrop } from 'react-dnd';
+import { bun } from '../../utils/const';
+import {
+  addConstructorElements,
+  makeAnOrder,
+} from '../../redux/slices/ingredientsSlice';
+import FillingCard from '../FillingCard/FillingCard';
 const classNames = require('classnames');
 
-const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
-  const ingredients = useContext(Context);
-  const order = useContext(OrderContext);
+const BurgerConstructor = () => {
+  const { constructorElements } = useSelector((state) => state.ingredients);
+
+  const dispatch = useDispatch();
+  const [{ isHover }, dropTarget] = useDrop({
+    accept: 'ingredients',
+    drop(card) {
+      dispatch(addConstructorElements(card));
+    },
+    collect: (monitor) => ({
+      isHover: monitor.isOver(),
+    }),
+  });
+
   const handleOpenCard = () => {
-    handleOpenOrderModal();
-    makeAnOrder();
+    const order = constructorElements.map((item) => item._id);
+    dispatch(
+      makeAnOrder({
+        ingredients: [...order],
+      }),
+    );
   };
 
-  useEffect(() => {
-    createOrder();
-  }, [ingredients]);
-
-  const createOrder = () => {
-    let copyIngredients = Object.assign([]);
-    if (ingredients.length === 0) return;
-    const buns = ingredients.filter((ingr) => ingr.type == 'bun');
-    copyIngredients.unshift(buns[1]);
-    copyIngredients.push(buns[1]);
-    const filtred = ingredients.filter((ingr) => ingr.type !== 'bun');
-    copyIngredients.splice(1, 0, ...filtred);
-    setOrder([...copyIngredients]);
-  };
-
-  const totalPrice = () => {
-    return order
+  const totalPrice = useMemo(() => {
+    return constructorElements
       .filter((item) => item != null)
-      .reduce((acc, item) => acc + item.price, 0);
-  };
+      .reduce((acc, item) => {
+        return acc + item.price;
+      }, 0);
+  }, [constructorElements]);
 
   return (
-    <section className='constructor'>
-      <div className='ml-4 mt-25 mb-10'>
-        {order
-          .filter((item) => item != null)
-          .map((item, index) => {
-            if (index === 0) {
-              return (
-                <div className={classNames(style.card, style.top)} key={index}>
-                  <ConstructorElement
-                    className='constructor__card_top'
-                    type='top'
-                    isLocked={true}
-                    text={item.name + ' (верх)'}
-                    price={item.price}
-                    thumbnail={bunImage}
-                  />
-                </div>
-              );
-            }
-          })}
-        <div className={classNames(style.cards, 'mb-4 mt-4')}>
-          {order
-            .filter((item) => item != null)
-            .map((item, index) => {
-              if (item.type !== 'bun') {
+    <section className={style.constructor}>
+      <div
+        className={classNames(
+          'pl-4 mt-25 mb-10',
+          style.wrapper,
+          isHover ? style.wrapperHide : '',
+        )}
+        style={{ minHeight: '664px' }}
+        ref={dropTarget}
+      >
+        {constructorElements.length > 0 ? (
+          <>
+            {constructorElements
+              .filter((item, index) => item != null && index === 0)
+              .map((item, index) => {
                 return (
                   <div
-                    className={classNames(style.card, 'mb-4 mr-2')}
+                    className={classNames(style.card, style.top)}
                     key={index}
                   >
-                    <DragIcon type='primary' />
                     <ConstructorElement
-                      text={item.name}
+                      className='constructor__card_top'
+                      type='top'
+                      isLocked={true}
+                      text={item.name + ' (верх)'}
                       price={item.price}
                       thumbnail={item.image}
                     />
                   </div>
                 );
-              }
-            })}
-        </div>
-        {order
-          .filter((item) => item != null)
-          .map((item, index) => {
-            if (index === order.length - 1) {
-              return (
-                <div
-                  className={classNames(style.card, style.bottom)}
-                  key={index}
-                >
-                  <ConstructorElement
-                    className='constructor__card_top'
-                    type='bottom'
-                    isLocked={true}
-                    text={item.name + ' (низ)'}
-                    price={item.price}
-                    thumbnail={bunImage}
-                  />
-                </div>
-              );
-            }
-          })}
+              })}
+            <div className={classNames(style.cards, 'mb-4 mt-4')}>
+              {constructorElements
+                .filter((item) => item != null && item.type !== bun)
+                .map((item, index) => {
+                  return (
+                    <FillingCard
+                      item={item}
+                      key={nanoid()}
+                      index={constructorElements.indexOf(item)}
+                    />
+                  );
+                })}
+            </div>
+            {constructorElements
+              .filter(
+                (item, index, arr) => item != null && index === arr.length - 1,
+              )
+              .map((item, index) => {
+                return (
+                  <div
+                    className={classNames(style.card, style.bottom)}
+                    key={index}
+                  >
+                    <ConstructorElement
+                      className='constructor__card_top'
+                      type='bottom'
+                      isLocked={true}
+                      text={item.name + ' (низ)'}
+                      price={item.price}
+                      thumbnail={item.image}
+                    />
+                  </div>
+                );
+              })}
+          </>
+        ) : (
+          <p className={classNames(style.plug, 'text text_type_main-large')}>
+            Давайте соберем бургер! Начнем с булки!
+          </p>
+        )}
       </div>
+
       <div className={classNames(style.footer, 'mr-4')}>
         <span className={style.price}>
-          <p className='text text_type_main-medium'>{totalPrice()}</p>
+          <p className='text text_type_main-medium'>{totalPrice}</p>
           <CurrencyIcon
             className='constructor__footer_price-icon'
             type='primary'
@@ -123,12 +141,6 @@ const BurgerConstructor = ({ handleOpenOrderModal, setOrder, makeAnOrder }) => {
       </div>
     </section>
   );
-};
-
-BurgerConstructor.propTypes = {
-  handleOpenOrderModal: PropTypes.func,
-  makeAnOrder: PropTypes.func,
-  setOrder: PropTypes.func,
 };
 
 export default BurgerConstructor;
