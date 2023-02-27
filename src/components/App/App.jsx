@@ -1,13 +1,13 @@
 import React from 'react';
 import style from './App.module.css';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Route, Routes } from 'react-router-dom';
 import AppHeader from '../AppHeader/AppHeader';
-import BurgerConstructor from '../BurgerConstructor/BurgerConstructor';
-import BurgerIngredients from '../BurgerIngredients/BurgerIngredients';
 import IngredientDetails from '../IngredientDetails/IngredientDetails';
+import Main from '../../pages/Main';
 import OrderDetails from '../OrderDetails/OrderDetails';
 import Modal from '../Modal/Modal';
 import { useSelector } from 'react-redux';
@@ -20,7 +20,7 @@ import {
 const App = () => {
   const { ingredientDetails } = useSelector((state) => state.ingredients);
   const { order } = useSelector((state) => state.ingredients);
-  
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getIngredients());
@@ -39,11 +39,20 @@ const App = () => {
       <AppHeader />
       <DndProvider backend={HTML5Backend}>
         <main className={style.main}>
-          <BurgerIngredients handleOpenModal={handleOpenModal}/>
-          <BurgerConstructor />
+          <Routes>
+            <Route
+              path='/'
+              element={<Main handleOpenModal={handleOpenModal} />}
+            />
+          </Routes>
         </main>
       </DndProvider>
-      <Modal onClose={handleCloseModal} isOpen={ingredientDetails} title='Детали ингредиента'>
+
+      <Modal
+        onClose={handleCloseModal}
+        isOpen={ingredientDetails}
+        title='Детали ингредиента'
+      >
         <IngredientDetails />
       </Modal>
 
