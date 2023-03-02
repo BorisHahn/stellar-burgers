@@ -8,6 +8,13 @@
   align-items: center;
 }
 
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .title {
   margin: 0;
   margin-bottom: 24px;
@@ -16,7 +23,7 @@
 }
 
 .link {
-  color: #4C4CFF;
+  color: #4c4cff;
   cursor: pointer;
   text-decoration: none;
 }
