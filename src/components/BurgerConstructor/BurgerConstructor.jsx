@@ -80,7 +80,7 @@ const BurgerConstructor = () => {
                   </div>
                 );
               })}
-            <div className={classNames(style.cards, 'mb-4 mt-4')}>
+            <div className={classNames(style.cards, 'mt-4')}>
               {constructorElements
                 .filter((item) => item != null && item.type !== bun)
                 .map((item, index) => {

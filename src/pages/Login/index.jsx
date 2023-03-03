@@ -6,12 +6,15 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import useFormAndValidation from '../../utils/hooks/ValidationHook';
 import Spinner from 'react-bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
+import { signIn } from '../../redux/slices/regAndAuthSlice';
 import {
   Input,
   PasswordInput,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { error, loadingStatus } = useSelector(
     (state) => state.accessProcedure,
   );
@@ -20,7 +23,8 @@ const Login = () => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(values);
+    dispatch(signIn(values));
+    navigate('/');
   }
 
   return (

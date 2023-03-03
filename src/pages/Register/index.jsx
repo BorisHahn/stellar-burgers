@@ -16,7 +16,6 @@ const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const inputRef = useRef(null);
-  const [isLoading, setIsLoading] = useState(false);
   const { error, loadingStatus } = useSelector(
     (state) => state.accessProcedure,
   );
@@ -24,10 +23,8 @@ const Register = () => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    setIsLoading(loadingStatus);
     dispatch(signUp(values));
     navigate('/login');
-    setIsLoading(loadingStatus);
   }
 
   return (
