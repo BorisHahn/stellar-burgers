@@ -1,15 +1,29 @@
 import styles from './Profile.module.css';
-import { Input } from '@ya.praktikum/react-developer-burger-ui-components';
+import {
+  Input,
+  EmailInput,
+} from '@ya.praktikum/react-developer-burger-ui-components';
 import classNames from 'classnames';
 import { emailRegExp } from '../../utils/const';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink, useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { signOut } from '../../redux/slices/regAndAuthSlice';
 const Profile = () => {
-  const [nameValue, setNameValue] = useState('');
-  const [emailValue, setEmailValue] = useState('');
+  const dispatch = useDispatch();
+  const { name, email } = useSelector(
+    (state) => state.accessProcedure.userInfo,
+  );
+  const [nameValue, setNameValue] = useState(name);
+  const [emailValue, setEmailValue] = useState(email);
   const [passwordValue, setPasswordValue] = useState('');
-  const inputRef = useRef(null);
   const location = useLocation();
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    dispatch(signOut())
+  }
 
   return (
     <section className={styles.profile}>
@@ -43,10 +57,16 @@ const Profile = () => {
               ? ['text text_type_main-medium', styles.linkActive]
               : 'text text_type_main-medium text_color_inactive',
           )}
+          onClick={handleLogout}
         >
           Выход
         </NavLink>
-        <p className={classNames('text text_type_main-default text_color_inactive', styles.caption)}>
+        <p
+          className={classNames(
+            'text text_type_main-default text_color_inactive',
+            styles.caption,
+          )}
+        >
           В этом разделе вы можете изменить свои персональные данные
         </p>
       </nav>
@@ -58,27 +78,27 @@ const Profile = () => {
           value={nameValue}
           name={'name'}
           error={false}
-          ref={inputRef}
           minLength={2}
           errorText={'Ошибка'}
           size={'default'}
           icon={'EditIcon'}
           extraClass='mb-6'
+          autoComplete='off'
           required
         />
-        <Input
+        <EmailInput
           type={'email'}
           placeholder={'Логин'}
           onChange={(e) => setEmailValue(e.target.value)}
           value={emailValue}
           name={'email'}
           error={false}
-          ref={inputRef}
           pattern={emailRegExp}
           errorText={'Ошибка'}
           size={'default'}
           icon={'EditIcon'}
           extraClass='mb-6'
+          autoComplete='off'
           required
         />
         <Input
@@ -88,12 +108,12 @@ const Profile = () => {
           value={passwordValue}
           name={'password'}
           error={false}
-          ref={inputRef}
           errorText={'Ошибка'}
           size={'default'}
           icon={'EditIcon'}
           extraClass='mb-6'
           minLength={8}
+          autoComplete='off'
           required
         />
       </form>

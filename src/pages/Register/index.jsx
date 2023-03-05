@@ -23,8 +23,13 @@ const Register = () => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    dispatch(signUp(values));
-    navigate('/login');
+    dispatch(signUp(values)).then((res) => {
+      if (res.payload != null && res.payload.success === true) {
+        navigate('/login');
+      } else {
+        console.log(res.payload.message);
+      }
+    });
   }
 
   return (

@@ -23,8 +23,13 @@ const Login = () => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    dispatch(signIn(values));
-    navigate('/');
+    dispatch(signIn(values)).then((res) => {
+      if (res.payload.success === true) {
+        navigate('/');
+      } else {
+        console.error(res.payload.message);
+      }
+    });
   }
 
   return (
