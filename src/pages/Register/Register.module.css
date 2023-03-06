@@ -31,3 +31,7 @@
 .enter {
   margin-bottom: 16px;
 }
+
+.error {
+  color: red;
+}

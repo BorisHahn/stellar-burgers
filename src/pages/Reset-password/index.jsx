@@ -2,8 +2,13 @@ import styles from './Reset-password.module.css';
 import classNames from 'classnames';
 import { NavLink, useNavigate } from 'react-router-dom';
 import useFormAndValidation from '../../utils/hooks/ValidationHook';
-import { resetPassword } from '../../redux/slices/regAndAuthSlice';
-import { useDispatch } from 'react-redux';
+import Spinner from 'react-bootstrap/Spinner';
+import {
+  resetPassword,
+  setLoadingStatus,
+  setError,
+} from '../../redux/slices/regAndAuthSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   PasswordInput,
   Button,
@@ -12,16 +17,24 @@ const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { values, handleChangeValid, errors, isValid } = useFormAndValidation();
+  const { error, loadingStatus } = useSelector(
+    (state) => state.accessProcedure,
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(resetPassword(values)).then((res) => {
-      if (res.payload.success === true) {
-        navigate('/login');
-      } else {
-        console.error(res.payload.message);
-      }
-    });
+    dispatch(resetPassword(values))
+      .then((res) => {
+        if (res.payload.success === true) {
+          navigate('/login');
+        } else {
+          console.error(res.payload.message);
+        }
+      })
+      .finally(() => {
+        dispatch(setLoadingStatus());
+        setTimeout(() => dispatch(setError()), 3000);
+      });
   };
 
   return (
@@ -65,8 +78,22 @@ const ResetPassword = () => {
           extraClass='mb-20'
           disabled={!isValid}
         >
-          Сохранить
+          {loadingStatus ? (
+            <>
+              <Spinner
+                as='span'
+                animation='border'
+                size='sm'
+                role='status'
+                aria-hidden='true'
+              />{' '}
+              Сохранение...
+            </>
+          ) : (
+            'Сохранить'
+          )}
         </Button>
+        <p className={styles.error}>{error}</p>
         <p
           className={classNames(
             'text text_type_main-default text_color_inactive',

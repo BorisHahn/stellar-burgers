@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { baseURL, mainURL} from '../../utils/const';
+import { baseURL, mainURL } from '../../utils/const';
 
 export const signUp = createAsyncThunk(
   'accessProcedure/signUp',
@@ -28,7 +28,7 @@ export const signIn = createAsyncThunk(
       },
       body: JSON.stringify(data),
     });
-    if (result.ok) {
+    if (result) {
       const data = await result.json();
       return data;
     }
@@ -52,22 +52,19 @@ export const resetPassword = createAsyncThunk(
   },
 );
 
-export const signOut = createAsyncThunk(
-  'accessProcedure/signOut',
-  async () => {
-    const result = await fetch(`${baseURL}/logout`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({"token": localStorage.getItem('refreshToken')}),
-    });
-    if (result.ok) {
-      const data = await result.json();
-      return data;
-    }
-  },
-);
+export const signOut = createAsyncThunk('accessProcedure/signOut', async () => {
+  const result = await fetch(`${baseURL}/logout`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
+  });
+  if (result) {
+    const data = await result.json();
+    return data;
+  }
+});
 
 export const getProfileInfo = createAsyncThunk(
   'accessProcedure/getProfileInfo',
@@ -79,7 +76,25 @@ export const getProfileInfo = createAsyncThunk(
         authorization: localStorage.getItem('accessToken'),
       },
     });
-    if (promise.ok) {
+    if (promise) {
+      const data = await promise.json();
+      return data;
+    }
+  },
+);
+
+export const changeProfileInfo = createAsyncThunk(
+  'accessProcedure/changeProfileInfo',
+  async (data) => {
+    const promise = await fetch(`${baseURL}/user`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: localStorage.getItem('accessToken'),
+      },
+      body: JSON.stringify(data),
+    });
+    if (promise) {
       const data = await promise.json();
       return data;
     }
@@ -95,14 +110,26 @@ const initialState = {
 const regAndAuthSlice = createSlice({
   name: 'accessProcedure',
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    setLoadingStatus: (state, action) => {
+      state.loadingStatus = false;
+    },
+    setError: (state, action) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(signUp.pending, (state) => {
         state.loadingStatus = true;
       })
       .addCase(signUp.fulfilled, (state, action) => {
-        state.loadingStatus = false;
+        if (action.payload.success === false) {
+          state.error = action.payload.message;
+        } else {
+          state.loadingStatus = false;
+          state.error = null;
+        }
       })
       .addCase(signUp.rejected, (state, action) => {
         state.loadingStatus = false;
@@ -112,14 +139,19 @@ const regAndAuthSlice = createSlice({
         state.loadingStatus = true;
       })
       .addCase(signIn.fulfilled, (state, action) => {
-        state.loadingStatus = false;
-        state.userInfo = {
-          name: action.payload.user.name,
-          email: action.payload.user.email,
-        };
-        localStorage.setItem('refreshToken', action.payload.refreshToken);
-        localStorage.setItem('accessToken', action.payload.accessToken);
-        state.isLogin = true;
+        if (action.payload.success === false) {
+          state.error = action.payload.message;
+        } else {
+          state.loadingStatus = false;
+          state.userInfo = {
+            name: action.payload.user.name,
+            email: action.payload.user.email,
+          };
+          localStorage.setItem('refreshToken', action.payload.refreshToken);
+          localStorage.setItem('accessToken', action.payload.accessToken);
+          state.isLogin = true;
+          state.error = null;
+        }
       })
       .addCase(signIn.rejected, (state, action) => {
         state.loadingStatus = false;
@@ -152,7 +184,35 @@ const regAndAuthSlice = createSlice({
         state.loadingStatus = false;
         state.error = action.error;
       })
+      .addCase(changeProfileInfo.pending, (state, action) => {
+        state.loadingStatus = true;
+      })
+      .addCase(changeProfileInfo.fulfilled, (state, action) => {
+        state.loadingStatus = false;
+        state.userInfo = {
+          name: action.payload.user.name,
+          email: action.payload.user.email,
+        };
+      })
+      .addCase(changeProfileInfo.rejected, (state, action) => {
+        state.error = action.error;
+      })
+      .addCase(resetPassword.pending, (state, action) => {
+        state.loadingStatus = true;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          state.error = action.payload.message;
+        } else {
+          state.loadingStatus = false;
+          state.error = null;
+        }
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loadingStatus = false;
+        state.error = action.error;
+      })
   },
 });
-
+export const { setLoadingStatus, setError } = regAndAuthSlice.actions;
 export default regAndAuthSlice.reducer;

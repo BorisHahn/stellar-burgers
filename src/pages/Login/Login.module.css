@@ -23,11 +23,15 @@
 }
 
 .link {
-  color: #4C4CFF;
+  color: #4c4cff;
   cursor: pointer;
   text-decoration: none;
 }
 
 .register {
   margin-bottom: 16px;
+}
+
+.error {
+  color: red;
 }

@@ -6,7 +6,11 @@ import { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import useFormAndValidation from '../../utils/hooks/ValidationHook';
-import { signUp } from '../../redux/slices/regAndAuthSlice';
+import {
+  signUp,
+  setLoadingStatus,
+  setError,
+} from '../../redux/slices/regAndAuthSlice';
 import {
   Input,
   PasswordInput,
@@ -23,13 +27,18 @@ const Register = () => {
 
   function handleSubmit(e) {
     e.preventDefault();
-    dispatch(signUp(values)).then((res) => {
-      if (res.payload != null && res.payload.success === true) {
-        navigate('/login');
-      } else {
-        console.log(res.payload.message);
-      }
-    });
+    dispatch(signUp(values))
+      .then((res) => {
+        if (res.payload != null && res.payload.success === true) {
+          navigate('/login');
+        } else {
+          console.log(res.payload.message);
+        }
+      })
+      .finally(() => {
+        dispatch(setLoadingStatus());
+        setTimeout(() => dispatch(setError()), 3000);
+      });
   }
 
   return (
@@ -104,6 +113,7 @@ const Register = () => {
             'Зарегистрироваться'
           )}
         </Button>
+        <p className={styles.error}>{error}</p>
         <p
           className={classNames(
             'text text_type_main-default text_color_inactive',

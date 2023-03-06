@@ -2,18 +2,23 @@ import styles from './Profile.module.css';
 import {
   Input,
   EmailInput,
+  Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import classNames from 'classnames';
+import Spinner from 'react-bootstrap/Spinner';
 import { emailRegExp } from '../../utils/const';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { signOut } from '../../redux/slices/regAndAuthSlice';
+import { signOut, changeProfileInfo } from '../../redux/slices/regAndAuthSlice';
 const Profile = () => {
   const dispatch = useDispatch();
   const { name, email } = useSelector(
     (state) => state.accessProcedure.userInfo,
+  );
+  const { loadingStatus} = useSelector(
+    (state) => state.accessProcedure,
   );
   const [nameValue, setNameValue] = useState(name);
   const [emailValue, setEmailValue] = useState(email);
@@ -22,8 +27,22 @@ const Profile = () => {
 
   const handleLogout = (e) => {
     e.preventDefault();
-    dispatch(signOut())
+    dispatch(signOut());
+  };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    dispatch(changeProfileInfo({ name: nameValue, email: emailValue }))
+  };
+
+  const resetProfileValues = (e) => {
+    e.preventDefault();
+    setNameValue(name);
+    setEmailValue(email);
   }
+
+  const saveBtnClass =
+    (nameValue !== name || emailValue !== email) && `${styles.view}`;
 
   return (
     <section className={styles.profile}>
@@ -70,7 +89,7 @@ const Profile = () => {
           В этом разделе вы можете изменить свои персональные данные
         </p>
       </nav>
-      <form>
+      <form onSubmit={handleChange}>
         <Input
           type={'text'}
           placeholder={'Имя'}
@@ -114,8 +133,30 @@ const Profile = () => {
           extraClass='mb-6'
           minLength={8}
           autoComplete='off'
+          disabled={true}
           required
         />
+        <span className={classNames(styles.buttonBar, saveBtnClass)}>
+          <Button htmlType='button' type='secondary' size='large' onClick={resetProfileValues}>
+            Отмена
+          </Button>
+          <Button htmlType='submit' type='primary' size='large'>
+          {loadingStatus ? (
+            <>
+              <Spinner
+                as='span'
+                animation='border'
+                size='sm'
+                role='status'
+                aria-hidden='true'
+              />{' '}
+              Сохранение...
+            </>
+          ) : (
+            'Сохранить'
+          )}
+          </Button>
+        </span>
       </form>
     </section>
   );
