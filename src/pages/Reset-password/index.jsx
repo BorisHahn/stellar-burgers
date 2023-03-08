@@ -1,6 +1,6 @@
 import styles from './Reset-password.module.css';
 import classNames from 'classnames';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import useFormAndValidation from '../../utils/hooks/ValidationHook';
 import Spinner from 'react-bootstrap/Spinner';
 import {
@@ -21,6 +21,8 @@ const ResetPassword = () => {
     (state) => state.accessProcedure,
   );
 
+  const isForgotPasswordFlag = useLocation()?.state;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(resetPassword(values))
@@ -37,7 +39,9 @@ const ResetPassword = () => {
       });
   };
 
-  return (
+  return !isForgotPasswordFlag ? (
+    <Navigate to={-1} />
+  ) : (
     <section className={styles.resetPassword}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h2 className={classNames(styles.title, 'text text_type_main-medium')}>

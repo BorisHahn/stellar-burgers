@@ -66,20 +66,38 @@ export const signOut = createAsyncThunk('accessProcedure/signOut', async () => {
   }
 });
 
+export const updateAccessToken = createAsyncThunk(
+  'accessProcedure/updateAccessToken',
+  async () => {
+    const result = await fetch(`${baseURL}/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
+    });
+    if (result) {
+      const data = await result.json();
+      return data;
+    }
+  },
+);
+
 export const getProfileInfo = createAsyncThunk(
   'accessProcedure/getProfileInfo',
   async () => {
-    const promise = await fetch(`${baseURL}/user`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: localStorage.getItem('accessToken'),
-      },
-    });
-    if (promise) {
-      const data = await promise.json();
-      return data;
-    }
+    
+      const promise = await fetch(`${baseURL}/user`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: localStorage.getItem('accessToken'),
+        },
+      });
+      if (promise) {
+        const data = await promise.json();
+        return data;
+      }
   },
 );
 
@@ -97,7 +115,7 @@ export const changeProfileInfo = createAsyncThunk(
     if (promise) {
       const data = await promise.json();
       return data;
-    }
+    } 
   },
 );
 
@@ -135,6 +153,7 @@ const regAndAuthSlice = createSlice({
         state.loadingStatus = false;
         state.error = action.error;
       })
+
       .addCase(signIn.pending, (state) => {
         state.loadingStatus = true;
       })
@@ -157,6 +176,7 @@ const regAndAuthSlice = createSlice({
         state.loadingStatus = false;
         state.error = action.error;
       })
+
       .addCase(getProfileInfo.pending, (state) => {
         state.loadingStatus = true;
       })
@@ -172,6 +192,7 @@ const regAndAuthSlice = createSlice({
         state.loadingStatus = false;
         state.error = action.error;
       })
+
       .addCase(signOut.pending, (state, action) => {
         state.loadingStatus = true;
       })
@@ -184,6 +205,7 @@ const regAndAuthSlice = createSlice({
         state.loadingStatus = false;
         state.error = action.error;
       })
+
       .addCase(changeProfileInfo.pending, (state, action) => {
         state.loadingStatus = true;
       })
@@ -197,6 +219,7 @@ const regAndAuthSlice = createSlice({
       .addCase(changeProfileInfo.rejected, (state, action) => {
         state.error = action.error;
       })
+
       .addCase(resetPassword.pending, (state, action) => {
         state.loadingStatus = true;
       })
@@ -212,6 +235,23 @@ const regAndAuthSlice = createSlice({
         state.loadingStatus = false;
         state.error = action.error;
       })
+
+      .addCase(updateAccessToken.pending, (state, action) => {
+        state.loadingStatus = true;
+      })
+      .addCase(updateAccessToken.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          state.error = action.payload.message;
+        } else {
+          localStorage.setItem('accessToken', action.payload.accessToken);
+          state.loadingStatus = false;
+          state.error = null;
+        }
+      })
+      .addCase(updateAccessToken.rejected, (state, action) => {
+        state.loadingStatus = false;
+        state.error = action.error;
+      });
   },
 });
 export const { setLoadingStatus, setError } = regAndAuthSlice.actions;

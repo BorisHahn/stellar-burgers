@@ -11,15 +11,19 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { signOut, changeProfileInfo } from '../../redux/slices/regAndAuthSlice';
+import {
+  signOut,
+  changeProfileInfo,
+  updateAccessToken,
+  setLoadingStatus,
+  setError,
+} from '../../redux/slices/regAndAuthSlice';
 const Profile = () => {
   const dispatch = useDispatch();
   const { name, email } = useSelector(
     (state) => state.accessProcedure.userInfo,
   );
-  const { loadingStatus} = useSelector(
-    (state) => state.accessProcedure,
-  );
+  const { loadingStatus } = useSelector((state) => state.accessProcedure);
   const [nameValue, setNameValue] = useState(name);
   const [emailValue, setEmailValue] = useState(email);
   const [passwordValue, setPasswordValue] = useState('');
@@ -33,13 +37,24 @@ const Profile = () => {
   const handleChange = (e) => {
     e.preventDefault();
     dispatch(changeProfileInfo({ name: nameValue, email: emailValue }))
+      .unwrap()
+      .catch((err) => {
+        dispatch(updateAccessToken())
+          .then((res) =>
+            dispatch(changeProfileInfo({ name: nameValue, email: emailValue })),
+          )
+          .finally(() => {
+            dispatch(setLoadingStatus());
+            setTimeout(() => dispatch(setError()), 3000);
+          });
+      });
   };
 
   const resetProfileValues = (e) => {
     e.preventDefault();
     setNameValue(name);
     setEmailValue(email);
-  }
+  };
 
   const saveBtnClass =
     (nameValue !== name || emailValue !== email) && `${styles.view}`;
@@ -137,24 +152,29 @@ const Profile = () => {
           required
         />
         <span className={classNames(styles.buttonBar, saveBtnClass)}>
-          <Button htmlType='button' type='secondary' size='large' onClick={resetProfileValues}>
+          <Button
+            htmlType='button'
+            type='secondary'
+            size='large'
+            onClick={resetProfileValues}
+          >
             Отмена
           </Button>
           <Button htmlType='submit' type='primary' size='large'>
-          {loadingStatus ? (
-            <>
-              <Spinner
-                as='span'
-                animation='border'
-                size='sm'
-                role='status'
-                aria-hidden='true'
-              />{' '}
-              Сохранение...
-            </>
-          ) : (
-            'Сохранить'
-          )}
+            {loadingStatus ? (
+              <>
+                <Spinner
+                  as='span'
+                  animation='border'
+                  size='sm'
+                  role='status'
+                  aria-hidden='true'
+                />{' '}
+                Сохранение...
+              </>
+            ) : (
+              'Сохранить'
+            )}
           </Button>
         </span>
       </form>

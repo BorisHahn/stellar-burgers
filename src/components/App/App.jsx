@@ -22,13 +22,21 @@ import {
   addCurrentIngredient,
   cleanOrderAndCurrent,
 } from '../../redux/slices/ingredientsSlice';
-import { getProfileInfo } from '../../redux/slices/regAndAuthSlice';
+import {
+  getProfileInfo,
+  updateAccessToken,
+  setLoadingStatus,
+  setError,
+} from '../../redux/slices/regAndAuthSlice';
 const App = () => {
   const { ingredientDetails } = useSelector((state) => state.ingredients);
   const { order } = useSelector((state) => state.ingredients);
   const { isLogin } = useSelector((state) => state.accessProcedure);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { error, loadingStatus } = useSelector(
+    (state) => state.accessProcedure,
+  );
   useEffect(() => {
     dispatch(getIngredients());
     tokenCheck();
@@ -45,7 +53,17 @@ const App = () => {
   const tokenCheck = () => {
     const token = localStorage.getItem('accessToken');
     if (token) {
-      dispatch(getProfileInfo());
+      dispatch(getProfileInfo())
+        .unwrap()
+        .catch((err) => {
+          dispatch(updateAccessToken())
+            .then((res) => dispatch(getProfileInfo()))
+            .finally(() => {
+              dispatch(setLoadingStatus());
+              setTimeout(() => dispatch(setError()), 3000);
+            });
+        });
+
       navigate('/');
     }
   };
@@ -73,10 +91,7 @@ const App = () => {
                 <ProtectedRoute loggedIn={isLogin} navigateTo='/login' />
               }
             >
-              <Route
-                path='profile'
-                element={<Profile />}
-              />
+              <Route path='profile' element={<Profile />} />
               <Route path='ingredients/:id' element={<Ingredient />} />
             </Route>
             <Route path='*' element={<NotFound />} />

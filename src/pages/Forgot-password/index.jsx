@@ -30,7 +30,7 @@ const ForgotPassword = () => {
       if (response.ok) {
         const data = await response.json();
         setIsLoading(false);
-        navigate('/reset-password');
+        navigate('/reset-password', {state: '/forgot-password'});
         return data;
       }
     } catch (err) {
