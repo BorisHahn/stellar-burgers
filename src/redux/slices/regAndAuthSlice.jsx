@@ -244,6 +244,7 @@ const regAndAuthSlice = createSlice({
           state.error = action.payload.message;
         } else {
           localStorage.setItem('accessToken', action.payload.accessToken);
+          localStorage.setItem('refreshToken', action.payload.refreshToken);
           state.loadingStatus = false;
           state.error = null;
         }

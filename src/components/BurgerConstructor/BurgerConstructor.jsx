@@ -8,6 +8,7 @@ import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import { nanoid } from 'nanoid';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
 import { bun } from '../../utils/const';
 import {
@@ -19,8 +20,10 @@ const classNames = require('classnames');
 
 const BurgerConstructor = () => {
   const { constructorElements } = useSelector((state) => state.ingredients);
-
+  const { isLogin } = useSelector((state) => state.accessProcedure);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [{ isHover }, dropTarget] = useDrop({
     accept: 'ingredients',
     drop(card) {
@@ -32,12 +35,16 @@ const BurgerConstructor = () => {
   });
 
   const handleOpenCard = () => {
-    const order = constructorElements.map((item) => item._id);
-    dispatch(
-      makeAnOrder({
-        ingredients: [...order],
-      }),
-    );
+    if (!isLogin) {
+      navigate('/login');
+    } else {
+      const order = constructorElements.map((item) => item._id);
+      dispatch(
+        makeAnOrder({
+          ingredients: [...order],
+        }),
+      );
+    }
   };
 
   const totalPrice = useMemo(() => {

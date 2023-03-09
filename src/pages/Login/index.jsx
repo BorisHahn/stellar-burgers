@@ -2,7 +2,7 @@ import styles from './Login.module.css';
 import classNames from 'classnames';
 import { emailRegExp } from '../../utils/const';
 import { useRef } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import useFormAndValidation from '../../utils/hooks/ValidationHook';
 import Spinner from 'react-bootstrap/Spinner';
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,18 +19,22 @@ import {
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { state: locationState } = useLocation();
   const { error, loadingStatus } = useSelector(
     (state) => state.accessProcedure,
   );
   const inputRef = useRef(null);
   const { values, handleChangeValid, errors, isValid } = useFormAndValidation();
-  
+
   function handleSubmit(e) {
     e.preventDefault();
     dispatch(signIn(values))
       .then((res) => {
         if (res.payload.success === true) {
-          navigate('/');
+          if (locationState) {
+            const { redirectTo } = locationState;
+            navigate(`${redirectTo.pathname}${redirectTo.search}`);
+          }
         } else {
           console.error(res.payload.message);
         }
