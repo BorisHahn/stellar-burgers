@@ -10,17 +10,26 @@ import { nanoid } from 'nanoid';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
+import Spinner from 'react-bootstrap/Spinner';
 import { bun } from '../../utils/const';
 import {
   addConstructorElements,
   makeAnOrder,
+  setLoadingStatus,
 } from '../../redux/slices/ingredientsSlice';
+import {
+  updateAccessToken,
+  setIsLogin,
+} from '../../redux/slices/regAndAuthSlice';
 import FillingCard from '../FillingCard/FillingCard';
 const classNames = require('classnames');
 
 const BurgerConstructor = () => {
-  const { constructorElements } = useSelector((state) => state.ingredients);
+  const { constructorElements, loadingStatus } = useSelector(
+    (state) => state.ingredients,
+  );
   const { isLogin } = useSelector((state) => state.accessProcedure);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -38,12 +47,32 @@ const BurgerConstructor = () => {
     if (!isLogin) {
       navigate('/login');
     } else {
-      const order = constructorElements.map((item) => item._id);
-      dispatch(
-        makeAnOrder({
-          ingredients: [...order],
-        }),
-      );
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        const order = constructorElements.map((item) => item._id);
+        dispatch(
+          makeAnOrder({
+            ingredients: [...order],
+          }),
+        )
+          .unwrap()
+          .catch((err) => {
+            dispatch(updateAccessToken())
+              .then((res) =>
+                dispatch(
+                  makeAnOrder({
+                    ingredients: [...order],
+                  }),
+                ),
+              )
+              .finally(() => {
+                dispatch(setLoadingStatus());
+              });
+          });
+      } else {
+        dispatch(setIsLogin());
+        navigate('/login');
+      }
     }
   };
 
@@ -143,7 +172,20 @@ const BurgerConstructor = () => {
           size='medium'
           onClick={handleOpenCard}
         >
-          Оформить заказ
+          {loadingStatus ? (
+            <>
+              <Spinner
+                as='span'
+                animation='border'
+                size='sm'
+                role='status'
+                aria-hidden='true'
+              />{' '}
+              Оформление...
+            </>
+          ) : (
+            'Оформить заказ'
+          )}
         </Button>
       </div>
     </section>

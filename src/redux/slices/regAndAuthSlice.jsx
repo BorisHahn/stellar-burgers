@@ -86,18 +86,17 @@ export const updateAccessToken = createAsyncThunk(
 export const getProfileInfo = createAsyncThunk(
   'accessProcedure/getProfileInfo',
   async () => {
-    
-      const promise = await fetch(`${baseURL}/user`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: localStorage.getItem('accessToken'),
-        },
-      });
-      if (promise) {
-        const data = await promise.json();
-        return data;
-      }
+    const promise = await fetch(`${baseURL}/user`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: localStorage.getItem('accessToken'),
+      },
+    });
+    if (promise) {
+      const data = await promise.json();
+      return data;
+    }
   },
 );
 
@@ -115,7 +114,7 @@ export const changeProfileInfo = createAsyncThunk(
     if (promise) {
       const data = await promise.json();
       return data;
-    } 
+    }
   },
 );
 
@@ -134,6 +133,9 @@ const regAndAuthSlice = createSlice({
     },
     setError: (state, action) => {
       state.error = null;
+    },
+    setIsLogin: (state, action) => {
+      state.isLogin = false;
     },
   },
   extraReducers: (builder) => {
@@ -255,5 +257,6 @@ const regAndAuthSlice = createSlice({
       });
   },
 });
-export const { setLoadingStatus, setError } = regAndAuthSlice.actions;
+export const { setLoadingStatus, setError, setIsLogin } =
+  regAndAuthSlice.actions;
 export default regAndAuthSlice.reducer;

@@ -1,11 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import {
-  mainURL,
-  loadingStatus,
-  idleStatus,
-  failedStatus,
-  bun,
-} from '../../utils/const';
+import { mainURL, bun } from '../../utils/const';
 
 export const getIngredients = createAsyncThunk(
   'ingredients/getIngredients',
@@ -25,6 +19,7 @@ export const makeAnOrder = createAsyncThunk(
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        authorization: localStorage.getItem('accessToken'),
       },
       body: JSON.stringify(data),
     });
@@ -40,7 +35,7 @@ const initialState = {
   constructorElements: [],
   ingredientDetails: null,
   order: null,
-  loadingStatus: idleStatus,
+  loadingStatus: false,
   error: null,
 };
 
@@ -48,6 +43,14 @@ const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState: initialState,
   reducers: {
+    setLoadingStatus: (state, action) => {
+      state.loadingStatus = false;
+    },
+
+    setError: (state, action) => {
+      state.error = null;
+    },
+
     addCurrentIngredient: (state, action) => {
       state.ingredientDetails = action.payload;
     },
@@ -92,30 +95,30 @@ const ingredientsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getIngredients.pending, (state) => {
-        state.loadingStatus = loadingStatus;
+        state.loadingStatus = true;
         state.error = null;
       })
       .addCase(getIngredients.fulfilled, (state, action) => {
         state.allIngredients = action.payload.data;
-        state.loadingStatus = idleStatus;
+        state.loadingStatus = false;
         state.error = null;
       })
       .addCase(getIngredients.rejected, (state, action) => {
-        state.loadingStatus = failedStatus;
+        state.loadingStatus = false;
         state.error = action.error;
       })
       .addCase(makeAnOrder.pending, (state) => {
-        state.loadingStatus = loadingStatus;
+        state.loadingStatus = true;
         state.error = null;
       })
       .addCase(makeAnOrder.fulfilled, (state, action) => {
         state.order = action.payload;
         state.constructorElements = [];
-        state.loadingStatus = idleStatus;
+        state.loadingStatus = false;
         state.error = null;
       })
       .addCase(makeAnOrder.rejected, (state, action) => {
-        state.loadingStatus = failedStatus;
+        state.loadingStatus = false;
         state.error = action.error;
       });
   },
@@ -127,5 +130,7 @@ export const {
   removeConstructorElements,
   replaceConstructorElements,
   cleanOrderAndCurrent,
+  setLoadingStatus,
+  setError,
 } = ingredientsSlice.actions;
 export default ingredientsSlice.reducer;
