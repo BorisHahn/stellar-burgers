@@ -3,13 +3,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import {
-  Route,
-  Routes,
-  useNavigate,
-  useLocation,
-  Router,
-} from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import AppHeader from '../AppHeader/AppHeader';
 import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import Main from '../../pages/Main';
@@ -21,11 +15,13 @@ import Profile from '../../pages/Profile';
 import NotFound from '../../pages/NotFound';
 import OrderDetails from '../OrderDetails/OrderDetails';
 import Modal from '../Modal/Modal';
+import IngredientPage from '../../pages/Ingredient';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import {
   getIngredients,
   addCurrentIngredient,
-  cleanOrderAndCurrent,
+  cleanCurrent,
+  cleanOrder,
 } from '../../redux/slices/ingredientsSlice';
 import {
   getProfileInfo,
@@ -34,103 +30,108 @@ import {
   setError,
 } from '../../redux/slices/regAndAuthSlice';
 function App() {
-  const ModalSwitch = () => {
-    const { ingredientDetails } = useSelector((state) => state.ingredients);
-    const { order } = useSelector((state) => state.ingredients);
-    const { isLogin } = useSelector((state) => state.accessProcedure);
-    const navigate = useNavigate();
-    const location = useLocation();
-    const dispatch = useDispatch();
+  const { ingredientDetails } = useSelector((state) => state.ingredients);
+  const { order } = useSelector((state) => state.ingredients);
+  const { isLogin } = useSelector((state) => state.accessProcedure);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const dispatch = useDispatch();
 
-    let background = location.state && location.state.background;
-    useEffect(() => {
-      dispatch(getIngredients());
-      tokenCheck();
-    }, []);
+  let backgroundLocation = location.state && location.state.backgroundLocation;
 
-    const handleOpenModal = (item) => {
-      dispatch(addCurrentIngredient(item));
-    };
+  useEffect(() => {
+    dispatch(getIngredients());
+    tokenCheck();
+  }, []);
 
-    const handleCloseModal = () => {
-      dispatch(cleanOrderAndCurrent());
-    };
+  const handleOpenModal = (item) => {
+    dispatch(addCurrentIngredient(item));
+  };
 
-    const tokenCheck = () => {
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        dispatch(getProfileInfo())
-          .unwrap()
-          .catch((err) => {
-            dispatch(updateAccessToken())
-              .then((res) => dispatch(getProfileInfo()))
-              .finally(() => {
-                dispatch(setLoadingStatus());
-                setTimeout(() => dispatch(setError()), 3000);
-              });
-          });
-        navigate(`${location.pathname}`);
-      }
-    };
+  const handleCloseCurrentModal = () => {
+    dispatch(cleanCurrent());
+    navigate(-1);
+  };
 
-    return (
-      <div className={style.page}>
-        <AppHeader />
-        <DndProvider backend={HTML5Backend}>
-          <main className={style.main}>
-            <Routes location={background || location}>
-              <Route
-                path='/'
-                element={<Main handleOpenModal={handleOpenModal} />}
-              />
-              <Route
-                element={<ProtectedRoute loggedIn={!isLogin} navigateTo='/' />}
-              >
-                <Route path='login' element={<Login />} />
-                <Route path='register' element={<Register />} />
-                <Route path='forgot-password' element={<ForgotPassword />} />
-                <Route path='reset-password' element={<ResetPassword />} />
-              </Route>
-              <Route
-                path='/'
-                element={
-                  <ProtectedRoute loggedIn={isLogin} navigateTo='/login' />
-                }
-              >
-                <Route path='profile' element={<Profile />} />
-                <Route
-                  path='ingredients/:ingredientId'
-                  element={<IngredientDetails />}
-                />
-              </Route>
-              <Route path='*' element={<NotFound />} />
-            </Routes>
-          </main>
-        </DndProvider>
+  const handleCloseOrderModal = () => {
+    dispatch(cleanOrder());
+  };
 
-        {background && (
-          <Routes>
+  const tokenCheck = () => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      dispatch(getProfileInfo())
+        .unwrap()
+        .catch((err) => {
+          dispatch(updateAccessToken())
+            .then((res) => dispatch(getProfileInfo()))
+            .finally(() => {
+              dispatch(setLoadingStatus());
+              setTimeout(() => dispatch(setError()), 3000);
+            });
+        });
+    }
+  };
+
+  return (
+    <div className={style.page}>
+      <AppHeader />
+      <DndProvider backend={HTML5Backend}>
+        <main className={style.main}>
+          <Routes location={backgroundLocation || location}>
             <Route
-              path='ingredients/:ingredientId'
+              path='/'
+              element={<Main handleOpenModal={handleOpenModal} />}
+            />
+            <Route
+              element={<ProtectedRoute loggedIn={!isLogin} navigateTo='/' />}
+            >
+              <Route path='login' element={<Login />} />
+              <Route path='register' element={<Register />} />
+              <Route path='forgot-password' element={<ForgotPassword />} />
+              <Route path='reset-password' element={<ResetPassword />} />
+            </Route>
+            <Route
               element={
-                <Modal
-                  onClose={handleCloseModal}
-                  isOpen={ingredientDetails}
-                  title='Детали ингредиента'
-                >
+                <ProtectedRoute loggedIn={isLogin} navigateTo='/login' />
+              }
+            >
+              <Route path='profile' element={<Profile />} />
+            </Route>
+            <Route
+              path='ingredients/:id'
+              element={
+                <IngredientPage>
                   <IngredientDetails />
-                </Modal>
+                </IngredientPage>
               }
             />
+            <Route path='*' element={<NotFound />} />
           </Routes>
-        )}
-        <Modal onClose={handleCloseModal} isOpen={order}>
-          <OrderDetails />
-        </Modal>
-      </div>
-    );
-  };
-  return <ModalSwitch />;
+        </main>
+      </DndProvider>
+
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path='ingredients/:id'
+            element={
+              <Modal
+                onClose={handleCloseCurrentModal}
+                isOpen={ingredientDetails}
+                title='Детали ингредиента'
+              >
+                <IngredientDetails />
+              </Modal>
+            }
+          />
+        </Routes>
+      )}
+      <Modal onClose={handleCloseOrderModal} isOpen={order}>
+        <OrderDetails />
+      </Modal>
+    </div>
+  );
 }
 
 export default App;

@@ -87,8 +87,10 @@ const ingredientsSlice = createSlice({
       ingredients.splice(hoverIndex, 0, dragCard);
     },
 
-    cleanOrderAndCurrent: (state) => {
+    cleanCurrent: (state) => {
       state.ingredientDetails = null;
+    },
+    cleanOrder: (state) => {
       state.order = null;
     },
   },
@@ -129,7 +131,8 @@ export const {
   addConstructorElements,
   removeConstructorElements,
   replaceConstructorElements,
-  cleanOrderAndCurrent,
+  cleanCurrent,
+  cleanOrder,
   setLoadingStatus,
   setError,
 } = ingredientsSlice.actions;

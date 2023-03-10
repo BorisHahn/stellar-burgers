@@ -12,7 +12,7 @@ const classNames = require('classnames');
 
 const IngridientCard = ({ card, handleOpen }) => {
   const location = useLocation();
-
+  
   const { name, price, image_large } = card;
 
   const { constructorElements } = useSelector((state) => state.ingredients);
@@ -32,10 +32,8 @@ const IngridientCard = ({ card, handleOpen }) => {
   return (
     <Link
       key={card._id}
-      to={{
-        pathname: `/ingredients/${card._id}`,
-        state: { background: location },
-      }}
+      to={`/ingredients/${card._id}`}
+      state={{ backgroundLocation: location }}
       className={styles.link}
     >
       <div className={styles.card} onClick={onClick} ref={dragRef}>
