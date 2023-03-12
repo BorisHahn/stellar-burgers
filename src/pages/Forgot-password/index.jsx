@@ -5,6 +5,7 @@ import useFormAndValidation from '../../utils/hooks/ValidationHook';
 import { emailRegExp } from '../../utils/const';
 import { useState, useRef } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { BASE_URL } from '../../utils/const';
 import {
   Input,
   Button,
@@ -17,20 +18,17 @@ const ForgotPassword = () => {
   async function resetPassword(data) {
     setIsLoading(true);
     try {
-      const response = await fetch(
-        'https://norma.nomoreparties.space/api/password-reset',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
+      const response = await fetch(`${BASE_URL}/password-reset`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify(data),
+      });
       if (response.ok) {
         const data = await response.json();
         setIsLoading(false);
-        navigate('/reset-password', {state: '/forgot-password'});
+        navigate('/reset-password', { state: '/forgot-password' });
         return data;
       }
     } catch (err) {

@@ -1,6 +1,5 @@
 const bunImage = 'https://code.s3.yandex.net/react/code/bun-02.png';
-const mainURL = 'https://norma.nomoreparties.space/api';
-const baseURL = 'https://norma.nomoreparties.space/api/auth';
+const BASE_URL = 'https://norma.nomoreparties.space/api';
 export const emailRegExp = '[A-z0-9_.-]{1,}@[A-z0-9_.-]{1,}[.][A-z]{2,6}';
 const loadingStatus = 'loading';
 const idleStatus = 'idle';
@@ -10,12 +9,11 @@ const sauce = 'sauce';
 const main = 'main';
 export {
   bunImage,
-  mainURL,
+  BASE_URL,
   loadingStatus,
   idleStatus,
   failedStatus,
   bun,
   sauce,
   main,
-  baseURL,
 };

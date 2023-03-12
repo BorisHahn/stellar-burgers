@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { mainURL, bun } from '../../utils/const';
+import { BASE_URL, bun } from '../../utils/const';
 
 export const getIngredients = createAsyncThunk(
   'ingredients/getIngredients',
   async () => {
-    const response = await fetch(`${mainURL}/ingredients`);
+    const response = await fetch(`${BASE_URL}/ingredients`);
     if (response.ok) {
       const data = await response.json();
       return data;
@@ -15,7 +15,7 @@ export const getIngredients = createAsyncThunk(
 export const makeAnOrder = createAsyncThunk(
   'ingredients/makeAnOrder',
   async (data) => {
-    const response = await fetch(`${mainURL}/orders`, {
+    const response = await fetch(`${BASE_URL}/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

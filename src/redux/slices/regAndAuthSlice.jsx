@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { baseURL, mainURL } from '../../utils/const';
+import { BASE_URL } from '../../utils/const';
 
 export const signUp = createAsyncThunk(
   'accessProcedure/signUp',
   async (data) => {
-    const result = await fetch(`${baseURL}/register`, {
+    const result = await fetch(`${BASE_URL}/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -21,7 +21,7 @@ export const signUp = createAsyncThunk(
 export const signIn = createAsyncThunk(
   'accessProcedure/signIn',
   async (data) => {
-    const result = await fetch(`${baseURL}/login`, {
+    const result = await fetch(`${BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export const signIn = createAsyncThunk(
 export const resetPassword = createAsyncThunk(
   'accessProcedure/resetPassword',
   async (data) => {
-    const result = await fetch(`${mainURL}/password-reset/reset`, {
+    const result = await fetch(`${BASE_URL}/password-reset/reset`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ export const resetPassword = createAsyncThunk(
 );
 
 export const signOut = createAsyncThunk('accessProcedure/signOut', async () => {
-  const result = await fetch(`${baseURL}/logout`, {
+  const result = await fetch(`${BASE_URL}/auth/logout`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ export const signOut = createAsyncThunk('accessProcedure/signOut', async () => {
 export const updateAccessToken = createAsyncThunk(
   'accessProcedure/updateAccessToken',
   async () => {
-    const result = await fetch(`${baseURL}/token`, {
+    const result = await fetch(`${BASE_URL}/auth/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -86,7 +86,7 @@ export const updateAccessToken = createAsyncThunk(
 export const getProfileInfo = createAsyncThunk(
   'accessProcedure/getProfileInfo',
   async () => {
-    const promise = await fetch(`${baseURL}/user`, {
+    const promise = await fetch(`${BASE_URL}/auth/user`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ export const getProfileInfo = createAsyncThunk(
 export const changeProfileInfo = createAsyncThunk(
   'accessProcedure/changeProfileInfo',
   async (data) => {
-    const promise = await fetch(`${baseURL}/user`, {
+    const promise = await fetch(`${BASE_URL}/auth/user`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
