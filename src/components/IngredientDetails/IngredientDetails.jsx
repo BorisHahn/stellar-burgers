@@ -26,7 +26,6 @@ const IngredientDetails = () => {
     getCurrentCard();
   }, [ingredientDetails, params]);
 
-  // const clazz =
   return (
     <div className={styles.infoCard}>
       <div className={classNames(styles.imageWrapper, 'mb-4')}>

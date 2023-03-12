@@ -6,7 +6,6 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useMemo } from 'react';
 import { useDispatch } from 'react-redux';
-import { nanoid } from 'nanoid';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
@@ -123,7 +122,7 @@ const BurgerConstructor = () => {
                   return (
                     <FillingCard
                       item={item}
-                      key={nanoid()}
+                      key={item._id}
                       index={constructorElements.indexOf(item)}
                     />
                   );

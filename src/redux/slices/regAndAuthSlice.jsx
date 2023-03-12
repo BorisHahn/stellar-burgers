@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { BASE_URL } from '../../utils/const';
+import checkResponse from '../../utils/helpers/checkResponse';
 
 export const signUp = createAsyncThunk(
   'accessProcedure/signUp',
@@ -11,10 +12,7 @@ export const signUp = createAsyncThunk(
       },
       body: JSON.stringify(data),
     });
-    if (result) {
-      const data = await result.json();
-      return data;
-    }
+    return checkResponse(result);
   },
 );
 
@@ -28,10 +26,7 @@ export const signIn = createAsyncThunk(
       },
       body: JSON.stringify(data),
     });
-    if (result) {
-      const data = await result.json();
-      return data;
-    }
+    return checkResponse(result);
   },
 );
 
@@ -45,10 +40,7 @@ export const resetPassword = createAsyncThunk(
       },
       body: JSON.stringify(data),
     });
-    if (result) {
-      const data = await result.json();
-      return data;
-    }
+    return checkResponse(result);
   },
 );
 
@@ -60,10 +52,7 @@ export const signOut = createAsyncThunk('accessProcedure/signOut', async () => {
     },
     body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
   });
-  if (result) {
-    const data = await result.json();
-    return data;
-  }
+  return checkResponse(result);
 });
 
 export const updateAccessToken = createAsyncThunk(
@@ -76,10 +65,7 @@ export const updateAccessToken = createAsyncThunk(
       },
       body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
     });
-    if (result) {
-      const data = await result.json();
-      return data;
-    }
+    return checkResponse(result);
   },
 );
 
@@ -93,10 +79,7 @@ export const getProfileInfo = createAsyncThunk(
         authorization: localStorage.getItem('accessToken'),
       },
     });
-    if (promise) {
-      const data = await promise.json();
-      return data;
-    }
+    return checkResponse(promise);
   },
 );
 
@@ -111,10 +94,7 @@ export const changeProfileInfo = createAsyncThunk(
       },
       body: JSON.stringify(data),
     });
-    if (promise) {
-      const data = await promise.json();
-      return data;
-    }
+    return checkResponse(promise);
   },
 );
 

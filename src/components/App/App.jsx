@@ -32,12 +32,12 @@ import {
 function App() {
   const { ingredientDetails } = useSelector((state) => state.ingredients);
   const { order } = useSelector((state) => state.ingredients);
-  const { isLogin } = useSelector((state) => state.accessProcedure);
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
 
-  let backgroundLocation = location.state && location.state.backgroundLocation;
+  const backgroundLocation =
+    location.state && location.state.backgroundLocation;
 
   useEffect(() => {
     dispatch(getIngredients());
@@ -84,20 +84,38 @@ function App() {
               element={<Main handleOpenModal={handleOpenModal} />}
             />
             <Route
-              element={<ProtectedRoute loggedIn={!isLogin} navigateTo='/' />}
-            >
-              <Route path='login' element={<Login />} />
-              <Route path='register' element={<Register />} />
-              <Route path='forgot-password' element={<ForgotPassword />} />
-              <Route path='reset-password' element={<ResetPassword />} />
-            </Route>
+              path='login'
+              element={<ProtectedRoute children={<Login />} anonymous={true} />}
+            />
             <Route
+              path='register'
               element={
-                <ProtectedRoute loggedIn={isLogin} navigateTo='/login' />
+                <ProtectedRoute children={<Register />} anonymous={true} />
               }
-            >
-              <Route path='profile' element={<Profile />} />
-            </Route>
+            />
+            <Route
+              path='forgot-password'
+              element={
+                <ProtectedRoute
+                  children={<ForgotPassword />}
+                  anonymous={true}
+                />
+              }
+            />
+            <Route
+              path='reset-password'
+              element={
+                <ProtectedRoute children={<ResetPassword />} anonymous={true} />
+              }
+            />
+
+            <Route
+              path='profile'
+              element={
+                <ProtectedRoute children={<Profile />} />
+              }
+            />
+
             <Route
               path='ingredients/:id'
               element={
@@ -118,7 +136,7 @@ function App() {
             element={
               <Modal
                 onClose={handleCloseCurrentModal}
-                isOpen={ingredientDetails}
+                objectInStore={ingredientDetails}
                 title='Детали ингредиента'
               >
                 <IngredientDetails />
@@ -127,7 +145,7 @@ function App() {
           />
         </Routes>
       )}
-      <Modal onClose={handleCloseOrderModal} isOpen={order}>
+      <Modal onClose={handleCloseOrderModal} objectInStore={order}>
         <OrderDetails />
       </Modal>
     </div>
