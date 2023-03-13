@@ -5,26 +5,39 @@ import {
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useMemo } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useDispatch } from 'react-redux';
-import { nanoid } from 'nanoid';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
+import Spinner from 'react-bootstrap/Spinner';
 import { bun } from '../../utils/const';
 import {
   addConstructorElements,
   makeAnOrder,
+  setLoadingStatus,
 } from '../../redux/slices/ingredientsSlice';
+import {
+  updateAccessToken,
+  setIsLogin,
+} from '../../redux/slices/regAndAuthSlice';
 import FillingCard from '../FillingCard/FillingCard';
 const classNames = require('classnames');
 
 const BurgerConstructor = () => {
-  const { constructorElements } = useSelector((state) => state.ingredients);
+  const { constructorElements, loadingStatus } = useSelector(
+    (state) => state.ingredients,
+  );
+
+  const { isLogin } = useSelector((state) => state.accessProcedure);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const [{ isHover }, dropTarget] = useDrop({
     accept: 'ingredients',
     drop(card) {
-      dispatch(addConstructorElements(card));
+      dispatch(addConstructorElements({ ...card, dragId: uuidv4() }));
     },
     collect: (monitor) => ({
       isHover: monitor.isOver(),
@@ -32,12 +45,36 @@ const BurgerConstructor = () => {
   });
 
   const handleOpenCard = () => {
-    const order = constructorElements.map((item) => item._id);
-    dispatch(
-      makeAnOrder({
-        ingredients: [...order],
-      }),
-    );
+    if (!isLogin) {
+      navigate('/login');
+    } else {
+      const token = localStorage.getItem('accessToken');
+      if (token) {
+        const order = constructorElements.map((item) => item._id);
+        dispatch(
+          makeAnOrder({
+            ingredients: [...order],
+          }),
+        )
+          .unwrap()
+          .catch((err) => {
+            dispatch(updateAccessToken())
+              .then((res) =>
+                dispatch(
+                  makeAnOrder({
+                    ingredients: [...order],
+                  }),
+                ),
+              )
+              .finally(() => {
+                dispatch(setLoadingStatus());
+              });
+          });
+      } else {
+        dispatch(setIsLogin());
+        navigate('/login');
+      }
+    }
   };
 
   const totalPrice = useMemo(() => {
@@ -80,14 +117,14 @@ const BurgerConstructor = () => {
                   </div>
                 );
               })}
-            <div className={classNames(style.cards, 'mb-4 mt-4')}>
+            <div className={classNames(style.cards, 'mt-4')}>
               {constructorElements
                 .filter((item) => item != null && item.type !== bun)
                 .map((item, index) => {
                   return (
                     <FillingCard
                       item={item}
-                      key={nanoid()}
+                      key={item.dragId}
                       index={constructorElements.indexOf(item)}
                     />
                   );
@@ -136,7 +173,20 @@ const BurgerConstructor = () => {
           size='medium'
           onClick={handleOpenCard}
         >
-          Оформить заказ
+          {loadingStatus ? (
+            <>
+              <Spinner
+                as='span'
+                animation='border'
+                size='sm'
+                role='status'
+                aria-hidden='true'
+              />{' '}
+              Оформление...
+            </>
+          ) : (
+            'Оформить заказ'
+          )}
         </Button>
       </div>
     </section>

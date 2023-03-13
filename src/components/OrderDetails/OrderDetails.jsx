@@ -1,6 +1,4 @@
 import styles from './OrderDetails.module.css';
-import { useContext } from 'react';
-import { NumberOfOrderContext } from '../../context/Context';
 import { useSelector } from 'react-redux';
 const classNames = require('classnames');
 

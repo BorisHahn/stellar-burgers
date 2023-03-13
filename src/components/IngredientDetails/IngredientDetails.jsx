@@ -1,16 +1,38 @@
 import styles from './IngredientDetails.module.css';
 import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+
 const classNames = require('classnames');
 
 const IngredientDetails = () => {
-  const { ingredientDetails } = useSelector((state) => state.ingredients);
+  const [card, setCard] = useState({});
+  const params = useParams();
+
+  const { ingredientDetails, allIngredients } = useSelector(
+    (state) => state.ingredients,
+  );
+
+  const getCurrentCard = () => {
+    if (ingredientDetails != null) {
+      setCard(ingredientDetails);
+    } else {
+      const card = allIngredients.filter((card) => card._id === params.id);
+      setCard(card[0]);
+    }
+  };
+
+  useEffect(() => {
+    getCurrentCard();
+  }, [ingredientDetails, params]);
+
   return (
     <div className={styles.infoCard}>
       <div className={classNames(styles.imageWrapper, 'mb-4')}>
         <img
           className={styles.image}
-          src={ingredientDetails?.image_large}
-          alt={ingredientDetails?.name}
+          src={card?.image_large}
+          alt={card?.name}
         ></img>
       </div>
       <p
@@ -20,7 +42,7 @@ const IngredientDetails = () => {
           'mb-8',
         )}
       >
-        {ingredientDetails?.name}
+        {card?.name}
       </p>
       <table className={classNames(styles.table, 'mb-15')}>
         <tbody>
@@ -54,7 +76,7 @@ const IngredientDetails = () => {
                   styles.value,
                 )}
               >
-                {ingredientDetails?.calories}
+                {card?.calories}
               </p>
             </td>
             <td>
@@ -64,7 +86,7 @@ const IngredientDetails = () => {
                   styles.value,
                 )}
               >
-                {ingredientDetails?.proteins}
+                {card?.proteins}
               </p>
             </td>
             <td>
@@ -74,7 +96,7 @@ const IngredientDetails = () => {
                   styles.value,
                 )}
               >
-                {ingredientDetails?.fat}
+                {card?.fat}
               </p>
             </td>
             <td>
@@ -84,7 +106,7 @@ const IngredientDetails = () => {
                   styles.value,
                 )}
               >
-                {ingredientDetails?.carbohydrates}
+                {card?.carbohydrates}
               </p>
             </td>
           </tr>

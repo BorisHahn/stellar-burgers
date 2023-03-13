@@ -1,0 +1,273 @@
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { BASE_URL } from '../../utils/const';
+import checkResponse from '../../utils/helpers/checkResponse';
+
+export const signUp = createAsyncThunk('accessProcedure/signUp', (data) => {
+  return fetch(`${BASE_URL}/auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then(checkResponse)
+    .catch((err) => console.error(err));
+});
+
+export const signIn = createAsyncThunk('accessProcedure/signIn', (data) => {
+  return fetch(`${BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then(checkResponse)
+    .catch((err) => console.error(err));
+});
+
+export const resetPassword = createAsyncThunk(
+  'accessProcedure/resetPassword',
+  (data) => {
+    return fetch(`${BASE_URL}/password-reset/reset`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(checkResponse)
+      .catch((err) => console.error(err));
+  },
+);
+
+export const forgotPassword = createAsyncThunk(
+  'accessProcedure/forgotPassword',
+  (data) => {
+    return fetch(`${BASE_URL}/password-reset`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(checkResponse)
+      .catch((err) => console.error(err));
+  },
+);
+
+export const signOut = createAsyncThunk('accessProcedure/signOut', () => {
+  return fetch(`${BASE_URL}/auth/logout`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
+  })
+    .then(checkResponse)
+    .catch((err) => console.error(err));
+});
+
+export const updateAccessToken = createAsyncThunk(
+  'accessProcedure/updateAccessToken',
+  () => {
+    return fetch(`${BASE_URL}/auth/token`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
+    })
+      .then(checkResponse)
+      .catch((err) => console.error(err));
+  },
+);
+
+export const getProfileInfo = createAsyncThunk(
+  'accessProcedure/getProfileInfo',
+  () => {
+    return fetch(`${BASE_URL}/auth/user`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: localStorage.getItem('accessToken'),
+      },
+    })
+      .then(checkResponse)
+      .catch((err) => console.error(err));
+  },
+);
+
+export const changeProfileInfo = createAsyncThunk(
+  'accessProcedure/changeProfileInfo',
+  (data) => {
+    return fetch(`${BASE_URL}/auth/user`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: localStorage.getItem('accessToken'),
+      },
+      body: JSON.stringify(data),
+    })
+      .then(checkResponse)
+      .catch((err) => console.error(err));
+  },
+);
+
+const initialState = {
+  userInfo: null,
+  isLogin: false,
+  error: null,
+  loadingStatus: null,
+};
+const regAndAuthSlice = createSlice({
+  name: 'accessProcedure',
+  initialState: initialState,
+  reducers: {
+    setLoadingStatus: (state, action) => {
+      state.loadingStatus = false;
+    },
+    setError: (state, action) => {
+      state.error = null;
+    },
+    setIsLogin: (state, action) => {
+      state.isLogin = false;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(signUp.pending, (state) => {
+        state.loadingStatus = true;
+      })
+      .addCase(signUp.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          state.error = action.payload.message;
+        } else {
+          state.loadingStatus = false;
+          state.error = null;
+        }
+      })
+      .addCase(signUp.rejected, (state, action) => {
+        state.loadingStatus = false;
+        state.error = action.error;
+      })
+
+      .addCase(signIn.pending, (state) => {
+        state.loadingStatus = true;
+      })
+      .addCase(signIn.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          state.error = action.payload.message;
+        } else {
+          state.loadingStatus = false;
+          state.userInfo = {
+            name: action.payload.user.name,
+            email: action.payload.user.email,
+          };
+          localStorage.setItem('refreshToken', action.payload.refreshToken);
+          localStorage.setItem('accessToken', action.payload.accessToken);
+          state.isLogin = true;
+          state.error = null;
+        }
+      })
+      .addCase(signIn.rejected, (state, action) => {
+        state.loadingStatus = false;
+        state.error = action.error;
+      })
+
+      .addCase(getProfileInfo.pending, (state) => {
+        state.loadingStatus = true;
+      })
+      .addCase(getProfileInfo.fulfilled, (state, action) => {
+        state.loadingStatus = false;
+        state.isLogin = true;
+        state.userInfo = {
+          name: action.payload.user.name,
+          email: action.payload.user.email,
+        };
+      })
+      .addCase(getProfileInfo.rejected, (state, action) => {
+        state.loadingStatus = false;
+        state.error = action.error;
+      })
+
+      .addCase(signOut.pending, (state, action) => {
+        state.loadingStatus = true;
+      })
+      .addCase(signOut.fulfilled, (state, action) => {
+        state.loadingStatus = false;
+        localStorage.clear();
+        state.isLogin = false;
+      })
+      .addCase(signOut.rejected, (state, action) => {
+        state.loadingStatus = false;
+        state.error = action.error;
+      })
+
+      .addCase(changeProfileInfo.pending, (state, action) => {
+        state.loadingStatus = true;
+      })
+      .addCase(changeProfileInfo.fulfilled, (state, action) => {
+        state.loadingStatus = false;
+        state.userInfo = {
+          name: action.payload.user.name,
+          email: action.payload.user.email,
+        };
+      })
+      .addCase(changeProfileInfo.rejected, (state, action) => {
+        state.error = action.error;
+      })
+
+      .addCase(resetPassword.pending, (state, action) => {
+        state.loadingStatus = true;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          state.error = action.payload.message;
+        } else {
+          state.loadingStatus = false;
+          state.error = null;
+        }
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loadingStatus = false;
+        state.error = action.error;
+      })
+      .addCase(forgotPassword.pending, (state, action) => {
+        state.loadingStatus = true;
+      })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          state.error = action.payload.message;
+        } else {
+          state.loadingStatus = false;
+          state.error = null;
+        }
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.loadingStatus = false;
+        state.error = action.error;
+      })
+
+      .addCase(updateAccessToken.pending, (state, action) => {
+        state.loadingStatus = true;
+      })
+      .addCase(updateAccessToken.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          state.error = action.payload.message;
+        } else {
+          localStorage.setItem('accessToken', action.payload.accessToken);
+          localStorage.setItem('refreshToken', action.payload.refreshToken);
+          state.loadingStatus = false;
+          state.error = null;
+        }
+      })
+      .addCase(updateAccessToken.rejected, (state, action) => {
+        state.loadingStatus = false;
+        state.error = action.error;
+      });
+  },
+});
+export const { setLoadingStatus, setError, setIsLogin } =
+  regAndAuthSlice.actions;
+export default regAndAuthSlice.reducer;
