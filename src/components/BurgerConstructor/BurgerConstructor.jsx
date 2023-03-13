@@ -5,6 +5,7 @@ import {
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useMemo } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +28,7 @@ const BurgerConstructor = () => {
   const { constructorElements, loadingStatus } = useSelector(
     (state) => state.ingredients,
   );
+
   const { isLogin } = useSelector((state) => state.accessProcedure);
 
   const dispatch = useDispatch();
@@ -35,7 +37,7 @@ const BurgerConstructor = () => {
   const [{ isHover }, dropTarget] = useDrop({
     accept: 'ingredients',
     drop(card) {
-      dispatch(addConstructorElements(card));
+      dispatch(addConstructorElements({ ...card, dragId: uuidv4() }));
     },
     collect: (monitor) => ({
       isHover: monitor.isOver(),
@@ -122,7 +124,7 @@ const BurgerConstructor = () => {
                   return (
                     <FillingCard
                       item={item}
-                      key={item._id}
+                      key={item.dragId}
                       index={constructorElements.indexOf(item)}
                     />
                   );

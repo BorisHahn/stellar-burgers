@@ -1,9 +1,15 @@
 import style from './App.module.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  useNavigate,
+  useLocation,
+  useParams,
+} from 'react-router-dom';
 import AppHeader from '../AppHeader/AppHeader';
 import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import Main from '../../pages/Main';
@@ -30,12 +36,15 @@ import {
   setError,
 } from '../../redux/slices/regAndAuthSlice';
 function App() {
-  const { ingredientDetails } = useSelector((state) => state.ingredients);
+  const { allIngredients, ingredientDetails } = useSelector(
+    (state) => state.ingredients,
+  );
   const { order } = useSelector((state) => state.ingredients);
+  const [info, setInfo] = useState({});
+  
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
-
   const backgroundLocation =
     location.state && location.state.backgroundLocation;
 
@@ -72,6 +81,8 @@ function App() {
         });
     }
   };
+
+  
 
   return (
     <div className={style.page}>
@@ -111,9 +122,7 @@ function App() {
 
             <Route
               path='profile'
-              element={
-                <ProtectedRoute children={<Profile />} />
-              }
+              element={<ProtectedRoute children={<Profile />} />}
             />
 
             <Route
@@ -136,7 +145,7 @@ function App() {
             element={
               <Modal
                 onClose={handleCloseCurrentModal}
-                objectInStore={ingredientDetails}
+                objectInStore={info}
                 title='Детали ингредиента'
               >
                 <IngredientDetails />

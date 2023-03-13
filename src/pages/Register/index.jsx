@@ -2,7 +2,7 @@ import styles from './Register.module.css';
 import classNames from 'classnames';
 import { emailRegExp } from '../../utils/const';
 import Spinner from 'react-bootstrap/Spinner';
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { NavLink, useNavigate } from 'react-router-dom';
 import useFormAndValidation from '../../utils/hooks/ValidationHook';

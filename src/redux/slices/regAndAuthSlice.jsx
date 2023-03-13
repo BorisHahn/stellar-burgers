@@ -2,99 +2,115 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { BASE_URL } from '../../utils/const';
 import checkResponse from '../../utils/helpers/checkResponse';
 
-export const signUp = createAsyncThunk(
-  'accessProcedure/signUp',
-  async (data) => {
-    const result = await fetch(`${BASE_URL}/auth/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return checkResponse(result);
-  },
-);
+export const signUp = createAsyncThunk('accessProcedure/signUp', (data) => {
+  return fetch(`${BASE_URL}/auth/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then(checkResponse)
+    .catch((err) => console.error(err));
+});
 
-export const signIn = createAsyncThunk(
-  'accessProcedure/signIn',
-  async (data) => {
-    const result = await fetch(`${BASE_URL}/auth/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return checkResponse(result);
-  },
-);
+export const signIn = createAsyncThunk('accessProcedure/signIn', (data) => {
+  return fetch(`${BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+    .then(checkResponse)
+    .catch((err) => console.error(err));
+});
 
 export const resetPassword = createAsyncThunk(
   'accessProcedure/resetPassword',
-  async (data) => {
-    const result = await fetch(`${BASE_URL}/password-reset/reset`, {
+  (data) => {
+    return fetch(`${BASE_URL}/password-reset/reset`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    });
-    return checkResponse(result);
+    })
+      .then(checkResponse)
+      .catch((err) => console.error(err));
   },
 );
 
-export const signOut = createAsyncThunk('accessProcedure/signOut', async () => {
-  const result = await fetch(`${BASE_URL}/auth/logout`, {
+export const forgotPassword = createAsyncThunk(
+  'accessProcedure/forgotPassword',
+  (data) => {
+    return fetch(`${BASE_URL}/password-reset`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then(checkResponse)
+      .catch((err) => console.error(err));
+  },
+);
+
+export const signOut = createAsyncThunk('accessProcedure/signOut', () => {
+  return fetch(`${BASE_URL}/auth/logout`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
-  });
-  return checkResponse(result);
+  })
+    .then(checkResponse)
+    .catch((err) => console.error(err));
 });
 
 export const updateAccessToken = createAsyncThunk(
   'accessProcedure/updateAccessToken',
-  async () => {
-    const result = await fetch(`${BASE_URL}/auth/token`, {
+  () => {
+    return fetch(`${BASE_URL}/auth/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
-    });
-    return checkResponse(result);
+    })
+      .then(checkResponse)
+      .catch((err) => console.error(err));
   },
 );
 
 export const getProfileInfo = createAsyncThunk(
   'accessProcedure/getProfileInfo',
-  async () => {
-    const promise = await fetch(`${BASE_URL}/auth/user`, {
+  () => {
+    return fetch(`${BASE_URL}/auth/user`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         authorization: localStorage.getItem('accessToken'),
       },
-    });
-    return checkResponse(promise);
+    })
+      .then(checkResponse)
+      .catch((err) => console.error(err));
   },
 );
 
 export const changeProfileInfo = createAsyncThunk(
   'accessProcedure/changeProfileInfo',
-  async (data) => {
-    const promise = await fetch(`${BASE_URL}/auth/user`, {
+  (data) => {
+    return fetch(`${BASE_URL}/auth/user`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         authorization: localStorage.getItem('accessToken'),
       },
       body: JSON.stringify(data),
-    });
-    return checkResponse(promise);
+    })
+      .then(checkResponse)
+      .catch((err) => console.error(err));
   },
 );
 
@@ -214,6 +230,21 @@ const regAndAuthSlice = createSlice({
         }
       })
       .addCase(resetPassword.rejected, (state, action) => {
+        state.loadingStatus = false;
+        state.error = action.error;
+      })
+      .addCase(forgotPassword.pending, (state, action) => {
+        state.loadingStatus = true;
+      })
+      .addCase(forgotPassword.fulfilled, (state, action) => {
+        if (action.payload.success === false) {
+          state.error = action.payload.message;
+        } else {
+          state.loadingStatus = false;
+          state.error = null;
+        }
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
         state.loadingStatus = false;
         state.error = action.error;
       })

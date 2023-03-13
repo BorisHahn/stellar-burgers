@@ -1,32 +1,29 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { BASE_URL, bun } from '../../utils/const';
+import checkResponse from '../../utils/helpers/checkResponse';
 
 export const getIngredients = createAsyncThunk(
   'ingredients/getIngredients',
-  async () => {
-    const response = await fetch(`${BASE_URL}/ingredients`);
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    }
+  () => {
+    return fetch(`${BASE_URL}/ingredients`)
+      .then(checkResponse)
+      .catch((err) => console.error(err));
   },
 );
 
 export const makeAnOrder = createAsyncThunk(
   'ingredients/makeAnOrder',
-  async (data) => {
-    const response = await fetch(`${BASE_URL}/orders`, {
+  (data) => {
+    return fetch(`${BASE_URL}/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         authorization: localStorage.getItem('accessToken'),
       },
       body: JSON.stringify(data),
-    });
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    }
+    })
+      .then(checkResponse)
+      .catch((err) => console.error(err));
   },
 );
 

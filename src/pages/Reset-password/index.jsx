@@ -80,7 +80,7 @@ const ResetPassword = () => {
           type='primary'
           size='large'
           extraClass='mb-20'
-          disabled={!isValid}
+          disabled={!isValid || loadingStatus}
         >
           {loadingStatus ? (
             <>

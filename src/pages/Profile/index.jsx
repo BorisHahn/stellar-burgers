@@ -9,7 +9,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import { emailRegExp } from '../../utils/const';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import {
   signOut,
@@ -28,7 +28,6 @@ const Profile = () => {
   const [emailValue, setEmailValue] = useState(email);
   const [passwordValue, setPasswordValue] = useState('');
   const location = useLocation();
-  const navigate = useNavigate();
   const handleLogout = (e) => {
     e.preventDefault();
     dispatch(signOut());
