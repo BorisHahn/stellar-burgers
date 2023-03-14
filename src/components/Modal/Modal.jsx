@@ -7,7 +7,8 @@ import PropTypes from 'prop-types';
 const classNames = require('classnames');
 const portal = document.getElementById('modals');
 
-const Modal = ({ children, onClose, isOpen, title }) => {
+const Modal = ({ children, onClose, objectInStore, title }) => {
+  
   const handleCloseByEsc = (e) => {
     if (e.code === 'Escape') {
       onClose();
@@ -18,17 +19,15 @@ const Modal = ({ children, onClose, isOpen, title }) => {
     window.addEventListener('keyup', handleCloseByEsc);
     return () => window.removeEventListener('keyup', handleCloseByEsc);
   });
-
+  
   return ReactDOM.createPortal(
-    <div
-      className={classNames(styles.wrapper, !isOpen && styles.hiddenWrapper)}
-    >
-      <ModalOverlay onClose={onClose} isOpen={isOpen} />
+    <div className={classNames(styles.wrapper, !objectInStore && styles.hiddenWrapper)}>
+      <ModalOverlay onClose={onClose} isOpen={objectInStore} />
       <div
         className={classNames(
           'pt-10 pl-10 pr-10',
           styles.modal,
-          isOpen && styles.opened,
+          objectInStore && styles.opened,
         )}
       >
         <div className={styles.header}>
