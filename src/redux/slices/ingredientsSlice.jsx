@@ -5,9 +5,7 @@ import checkResponse from '../../utils/helpers/checkResponse';
 export const getIngredients = createAsyncThunk(
   'ingredients/getIngredients',
   () => {
-    return fetch(`${BASE_URL}/ingredients`)
-      .then(checkResponse)
-      .catch((err) => console.error(err));
+    return fetch(`${BASE_URL}/ingredients`).then(checkResponse);
   },
 );
 
@@ -21,9 +19,7 @@ export const makeAnOrder = createAsyncThunk(
         authorization: localStorage.getItem('accessToken'),
       },
       body: JSON.stringify(data),
-    })
-      .then(checkResponse)
-      .catch((err) => console.error(err));
+    }).then(checkResponse);
   },
 );
 

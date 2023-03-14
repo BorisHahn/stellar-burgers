@@ -9,9 +9,7 @@ export const signUp = createAsyncThunk('accessProcedure/signUp', (data) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  })
-    .then(checkResponse)
-    .catch((err) => console.error(err));
+  }).then(checkResponse);
 });
 
 export const signIn = createAsyncThunk('accessProcedure/signIn', (data) => {
@@ -21,9 +19,7 @@ export const signIn = createAsyncThunk('accessProcedure/signIn', (data) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(data),
-  })
-    .then(checkResponse)
-    .catch((err) => console.error(err));
+  }).then(checkResponse);
 });
 
 export const resetPassword = createAsyncThunk(
@@ -35,9 +31,7 @@ export const resetPassword = createAsyncThunk(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    })
-      .then(checkResponse)
-      .catch((err) => console.error(err));
+    }).then(checkResponse);
   },
 );
 
@@ -50,9 +44,7 @@ export const forgotPassword = createAsyncThunk(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),
-    })
-      .then(checkResponse)
-      .catch((err) => console.error(err));
+    }).then(checkResponse);
   },
 );
 
@@ -63,9 +55,7 @@ export const signOut = createAsyncThunk('accessProcedure/signOut', () => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
-  })
-    .then(checkResponse)
-    .catch((err) => console.error(err));
+  }).then(checkResponse);
 });
 
 export const updateAccessToken = createAsyncThunk(
@@ -77,9 +67,7 @@ export const updateAccessToken = createAsyncThunk(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({ token: localStorage.getItem('refreshToken') }),
-    })
-      .then(checkResponse)
-      .catch((err) => console.error(err));
+    }).then(checkResponse);
   },
 );
 
@@ -92,9 +80,7 @@ export const getProfileInfo = createAsyncThunk(
         'Content-Type': 'application/json',
         authorization: localStorage.getItem('accessToken'),
       },
-    })
-      .then(checkResponse)
-      .catch((err) => console.error(err));
+    }).then(checkResponse);
   },
 );
 
@@ -108,9 +94,7 @@ export const changeProfileInfo = createAsyncThunk(
         authorization: localStorage.getItem('accessToken'),
       },
       body: JSON.stringify(data),
-    })
-      .then(checkResponse)
-      .catch((err) => console.error(err));
+    }).then(checkResponse);
   },
 );
 
