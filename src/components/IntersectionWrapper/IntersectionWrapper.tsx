@@ -1,7 +1,19 @@
-import React from 'react';
+import React, { FC, ReactNode } from 'react';
 import { useInView } from 'react-intersection-observer';
 
-const IntersectionWrapper = ({ children, onChange, threshold = 0 }) => {
+interface IIntersectionWrapperProps {
+  name: string;
+  children?: ReactNode;
+  onChange: (arg: boolean) => void;
+  threshold?: number;
+}
+
+const IntersectionWrapper: FC<IIntersectionWrapperProps> = ({
+  name,
+  children,
+  onChange,
+  threshold = 0,
+}) => {
   const { ref, inView } = useInView({
     /* Optional options */
     threshold,
