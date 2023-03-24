@@ -1,15 +1,16 @@
 import styles from './IngredientDetails.module.css';
-import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
+import { useAppSelector } from '../../utils/hooks/ReduxTypedHook';
+import { useState, useEffect, FC } from 'react';
 import { useParams } from 'react-router-dom';
+import { IIngredientCard } from '../../utils/types/ingredientsTypes';
 
 const classNames = require('classnames');
 
-const IngredientDetails = () => {
-  const [card, setCard] = useState({});
+const IngredientDetails: FC = () => {
+  const [card, setCard] = useState<IIngredientCard | null>(null);
   const params = useParams();
 
-  const { ingredientDetails, allIngredients } = useSelector(
+  const { ingredientDetails, allIngredients } = useAppSelector(
     (state) => state.ingredients,
   );
 

@@ -41,7 +41,7 @@ function App() {
   );
   const { order } = useSelector((state) => state.ingredients);
   const [info, setInfo] = useState({});
-  
+
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
@@ -81,8 +81,6 @@ function App() {
         });
     }
   };
-
-  
 
   return (
     <div className={style.page}>
