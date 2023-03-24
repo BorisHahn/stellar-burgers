@@ -1,9 +1,11 @@
 import styles from './OrderDetails.module.css';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../utils/hooks/ReduxTypedHook';
+import { FC } from 'react';
+
 const classNames = require('classnames');
 
-const OrderDetails = () => {
-  const { order } = useSelector((state) => state.ingredients);
+const OrderDetails:FC = () => {
+  const { order } = useAppSelector((state) => state.ingredients);
 
   return (
     <div className={styles.orderCard}>
