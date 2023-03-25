@@ -1,21 +1,26 @@
 import styles from './IngredientCard.module.css';
-import PropTypes from 'prop-types';
-import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
+import { FC } from 'react';
+import { IIngredientCard } from '../../utils/types/ingredientsTypes';
 import { useLocation, Link } from 'react-router-dom';
 import {
   CurrencyIcon,
   Counter,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDrag } from 'react-dnd';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../utils/hooks/ReduxTypedHook';
 const classNames = require('classnames');
 
-const IngridientCard = ({ card, handleOpen }) => {
+interface IIngridientCardProps {
+  card: IIngredientCard;
+  handleOpen: (card: IIngredientCard) => void;
+}
+
+const IngridientCard: FC<IIngridientCardProps> = ({ card, handleOpen }) => {
   const location = useLocation();
-  
+
   const { name, price, image_large } = card;
 
-  const { constructorElements } = useSelector((state) => state.ingredients);
+  const { constructorElements } = useAppSelector((state) => state.ingredients);
   const counter = constructorElements.filter(
     (item) => item._id === card._id,
   ).length;
@@ -50,10 +55,7 @@ const IngridientCard = ({ card, handleOpen }) => {
         </span>
         <span className={styles.price}>
           <p className='text text_type_main-medium'>{price}</p>
-          <CurrencyIcon
-            className='constructor__footer_price-icon'
-            type='primary'
-          />
+          <CurrencyIcon type='primary' />
         </span>
         <p className={classNames('text text_type_main-default', styles.name)}>
           {name}
@@ -61,11 +63,6 @@ const IngridientCard = ({ card, handleOpen }) => {
       </div>
     </Link>
   );
-};
-
-IngridientCard.propTypes = {
-  card: ingredientsPropTypes.isRequired,
-  handleOpen: PropTypes.func,
 };
 
 export default IngridientCard;

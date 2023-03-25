@@ -2,7 +2,7 @@ import style from './BurgerIngredients.module.css';
 import { IIngredientCard } from '../../utils/types/ingredientsTypes';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useState, useRef, useMemo, FC } from 'react';
-import { useSelector } from 'react-redux';
+import { useAppSelector } from '../../utils/hooks/ReduxTypedHook';
 import IngredientCard from '../IngredientCard/IngredientCard';
 import { bun, sauce, main } from '../../utils/const';
 import IntersectionWrapper from '../IntersectionWrapper/IntersectionWrapper';
@@ -19,7 +19,7 @@ const BurgerIngredients: FC<IBurgerIngredientsProps> = ({
   const refSauce = useRef<HTMLHeadingElement>(null);
   const refMain = useRef<HTMLHeadingElement>(null);
   const refIndegrients = useRef<HTMLDivElement>(null);
-  const { allIngredients } = useSelector((state: any) => state.ingredients);
+  const { allIngredients } = useAppSelector((state) => state.ingredients);
   const [inViewBun, setInViewBun] = useState(true);
   const [inViewSauce, setInViewSauce] = useState(false);
   const [inViewMain, setInViewMain] = useState(false);

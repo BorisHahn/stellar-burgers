@@ -1,20 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { IIngredientCard } from '../../utils/types/ingredientsTypes';
+import { IInitialState } from '../../utils/types/ingredientsTypes';
 import { BASE_URL, bun } from '../../utils/const';
 import checkResponse from '../../utils/helpers/checkResponse';
-
-interface IOrder {
-  order: {number: number};
-}
-
-export interface IInitialState {
-  allIngredients: IIngredientCard[];
-  constructorElements: IIngredientCard[];
-  ingredientDetails: IIngredientCard | null;
-  order: IOrder | null;
-  loadingStatus: boolean;
-  error: object | null;
-}
 
 export const getIngredients = createAsyncThunk(
   'ingredients/getIngredients',

@@ -1,7 +1,5 @@
 import style from './FillingCard.module.css';
-import PropTypes from 'prop-types';
 import { useRef } from 'react';
-import ingredientsPropTypes from '../../utils/types/ingredientsTypes';
 import { bun } from '../../utils/const';
 import { useDrag, useDrop } from 'react-dnd';
 import {
@@ -82,11 +80,6 @@ const FillingCard = ({ item, index }) => {
       />
     </div>
   );
-};
-
-FillingCard.propTypes = {
-  item: ingredientsPropTypes.isRequired,
-  index: PropTypes.number,
 };
 
 export default FillingCard;

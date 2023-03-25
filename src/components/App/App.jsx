@@ -8,7 +8,6 @@ import {
   Routes,
   useNavigate,
   useLocation,
-  useParams,
 } from 'react-router-dom';
 import AppHeader from '../AppHeader/AppHeader';
 import IngredientDetails from '../IngredientDetails/IngredientDetails';
@@ -36,9 +35,6 @@ import {
   setError,
 } from '../../redux/slices/regAndAuthSlice';
 function App() {
-  const { allIngredients, ingredientDetails } = useSelector(
-    (state) => state.ingredients,
-  );
   const { order } = useSelector((state) => state.ingredients);
   const [info, setInfo] = useState({});
 

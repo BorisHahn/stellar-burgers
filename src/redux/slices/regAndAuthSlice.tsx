@@ -1,6 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { BASE_URL } from '../../utils/const';
 import checkResponse from '../../utils/helpers/checkResponse';
+import {
+  IUserInfoState,
+  IChangeProfileInfoPayload,
+  IChangeProfileInfoResponse,
+} from '../../utils/types/regAndAuthTypes';
 
 export const signUp = createAsyncThunk('accessProcedure/signUp', (data) => {
   return fetch(`${BASE_URL}/auth/register`, {
@@ -78,43 +83,44 @@ export const getProfileInfo = createAsyncThunk(
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        authorization: localStorage.getItem('accessToken'),
+        authorization: localStorage.getItem('accessToken') || '',
       },
     }).then(checkResponse);
   },
 );
 
-export const changeProfileInfo = createAsyncThunk(
-  'accessProcedure/changeProfileInfo',
-  (data) => {
-    return fetch(`${BASE_URL}/auth/user`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: localStorage.getItem('accessToken'),
-      },
-      body: JSON.stringify(data),
-    }).then(checkResponse);
-  },
-);
+export const changeProfileInfo = createAsyncThunk<
+  IChangeProfileInfoResponse,
+  IChangeProfileInfoPayload
+>('accessProcedure/changeProfileInfo', (data) => {
+  return fetch(`${BASE_URL}/auth/user`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: localStorage.getItem('accessToken') || '',
+    },
+    body: JSON.stringify(data),
+  }).then(checkResponse);
+});
 
 const initialState = {
-  userInfo: null,
+  userInfo: {},
   isLogin: false,
   error: null,
   loadingStatus: null,
 };
+
 const regAndAuthSlice = createSlice({
   name: 'accessProcedure',
-  initialState: initialState,
+  initialState: initialState as IUserInfoState,
   reducers: {
-    setLoadingStatus: (state, action) => {
+    setLoadingStatus: (state) => {
       state.loadingStatus = false;
     },
-    setError: (state, action) => {
+    setError: (state) => {
       state.error = null;
     },
-    setIsLogin: (state, action) => {
+    setIsLogin: (state) => {
       state.isLogin = false;
     },
   },
@@ -193,10 +199,12 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(changeProfileInfo.fulfilled, (state, action) => {
         state.loadingStatus = false;
-        state.userInfo = {
-          name: action.payload.user.name,
-          email: action.payload.user.email,
-        };
+        if (action.payload.user) {
+          state.userInfo = {
+            name: action.payload.user.name,
+            email: action.payload.user.email,
+          };
+        }
       })
       .addCase(changeProfileInfo.rejected, (state, action) => {
         state.error = action.error;
