@@ -1,5 +1,6 @@
 import styles from './Reset-password.module.css';
 import classNames from 'classnames';
+import { FC, FormEvent } from 'react';
 import { NavLink, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import useFormAndValidation from '../../utils/hooks/ValidationHook';
 import Spinner from 'react-bootstrap/Spinner';
@@ -8,29 +9,30 @@ import {
   setLoadingStatus,
   setError,
 } from '../../redux/slices/regAndAuthSlice';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  useAppSelector,
+  useAppDispatch,
+} from '../../utils/hooks/ReduxTypedHook';
 import {
   PasswordInput,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-const ResetPassword = () => {
-  const dispatch = useDispatch();
+const ResetPassword: FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { values, handleChangeValid, errors, isValid } = useFormAndValidation();
-  const { error, loadingStatus } = useSelector(
+  const { error, loadingStatus } = useAppSelector(
     (state) => state.accessProcedure,
   );
 
   const isForgotPasswordFlag = useLocation()?.state;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(resetPassword(values))
-      .then((res) => {
+      .then((res: any) => {
         if (res.payload.success === true) {
           navigate('/login');
-        } else {
-          console.error(res.payload.message);
         }
       })
       .finally(() => {
@@ -40,7 +42,7 @@ const ResetPassword = () => {
   };
 
   return !isForgotPasswordFlag ? (
-    <Navigate to={-1} />
+    <Navigate to={'/'} />
   ) : (
     <section className={styles.resetPassword}>
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -52,6 +54,7 @@ const ResetPassword = () => {
           onChange={handleChangeValid}
           value={values.password || ''}
           name={'password'}
+          //@ts-ignore
           error={errors.password ? true : false}
           errorText={errors.password}
           size={'default'}
@@ -66,6 +69,7 @@ const ResetPassword = () => {
           onChange={handleChangeValid}
           value={values.token || ''}
           name={'token'}
+          //@ts-ignore
           error={errors.token ? true : false}
           errorText={errors.token}
           size={'default'}
@@ -97,7 +101,7 @@ const ResetPassword = () => {
             'Сохранить'
           )}
         </Button>
-        <p className={styles.error}>{error}</p>
+        <p className={styles.error}>{error?.message}</p>
         <p
           className={classNames(
             'text text_type_main-default text_color_inactive',

@@ -2,7 +2,7 @@ import styles from './IngredientDetails.module.css';
 import { useAppSelector } from '../../utils/hooks/ReduxTypedHook';
 import { useState, useEffect, FC } from 'react';
 import { useParams } from 'react-router-dom';
-import { IIngredientCard } from '../../utils/types/ingredientsTypes';
+import { IIngredientCard } from '../../types/ingredientsTypes';
 
 const classNames = require('classnames');
 

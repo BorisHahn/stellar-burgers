@@ -3,35 +3,36 @@ import classNames from 'classnames';
 import Spinner from 'react-bootstrap/Spinner';
 import useFormAndValidation from '../../utils/hooks/ValidationHook';
 import { emailRegExp } from '../../utils/const';
-import { useRef } from 'react';
+import { useRef, FormEvent, FC } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { IValues } from '../../utils/hooks/ValidationHook';
 import {
   forgotPassword,
   setLoadingStatus,
   setError,
 } from '../../redux/slices/regAndAuthSlice';
-import { useDispatch, useSelector } from 'react-redux';
-
+import {
+  useAppSelector,
+  useAppDispatch,
+} from '../../utils/hooks/ReduxTypedHook';
 import {
   Input,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-const ForgotPassword = () => {
-  const { error, loadingStatus } = useSelector(
+const ForgotPassword: FC = () => {
+  const { error, loadingStatus } = useAppSelector(
     (state) => state.accessProcedure,
   );
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const { values, handleChangeValid, errors, isValid } = useFormAndValidation();
 
-  const resetPassword = (data) => {
+  const resetPassword = (data: IValues) => {
     dispatch(forgotPassword(data))
-      .then((res) => {
-        if (res.payload.success === true) {
+      .then((res: any) => {
+        if (res.payload.success) {
           navigate('/reset-password', { state: '/forgot-password' });
-        } else {
-          console.error(res.payload.message);
         }
       })
       .finally(() => {
@@ -40,7 +41,7 @@ const ForgotPassword = () => {
       });
   };
 
-  function handleSubmit(e) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     resetPassword(values);
   }
@@ -88,7 +89,7 @@ const ForgotPassword = () => {
             'Восстановить'
           )}
         </Button>
-        <p className={styles.error}>{error}</p>
+        <p className={styles.error}>{error?.message}</p>
         <p
           className={classNames(
             'text text_type_main-default text_color_inactive',

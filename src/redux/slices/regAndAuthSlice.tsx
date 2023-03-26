@@ -5,7 +5,11 @@ import {
   IUserInfoState,
   IChangeProfileInfoPayload,
   IChangeProfileInfoResponse,
-} from '../../utils/types/regAndAuthTypes';
+  ISignInAndUpResponse,
+  TForgotAndResetPasswordResponse,
+  IResetPasswordPayload,
+} from '../../types/regAndAuthTypes';
+import { IValues } from '../../utils/hooks/ValidationHook';
 
 export const signUp = createAsyncThunk('accessProcedure/signUp', (data) => {
   return fetch(`${BASE_URL}/auth/register`, {
@@ -17,8 +21,24 @@ export const signUp = createAsyncThunk('accessProcedure/signUp', (data) => {
   }).then(checkResponse);
 });
 
-export const signIn = createAsyncThunk('accessProcedure/signIn', (data) => {
-  return fetch(`${BASE_URL}/auth/login`, {
+export const signIn = createAsyncThunk<ISignInAndUpResponse, IValues>(
+  'accessProcedure/signIn',
+  (data) => {
+    return fetch(`${BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(checkResponse);
+  },
+);
+
+export const resetPassword = createAsyncThunk<
+  TForgotAndResetPasswordResponse,
+  IValues
+>('accessProcedure/resetPassword', (data) => {
+  return fetch(`${BASE_URL}/password-reset/reset`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,31 +47,18 @@ export const signIn = createAsyncThunk('accessProcedure/signIn', (data) => {
   }).then(checkResponse);
 });
 
-export const resetPassword = createAsyncThunk(
-  'accessProcedure/resetPassword',
-  (data) => {
-    return fetch(`${BASE_URL}/password-reset/reset`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }).then(checkResponse);
-  },
-);
-
-export const forgotPassword = createAsyncThunk(
-  'accessProcedure/forgotPassword',
-  (data) => {
-    return fetch(`${BASE_URL}/password-reset`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    }).then(checkResponse);
-  },
-);
+export const forgotPassword = createAsyncThunk<
+  TForgotAndResetPasswordResponse,
+  IValues
+>('accessProcedure/forgotPassword', (data) => {
+  return fetch(`${BASE_URL}/password-reset`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  }).then(checkResponse);
+});
 
 export const signOut = createAsyncThunk('accessProcedure/signOut', () => {
   return fetch(`${BASE_URL}/auth/logout`, {
@@ -106,8 +113,8 @@ export const changeProfileInfo = createAsyncThunk<
 const initialState = {
   userInfo: {},
   isLogin: false,
-  error: null,
-  loadingStatus: null,
+  error: {},
+  loadingStatus: false,
 };
 
 const regAndAuthSlice = createSlice({
@@ -131,7 +138,6 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(signUp.fulfilled, (state, action) => {
         if (action.payload.success === false) {
-          state.error = action.payload.message;
         } else {
           state.loadingStatus = false;
           state.error = null;
@@ -147,7 +153,6 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(signIn.fulfilled, (state, action) => {
         if (action.payload.success === false) {
-          state.error = action.payload.message;
         } else {
           state.loadingStatus = false;
           state.userInfo = {
@@ -215,7 +220,7 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(resetPassword.fulfilled, (state, action) => {
         if (action.payload.success === false) {
-          state.error = action.payload.message;
+          state.error = action.payload;
         } else {
           state.loadingStatus = false;
           state.error = null;
@@ -230,7 +235,7 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(forgotPassword.fulfilled, (state, action) => {
         if (action.payload.success === false) {
-          state.error = action.payload.message;
+          state.error = action.payload;
         } else {
           state.loadingStatus = false;
           state.error = null;

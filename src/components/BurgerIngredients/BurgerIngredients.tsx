@@ -1,7 +1,7 @@
 import style from './BurgerIngredients.module.css';
-import { IIngredientCard } from '../../utils/types/ingredientsTypes';
+import { IIngredientCard } from '../../types/ingredientsTypes';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef, useMemo, FC } from 'react';
+import { useState, useRef, useMemo, FC, ReactNode} from 'react';
 import { useAppSelector } from '../../utils/hooks/ReduxTypedHook';
 import IngredientCard from '../IngredientCard/IngredientCard';
 import { bun, sauce, main } from '../../utils/const';

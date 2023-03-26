@@ -1,6 +1,6 @@
 import styles from './IngredientCard.module.css';
 import { FC } from 'react';
-import { IIngredientCard } from '../../utils/types/ingredientsTypes';
+import { IIngredientCard } from '../../types/ingredientsTypes';
 import { useLocation, Link } from 'react-router-dom';
 import {
   CurrencyIcon,

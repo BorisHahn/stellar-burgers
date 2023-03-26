@@ -1,11 +1,14 @@
 import styles from './Login.module.css';
 import classNames from 'classnames';
 import { emailRegExp } from '../../utils/const';
-import { useRef } from 'react';
+import { useRef, FC, FormEvent } from 'react';
 import { NavLink } from 'react-router-dom';
 import useFormAndValidation from '../../utils/hooks/ValidationHook';
 import Spinner from 'react-bootstrap/Spinner';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  useAppSelector,
+  useAppDispatch,
+} from '../../utils/hooks/ReduxTypedHook';
 import {
   signIn,
   setLoadingStatus,
@@ -16,26 +19,20 @@ import {
   PasswordInput,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-const Login = () => {
-  const dispatch = useDispatch();
-  const { error, loadingStatus } = useSelector(
+const Login: FC = () => {
+  const dispatch = useAppDispatch();
+  const { error, loadingStatus } = useAppSelector(
     (state) => state.accessProcedure,
   );
-  const inputRef = useRef(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const { values, handleChangeValid, errors, isValid } = useFormAndValidation();
 
-  function handleSubmit(e) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    dispatch(signIn(values))
-      .then((res) => {
-        if (res.payload.success === false) {
-          console.error(res.payload.message);
-        }
-      })
-      .finally(() => {
-        dispatch(setLoadingStatus());
-        setTimeout(() => dispatch(setError()), 3000);
-      });
+    dispatch(signIn(values)).finally(() => {
+      dispatch(setLoadingStatus());
+      setTimeout(() => dispatch(setError()), 3000);
+    });
   }
 
   return (
@@ -64,6 +61,7 @@ const Login = () => {
           onChange={handleChangeValid}
           value={values.password || ''}
           name={'password'}
+          //@ts-ignore
           error={errors.password ? true : false}
           errorText={errors.password}
           size={'default'}
@@ -95,7 +93,7 @@ const Login = () => {
             'Войти'
           )}
         </Button>
-        <p className={styles.error}>{error}</p>
+        <p className={styles.error}>{error?.message}</p>
         <p
           className={classNames(
             'text text_type_main-default text_color_inactive',

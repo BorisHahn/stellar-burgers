@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { IInitialState } from '../../utils/types/ingredientsTypes';
+import { IInitialState } from '../../types/ingredientsTypes';
 import { BASE_URL, bun } from '../../utils/const';
 import checkResponse from '../../utils/helpers/checkResponse';
 
