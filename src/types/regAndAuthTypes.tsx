@@ -15,11 +15,6 @@ export interface IChangeProfileInfoPayload {
   password: string;
 }
 
-export interface IResetPasswordPayload {
-  password: string;
-  token: string;
-}
-
 export type TSignInPayload = Omit<IChangeProfileInfoPayload, 'name'>;
 
 export interface IChangeProfileInfoResponse {
@@ -37,6 +32,7 @@ export interface ISignInAndUpResponse {
   accessToken: string;
   refreshToken: string;
 }
+
 export type TForgotAndResetPasswordResponse = Omit<
   ISignInAndUpResponse,
   'user' | 'accessToken' | 'refreshToken'

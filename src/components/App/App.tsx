@@ -1,14 +1,12 @@
 import style from './App.module.css';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../utils/hooks/ReduxTypedHook';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import {
-  Route,
-  Routes,
-  useNavigate,
-  useLocation,
-} from 'react-router-dom';
+import { Route, Routes, useNavigate, useLocation } from 'react-router-dom';
 import AppHeader from '../AppHeader/AppHeader';
 import IngredientDetails from '../IngredientDetails/IngredientDetails';
 import Main from '../../pages/Main';
@@ -22,6 +20,7 @@ import OrderDetails from '../OrderDetails/OrderDetails';
 import Modal from '../Modal/Modal';
 import IngredientPage from '../../pages/Ingredient';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import { IOrderPayload } from '../../types/ingredientsTypes';
 import {
   getIngredients,
   addCurrentIngredient,
@@ -35,12 +34,12 @@ import {
   setError,
 } from '../../redux/slices/regAndAuthSlice';
 function App() {
-  const { order } = useSelector((state) => state.ingredients);
-  const [info, setInfo] = useState({});
+  const { order } = useAppSelector((state) => state.ingredients);
+  const [info, setInfo] = useState<IOrderPayload | object>({});
 
   const navigate = useNavigate();
   const location = useLocation();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const backgroundLocation =
     location.state && location.state.backgroundLocation;
 
@@ -49,7 +48,7 @@ function App() {
     tokenCheck();
   }, []);
 
-  const handleOpenModal = (item) => {
+  const handleOpenModal = (item: object) => {
     dispatch(addCurrentIngredient(item));
   };
 

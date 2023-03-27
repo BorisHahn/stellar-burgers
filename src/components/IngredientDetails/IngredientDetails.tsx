@@ -2,12 +2,12 @@ import styles from './IngredientDetails.module.css';
 import { useAppSelector } from '../../utils/hooks/ReduxTypedHook';
 import { useState, useEffect, FC } from 'react';
 import { useParams } from 'react-router-dom';
-import { IIngredientCard } from '../../types/ingredientsTypes';
+import { TIngredientCard } from '../../types/ingredientsTypes';
 
 const classNames = require('classnames');
 
 const IngredientDetails: FC = () => {
-  const [card, setCard] = useState<IIngredientCard | null>(null);
+  const [card, setCard] = useState<TIngredientCard | null>(null);
   const params = useParams();
 
   const { ingredientDetails, allIngredients } = useAppSelector(

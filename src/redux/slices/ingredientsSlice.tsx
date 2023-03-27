@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { IInitialState } from '../../types/ingredientsTypes';
 import { BASE_URL, bun } from '../../utils/const';
 import checkResponse from '../../utils/helpers/checkResponse';
+import { IOrderResponse, IOrderPayload } from '../../types/ingredientsTypes';
 
 export const getIngredients = createAsyncThunk(
   'ingredients/getIngredients',
@@ -10,14 +11,14 @@ export const getIngredients = createAsyncThunk(
   },
 );
 
-export const makeAnOrder = createAsyncThunk(
+export const makeAnOrder = createAsyncThunk<IOrderPayload, IOrderResponse>(
   'ingredients/makeAnOrder',
-  (data) => {
+  (data: IOrderResponse) => {
     return fetch(`${BASE_URL}/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        // authorization: localStorage.getItem('accessToken'),
+        authorization: localStorage.getItem('accessToken') || '',
       },
       body: JSON.stringify(data),
     }).then(checkResponse);

@@ -1,22 +1,31 @@
 import style from './FillingCard.module.css';
-import { useRef } from 'react';
+import { useRef, FC } from 'react';
 import { bun } from '../../utils/const';
-import { useDrag, useDrop } from 'react-dnd';
+import { useDrag, useDrop, XYCoord } from 'react-dnd';
+import { TIngredientCard } from '../../types/ingredientsTypes';
 import {
   DragIcon,
   ConstructorElement,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '../../utils/hooks/ReduxTypedHook';
 import {
   removeConstructorElements,
   replaceConstructorElements,
 } from '../../redux/slices/ingredientsSlice';
 const classNames = require('classnames');
 
-const FillingCard = ({ item, index }) => {
-  const ref = useRef(null);
-  const { constructorElements } = useSelector((state) => state.ingredients);
-  const dispatch = useDispatch();
+interface IFillingCardProps {
+  item: TIngredientCard;
+  index: number;
+}
+
+const FillingCard: FC<IFillingCardProps> = ({ item, index }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const { constructorElements } = useAppSelector((state) => state.ingredients);
+  const dispatch = useAppDispatch();
 
   const [{ handlerId }, drop] = useDrop({
     accept: 'filling',
@@ -29,7 +38,7 @@ const FillingCard = ({ item, index }) => {
       if (!ref.current) {
         return;
       }
-      const dragIndex = item.index;
+      const dragIndex = (item as TIngredientCard).index;
       const hoverIndex = index;
       if (dragIndex === hoverIndex) {
         return;
@@ -38,7 +47,7 @@ const FillingCard = ({ item, index }) => {
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
       const clientOffset = monitor.getClientOffset();
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
+      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
         return;
       }
@@ -46,7 +55,7 @@ const FillingCard = ({ item, index }) => {
         return;
       }
       dispatch(replaceConstructorElements({ dragIndex, hoverIndex }));
-      item.index = hoverIndex;
+      (item as TIngredientCard).index = hoverIndex;
     },
   });
   const [{ isDragging }, drag] = useDrag({
@@ -58,7 +67,6 @@ const FillingCard = ({ item, index }) => {
   });
   const opacity = isDragging ? 0 : 1;
   if (item.type !== bun) drag(drop(ref));
-  const preventDefault = (e) => e.preventDefault();
 
   return (
     <div
@@ -66,7 +74,6 @@ const FillingCard = ({ item, index }) => {
       draggable={true}
       ref={ref}
       style={{ opacity }}
-      onDrop={preventDefault}
       data-handler-id={handlerId}
     >
       <DragIcon type='primary' />

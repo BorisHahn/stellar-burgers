@@ -2,8 +2,11 @@ import styles from './Register.module.css';
 import classNames from 'classnames';
 import { emailRegExp } from '../../utils/const';
 import Spinner from 'react-bootstrap/Spinner';
-import { useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useRef, FC, FormEvent } from 'react';
+import {
+  useAppSelector,
+  useAppDispatch,
+} from '../../utils/hooks/ReduxTypedHook';
 import { NavLink, useNavigate } from 'react-router-dom';
 import useFormAndValidation from '../../utils/hooks/ValidationHook';
 import {
@@ -16,23 +19,21 @@ import {
   PasswordInput,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-const Register = () => {
-  const dispatch = useDispatch();
+const Register: FC = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const inputRef = useRef(null);
-  const { error, loadingStatus } = useSelector(
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { error, loadingStatus } = useAppSelector(
     (state) => state.accessProcedure,
   );
   const { values, handleChangeValid, errors, isValid } = useFormAndValidation();
 
-  function handleSubmit(e) {
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     dispatch(signUp(values))
-      .then((res) => {
+      .then((res: any) => {
         if (res.payload != null && res.payload.success === true) {
           navigate('/login');
-        } else {
-          console.log(res.payload.message);
         }
       })
       .finally(() => {
@@ -82,6 +83,7 @@ const Register = () => {
           onChange={handleChangeValid}
           value={values.password || ''}
           name={'password'}
+          //@ts-ignore
           error={errors.password ? true : false}
           errorText={errors.password}
           size={'default'}
@@ -113,7 +115,7 @@ const Register = () => {
             'Зарегистрироваться'
           )}
         </Button>
-        <p className={styles.error}>{error}</p>
+        <p className={styles.error}>{error?.message}</p>
         <p
           className={classNames(
             'text text_type_main-default text_color_inactive',

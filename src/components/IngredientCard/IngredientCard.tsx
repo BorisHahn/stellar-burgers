@@ -1,6 +1,6 @@
 import styles from './IngredientCard.module.css';
 import { FC } from 'react';
-import { IIngredientCard } from '../../types/ingredientsTypes';
+import { TIngredientCard } from '../../types/ingredientsTypes';
 import { useLocation, Link } from 'react-router-dom';
 import {
   CurrencyIcon,
@@ -11,8 +11,8 @@ import { useAppSelector } from '../../utils/hooks/ReduxTypedHook';
 const classNames = require('classnames');
 
 interface IIngridientCardProps {
-  card: IIngredientCard;
-  handleOpen: (card: IIngredientCard) => void;
+  card: TIngredientCard;
+  handleOpen: (card: TIngredientCard) => void;
 }
 
 const IngridientCard: FC<IIngridientCardProps> = ({ card, handleOpen }) => {

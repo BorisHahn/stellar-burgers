@@ -7,19 +7,21 @@ import {
   IChangeProfileInfoResponse,
   ISignInAndUpResponse,
   TForgotAndResetPasswordResponse,
-  IResetPasswordPayload,
 } from '../../types/regAndAuthTypes';
 import { IValues } from '../../utils/hooks/ValidationHook';
 
-export const signUp = createAsyncThunk('accessProcedure/signUp', (data) => {
-  return fetch(`${BASE_URL}/auth/register`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  }).then(checkResponse);
-});
+export const signUp = createAsyncThunk<ISignInAndUpResponse, IValues>(
+  'accessProcedure/signUp',
+  (data) => {
+    return fetch(`${BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }).then(checkResponse);
+  },
+);
 
 export const signIn = createAsyncThunk<ISignInAndUpResponse, IValues>(
   'accessProcedure/signIn',

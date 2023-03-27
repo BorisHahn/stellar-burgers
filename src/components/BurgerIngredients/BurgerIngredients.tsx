@@ -1,7 +1,8 @@
 import style from './BurgerIngredients.module.css';
-import { IIngredientCard } from '../../types/ingredientsTypes';
+import { TIngredientCard } from '../../types/ingredientsTypes';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef, useMemo, FC, ReactNode} from 'react';
+import React from 'react';
+import { useState, useRef, useMemo, FC, RefObject } from 'react';
 import { useAppSelector } from '../../utils/hooks/ReduxTypedHook';
 import IngredientCard from '../IngredientCard/IngredientCard';
 import { bun, sauce, main } from '../../utils/const';
@@ -24,15 +25,15 @@ const BurgerIngredients: FC<IBurgerIngredientsProps> = ({
   const [inViewSauce, setInViewSauce] = useState(false);
   const [inViewMain, setInViewMain] = useState(false);
 
-  const handleOpenCard = (card: IIngredientCard) => {
+  const handleOpenCard = (card: TIngredientCard) => {
     handleOpenModal(card);
   };
 
-  function handleScroleTo(ref: any) {
-    ref.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  function handleScroleTo(ref: React.RefObject<HTMLHeadingElement>) {
+    ref.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
   }
 
-  function filterByType(array: IIngredientCard[], type: string) {
+  function filterByType(array: TIngredientCard[], type: string) {
     return array.filter((e) => e.type === type);
   }
   const arrayOfBuns = useMemo(
@@ -48,7 +49,7 @@ const BurgerIngredients: FC<IBurgerIngredientsProps> = ({
     [allIngredients, main],
   );
 
-  function getCards(array: IIngredientCard[]) {
+  function getCards(array: TIngredientCard[]) {
     const newArray = array.map((item) => {
       return (
         <IngredientCard
