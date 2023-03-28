@@ -13,6 +13,7 @@ export type TIngredientCard = {
   readonly __v: number;
   id?: string;
   index: number;
+  dragId?: number;
 }
 
 export interface IOrderResponse {

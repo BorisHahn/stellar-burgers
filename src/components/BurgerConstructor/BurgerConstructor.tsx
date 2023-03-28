@@ -4,10 +4,12 @@ import {
   CurrencyIcon,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useMemo } from 'react';
+import { useMemo, FC } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import {
+  useAppSelector,
+  useAppDispatch,
+} from '../../utils/hooks/ReduxTypedHook';
 import { useNavigate } from 'react-router-dom';
 import { useDrop } from 'react-dnd';
 import Spinner from 'react-bootstrap/Spinner';
@@ -22,21 +24,22 @@ import {
   setIsLogin,
 } from '../../redux/slices/regAndAuthSlice';
 import FillingCard from '../FillingCard/FillingCard';
+import { TIngredientCard } from '../../types/ingredientsTypes';
 const classNames = require('classnames');
 
-const BurgerConstructor = () => {
-  const { constructorElements, loadingStatus } = useSelector(
+const BurgerConstructor: FC = () => {
+  const { constructorElements, loadingStatus } = useAppSelector(
     (state) => state.ingredients,
   );
 
-  const { isLogin } = useSelector((state) => state.accessProcedure);
+  const { isLogin } = useAppSelector((state) => state.accessProcedure);
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [{ isHover }, dropTarget] = useDrop({
     accept: 'ingredients',
-    drop(card) {
+    drop(card: TIngredientCard) {
       dispatch(addConstructorElements({ ...card, dragId: uuidv4() }));
     },
     collect: (monitor) => ({
@@ -47,6 +50,8 @@ const BurgerConstructor = () => {
   const handleOpenCard = () => {
     if (!isLogin) {
       navigate('/login');
+    } else if (constructorElements.length === 0) {
+      return;
     } else {
       const token = localStorage.getItem('accessToken');
       if (token) {
@@ -67,7 +72,7 @@ const BurgerConstructor = () => {
                 ),
               )
               .finally(() => {
-                dispatch(setLoadingStatus());
+                dispatch(setLoadingStatus(loadingStatus));
               });
           });
       } else {
@@ -77,7 +82,7 @@ const BurgerConstructor = () => {
     }
   };
 
-  const totalPrice = useMemo(() => {
+  const totalPrice = useMemo<number>(() => {
     return constructorElements
       .filter((item) => item != null)
       .reduce((acc, item) => {
@@ -86,7 +91,7 @@ const BurgerConstructor = () => {
   }, [constructorElements]);
 
   return (
-    <section className={style.constructor}>
+    <section className={classNames(style.constructor)}>
       <div
         className={classNames(
           'pl-4 mt-25 mb-10',
@@ -107,7 +112,6 @@ const BurgerConstructor = () => {
                     key={index}
                   >
                     <ConstructorElement
-                      className='constructor__card_top'
                       type='top'
                       isLocked={true}
                       text={item.name + ' (верх)'}
@@ -141,7 +145,6 @@ const BurgerConstructor = () => {
                     key={index}
                   >
                     <ConstructorElement
-                      className='constructor__card_top'
                       type='bottom'
                       isLocked={true}
                       text={item.name + ' (низ)'}
@@ -162,10 +165,7 @@ const BurgerConstructor = () => {
       <div className={classNames(style.footer, 'mr-4')}>
         <span className={style.price}>
           <p className='text text_type_main-medium'>{totalPrice}</p>
-          <CurrencyIcon
-            className='constructor__footer_price-icon'
-            type='primary'
-          />
+          <CurrencyIcon type='primary' />
         </span>
         <Button
           htmlType='button'
