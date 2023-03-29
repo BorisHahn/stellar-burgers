@@ -1,32 +1,39 @@
 import style from './BurgerIngredients.module.css';
+import { TIngredientCard } from '../../types/ingredientsTypes';
 import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState, useRef, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { useState, useRef, useMemo, FC, RefObject } from 'react';
+import { useAppSelector } from '../../utils/hooks/ReduxTypedHook';
 import IngredientCard from '../IngredientCard/IngredientCard';
 import { bun, sauce, main } from '../../utils/const';
-import PropTypes from 'prop-types';
 import IntersectionWrapper from '../IntersectionWrapper/IntersectionWrapper';
 const classNames = require('classnames');
 
-const BurgerIngredients = ({ handleOpenModal }) => {
-  const refBun = useRef();
-  const refSauce = useRef();
-  const refMain = useRef();
-  const refIndegrients = useRef();
-  const { allIngredients } = useSelector((state) => state.ingredients);
+interface IBurgerIngredientsProps {
+  handleOpenModal: (card: object) => void;
+}
+
+const BurgerIngredients: FC<IBurgerIngredientsProps> = ({
+  handleOpenModal,
+}) => {
+  const refBun = useRef<HTMLHeadingElement>(null);
+  const refSauce = useRef<HTMLHeadingElement>(null);
+  const refMain = useRef<HTMLHeadingElement>(null);
+  const refIndegrients = useRef<HTMLDivElement>(null);
+  const { allIngredients } = useAppSelector((state) => state.ingredients);
   const [inViewBun, setInViewBun] = useState(true);
   const [inViewSauce, setInViewSauce] = useState(false);
   const [inViewMain, setInViewMain] = useState(false);
 
-  const handleOpenCard = (card) => {
+  const handleOpenCard = (card: TIngredientCard) => {
     handleOpenModal(card);
   };
 
-  function handleScroleTo(ref) {
-    ref.current.scrollIntoView({ block: 'start', behavior: 'smooth' });
+  function handleScroleTo(ref: React.RefObject<HTMLHeadingElement>) {
+    ref.current?.scrollIntoView({ block: 'start', behavior: 'smooth' });
   }
 
-  function filterByType(array, type) {
+  function filterByType(array: TIngredientCard[], type: string) {
     return array.filter((e) => e.type === type);
   }
   const arrayOfBuns = useMemo(
@@ -42,7 +49,7 @@ const BurgerIngredients = ({ handleOpenModal }) => {
     [allIngredients, main],
   );
 
-  function getCards(array) {
+  function getCards(array: TIngredientCard[]) {
     const newArray = array.map((item) => {
       return (
         <IngredientCard
@@ -140,10 +147,6 @@ const BurgerIngredients = ({ handleOpenModal }) => {
       </div>
     </section>
   );
-};
-
-BurgerIngredients.propTypes = {
-  handleOpenModal: PropTypes.func,
 };
 
 export default BurgerIngredients;

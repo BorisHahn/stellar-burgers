@@ -1,56 +1,68 @@
-import styles from './Forgot-password.module.css';
+import styles from './Register.module.css';
 import classNames from 'classnames';
-import Spinner from 'react-bootstrap/Spinner';
-import useFormAndValidation from '../../utils/hooks/ValidationHook';
 import { emailRegExp } from '../../utils/const';
-import { useRef } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import Spinner from 'react-bootstrap/Spinner';
+import { useRef, FC, FormEvent } from 'react';
 import {
-  forgotPassword,
+  useAppSelector,
+  useAppDispatch,
+} from '../../utils/hooks/ReduxTypedHook';
+import { NavLink, useNavigate } from 'react-router-dom';
+import useFormAndValidation from '../../utils/hooks/ValidationHook';
+import {
+  signUp,
   setLoadingStatus,
   setError,
 } from '../../redux/slices/regAndAuthSlice';
-import { useDispatch, useSelector } from 'react-redux';
-
 import {
   Input,
+  PasswordInput,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-const ForgotPassword = () => {
-  const { error, loadingStatus } = useSelector(
+const Register: FC = () => {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { error, loadingStatus } = useAppSelector(
     (state) => state.accessProcedure,
   );
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const inputRef = useRef(null);
   const { values, handleChangeValid, errors, isValid } = useFormAndValidation();
 
-  const resetPassword = (data) => {
-    dispatch(forgotPassword(data))
-      .then((res) => {
-        if (res.payload.success === true) {
-          navigate('/reset-password', { state: '/forgot-password' });
-        } else {
-          console.error(res.payload.message);
+  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    dispatch(signUp(values))
+      .then((res: any) => {
+        if (res.payload != null && res.payload.success === true) {
+          navigate('/login');
         }
       })
       .finally(() => {
         dispatch(setLoadingStatus());
         setTimeout(() => dispatch(setError()), 3000);
       });
-  };
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    resetPassword(values);
   }
 
   return (
-    <section className={styles.forgotPassword}>
+    <section className={styles.register}>
       <form className={styles.form} onSubmit={handleSubmit}>
         <h2 className={classNames(styles.title, 'text text_type_main-medium')}>
-          Восстановление пароля
+          Регистрация
         </h2>
+        <Input
+          type={'text'}
+          placeholder={'Имя'}
+          onChange={handleChangeValid}
+          value={values.name || ''}
+          name={'name'}
+          error={errors.name ? true : false}
+          ref={inputRef}
+          minLength={2}
+          errorText={errors.name}
+          size={'default'}
+          extraClass='mb-6'
+          autoComplete='off'
+          required
+        />
         <Input
           type={'email'}
           placeholder={'E-mail'}
@@ -66,11 +78,26 @@ const ForgotPassword = () => {
           autoComplete='off'
           required
         />
+        <PasswordInput
+          placeholder={'Пароль'}
+          onChange={handleChangeValid}
+          value={values.password || ''}
+          name={'password'}
+          //@ts-ignore
+          error={errors.password ? true : false}
+          errorText={errors.password}
+          size={'default'}
+          icon={'ShowIcon'}
+          extraClass='mb-6'
+          minLength={8}
+          autoComplete='new-password'
+          required
+        />
         <Button
-          htmlType='submit'
           type='primary'
           size='large'
           extraClass='mb-20'
+          htmlType='submit'
           disabled={!isValid || loadingStatus}
         >
           {loadingStatus ? (
@@ -85,17 +112,17 @@ const ForgotPassword = () => {
               Ожидание...
             </>
           ) : (
-            'Восстановить'
+            'Зарегистрироваться'
           )}
         </Button>
-        <p className={styles.error}>{error}</p>
+        <p className={styles.error}>{error?.message}</p>
         <p
           className={classNames(
             'text text_type_main-default text_color_inactive',
             styles.enter,
           )}
         >
-          Вспомнили пароль?{' '}
+          Уже зарегестрированы?{' '}
           <NavLink to={'/login'} className={styles.link}>
             Войти
           </NavLink>
@@ -105,4 +132,4 @@ const ForgotPassword = () => {
   );
 };
 
-export default ForgotPassword;
+export default Register;

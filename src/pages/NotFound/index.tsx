@@ -1,5 +1,6 @@
 import styles from './NotFound.module.css';
-const NotFound = () => {
+import { FC } from 'react';
+const NotFound: FC = () => {
   return (
     <section className={styles.notFound}>
       <div className={styles.wrapper}></div>

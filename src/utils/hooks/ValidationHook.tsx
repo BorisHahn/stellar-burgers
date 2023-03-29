@@ -1,15 +1,26 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, ChangeEvent } from 'react';
+
+export interface IValues {
+  name?: string;
+  email?: string;
+  password?: string;
+  token?: string;
+}
+
+type TErrors<T> = {
+  [key: string]: T;
+};
 
 export function useFormAndValidation() {
-  const [values, setValues] = useState({});
-  const [errors, setErrors] = useState({});
-  const [isValid, setIsValid] = useState(true);
+  const [values, setValues] = useState<IValues>({});
+  const [errors, setErrors] = useState<TErrors<string>>({});
+  const [isValid, setIsValid] = useState<boolean>(true);
 
-  const handleChangeValid = (e) => {
+  const handleChangeValid = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
     setErrors({ ...errors, [name]: e.target.validationMessage });
-    setIsValid(e.target.closest('form').checkValidity());
+    setIsValid(e.target.closest('form')!.checkValidity());
   };
 
   const resetForm = useCallback(
@@ -18,7 +29,7 @@ export function useFormAndValidation() {
       setErrors(newErrors);
       setIsValid(newIsValid);
     },
-    [setValues, setErrors, setIsValid]
+    [setValues, setErrors, setIsValid],
   );
 
   return {

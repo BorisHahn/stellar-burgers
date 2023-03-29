@@ -1,31 +1,19 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { BASE_URL } from '../../utils/const';
 import checkResponse from '../../utils/helpers/checkResponse';
+import {
+  IUserInfoState,
+  IChangeProfileInfoPayload,
+  IChangeProfileInfoResponse,
+  ISignInAndUpResponse,
+  TForgotAndResetPasswordResponse,
+} from '../../types/regAndAuthTypes';
+import { IValues } from '../../utils/hooks/ValidationHook';
 
-export const signUp = createAsyncThunk('accessProcedure/signUp', (data) => {
-  return fetch(`${BASE_URL}/auth/register`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  }).then(checkResponse);
-});
-
-export const signIn = createAsyncThunk('accessProcedure/signIn', (data) => {
-  return fetch(`${BASE_URL}/auth/login`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  }).then(checkResponse);
-});
-
-export const resetPassword = createAsyncThunk(
-  'accessProcedure/resetPassword',
+export const signUp = createAsyncThunk<ISignInAndUpResponse, IValues>(
+  'accessProcedure/signUp',
   (data) => {
-    return fetch(`${BASE_URL}/password-reset/reset`, {
+    return fetch(`${BASE_URL}/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -35,10 +23,10 @@ export const resetPassword = createAsyncThunk(
   },
 );
 
-export const forgotPassword = createAsyncThunk(
-  'accessProcedure/forgotPassword',
+export const signIn = createAsyncThunk<ISignInAndUpResponse, IValues>(
+  'accessProcedure/signIn',
   (data) => {
-    return fetch(`${BASE_URL}/password-reset`, {
+    return fetch(`${BASE_URL}/auth/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -47,6 +35,32 @@ export const forgotPassword = createAsyncThunk(
     }).then(checkResponse);
   },
 );
+
+export const resetPassword = createAsyncThunk<
+  TForgotAndResetPasswordResponse,
+  IValues
+>('accessProcedure/resetPassword', (data) => {
+  return fetch(`${BASE_URL}/password-reset/reset`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  }).then(checkResponse);
+});
+
+export const forgotPassword = createAsyncThunk<
+  TForgotAndResetPasswordResponse,
+  IValues
+>('accessProcedure/forgotPassword', (data) => {
+  return fetch(`${BASE_URL}/password-reset`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  }).then(checkResponse);
+});
 
 export const signOut = createAsyncThunk('accessProcedure/signOut', () => {
   return fetch(`${BASE_URL}/auth/logout`, {
@@ -78,43 +92,44 @@ export const getProfileInfo = createAsyncThunk(
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        authorization: localStorage.getItem('accessToken'),
+        authorization: localStorage.getItem('accessToken') || '',
       },
     }).then(checkResponse);
   },
 );
 
-export const changeProfileInfo = createAsyncThunk(
-  'accessProcedure/changeProfileInfo',
-  (data) => {
-    return fetch(`${BASE_URL}/auth/user`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-        authorization: localStorage.getItem('accessToken'),
-      },
-      body: JSON.stringify(data),
-    }).then(checkResponse);
-  },
-);
+export const changeProfileInfo = createAsyncThunk<
+  IChangeProfileInfoResponse,
+  IChangeProfileInfoPayload
+>('accessProcedure/changeProfileInfo', (data) => {
+  return fetch(`${BASE_URL}/auth/user`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      authorization: localStorage.getItem('accessToken') || '',
+    },
+    body: JSON.stringify(data),
+  }).then(checkResponse);
+});
 
 const initialState = {
-  userInfo: null,
+  userInfo: {},
   isLogin: false,
-  error: null,
-  loadingStatus: null,
+  error: {},
+  loadingStatus: false,
 };
+
 const regAndAuthSlice = createSlice({
   name: 'accessProcedure',
-  initialState: initialState,
+  initialState: initialState as IUserInfoState,
   reducers: {
-    setLoadingStatus: (state, action) => {
+    setLoadingStatus: (state) => {
       state.loadingStatus = false;
     },
-    setError: (state, action) => {
+    setError: (state) => {
       state.error = null;
     },
-    setIsLogin: (state, action) => {
+    setIsLogin: (state) => {
       state.isLogin = false;
     },
   },
@@ -125,7 +140,6 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(signUp.fulfilled, (state, action) => {
         if (action.payload.success === false) {
-          state.error = action.payload.message;
         } else {
           state.loadingStatus = false;
           state.error = null;
@@ -141,7 +155,6 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(signIn.fulfilled, (state, action) => {
         if (action.payload.success === false) {
-          state.error = action.payload.message;
         } else {
           state.loadingStatus = false;
           state.userInfo = {
@@ -193,10 +206,12 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(changeProfileInfo.fulfilled, (state, action) => {
         state.loadingStatus = false;
-        state.userInfo = {
-          name: action.payload.user.name,
-          email: action.payload.user.email,
-        };
+        if (action.payload.user) {
+          state.userInfo = {
+            name: action.payload.user.name,
+            email: action.payload.user.email,
+          };
+        }
       })
       .addCase(changeProfileInfo.rejected, (state, action) => {
         state.error = action.error;
@@ -207,7 +222,7 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(resetPassword.fulfilled, (state, action) => {
         if (action.payload.success === false) {
-          state.error = action.payload.message;
+          state.error = action.payload;
         } else {
           state.loadingStatus = false;
           state.error = null;
@@ -222,7 +237,7 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(forgotPassword.fulfilled, (state, action) => {
         if (action.payload.success === false) {
-          state.error = action.payload.message;
+          state.error = action.payload;
         } else {
           state.loadingStatus = false;
           state.error = null;

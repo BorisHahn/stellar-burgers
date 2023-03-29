@@ -1,16 +1,17 @@
 import styles from './Profile.module.css';
 import {
   Input,
-  EmailInput,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import classNames from 'classnames';
 import Spinner from 'react-bootstrap/Spinner';
 import { emailRegExp } from '../../utils/const';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, FormEvent, SyntheticEvent, FC } from 'react';
+import {
+  useAppSelector,
+  useAppDispatch,
+} from '../../utils/hooks/ReduxTypedHook';
 import { NavLink, useLocation } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import {
   signOut,
   changeProfileInfo,
@@ -18,22 +19,21 @@ import {
   setLoadingStatus,
   setError,
 } from '../../redux/slices/regAndAuthSlice';
-const Profile = () => {
-  const dispatch = useDispatch();
-  const { name, email } = useSelector(
-    (state) => state.accessProcedure.userInfo,
+const Profile: FC = () => {
+  const dispatch = useAppDispatch();
+  const { loadingStatus, userInfo } = useAppSelector(
+    (state) => state.accessProcedure,
   );
-  const { loadingStatus } = useSelector((state) => state.accessProcedure);
-  const [nameValue, setNameValue] = useState(name);
-  const [emailValue, setEmailValue] = useState(email);
-  const [passwordValue, setPasswordValue] = useState('');
+  const { name, email } = userInfo;
+  const [nameValue, setNameValue] = useState<string>(name);
+  const [emailValue, setEmailValue] = useState<string>(email);
+  const [passwordValue, setPasswordValue] = useState<string>('');
   const location = useLocation();
-  const handleLogout = (e) => {
-    e.preventDefault();
+  const handleLogout = () => {
     dispatch(signOut());
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -68,7 +68,7 @@ const Profile = () => {
     }
   };
 
-  const resetProfileValues = (e) => {
+  const resetProfileValues = (e: SyntheticEvent) => {
     e.preventDefault();
     setNameValue(name);
     setEmailValue(email);
@@ -105,12 +105,14 @@ const Profile = () => {
           История заказов
         </NavLink>
         <NavLink
+          to={'#'}
           className={classNames(
             styles.link,
             location.pathname === '/logout'
               ? ['text text_type_main-medium', styles.linkActive]
               : 'text text_type_main-medium text_color_inactive',
           )}
+          type='button'
           onClick={handleLogout}
         >
           Выход
@@ -140,7 +142,7 @@ const Profile = () => {
           autoComplete='off'
           required
         />
-        <EmailInput
+        <Input
           type={'email'}
           placeholder={'Логин'}
           onChange={(e) => setEmailValue(e.target.value)}

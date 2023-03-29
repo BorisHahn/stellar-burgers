@@ -1,5 +1,6 @@
 import style from './AppHeader.module.css';
 import { NavLink } from 'react-router-dom';
+import { FC } from 'react';
 import {
   Logo,
   BurgerIcon,
@@ -8,7 +9,7 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 const classNames = require('classnames');
 
-const AppHeader = () => {
+const AppHeader: FC = () => {
   return (
     <header className={style.header}>
       <div className={style.nav}>
