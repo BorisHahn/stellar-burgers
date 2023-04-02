@@ -1,0 +1,7 @@
+.wrapper {
+  margin-top: 40px;
+  max-height: 664px;
+  overflow: scroll;
+  overflow-x: hidden;
+  border: 1px solid blue;
+}

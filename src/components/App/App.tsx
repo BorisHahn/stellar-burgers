@@ -117,6 +117,10 @@ function App() {
               path='profile'
               element={<ProtectedRoute children={<Profile />} />}
             />
+            <Route
+              path='profile/orders'
+              element={<ProtectedRoute children={<Profile />} />}
+            />
 
             <Route
               path='ingredients/:id'
