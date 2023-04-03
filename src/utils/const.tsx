@@ -7,6 +7,24 @@ const failedStatus = 'failed';
 const bun = 'bun';
 const sauce = 'sauce';
 const main = 'main';
+const orders = [
+  {
+    ingredients: ['60d3b41abdacab0026a733c6', '60d3b41abdacab0026a733c6'],
+    _id: '',
+    status: 'done',
+    number: 1,
+    createdAt: '2021-06-23T20:11:01.403Z',
+    updatedAt: '2021-06-23T20:11:01.406Z',
+  },
+  {
+    ingredients: ['60d3b41abdacab0026a733c6'],
+    _id: '',
+    status: 'done',
+    number: 3,
+    createdAt: '2021-06-23T20:13:23.654Z',
+    updatedAt: '2021-06-23T20:13:23.657Z',
+  },
+];
 export {
   bunImage,
   BASE_URL,
@@ -16,4 +34,5 @@ export {
   bun,
   sauce,
   main,
+  orders,
 };

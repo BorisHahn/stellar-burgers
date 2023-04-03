@@ -1,7 +1,11 @@
 .wrapper {
   margin-top: 40px;
-  max-height: 664px;
-  overflow: scroll;
+  max-height: 800px;
+  overflow: auto;
   overflow-x: hidden;
-  border: 1px solid blue;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 24px;
 }
