@@ -38,11 +38,11 @@ const ingredientsSlice = createSlice({
   name: 'ingredients',
   initialState: initialState,
   reducers: {
-    setLoadingStatus: (state, action) => {
+    setLoadingStatus: (state) => {
       state.loadingStatus = false;
     },
 
-    setError: (state, action) => {
+    setError: (state) => {
       state.error = null;
     },
 

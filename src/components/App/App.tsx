@@ -20,6 +20,7 @@ import OrderDetails from '../OrderDetails/OrderDetails';
 import Modal from '../Modal/Modal';
 import IngredientPage from '../../pages/Ingredient';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import OrderCard from '../OrdersCard';
 import { IOrderPayload } from '../../types/ingredientsTypes';
 import {
   getIngredients,

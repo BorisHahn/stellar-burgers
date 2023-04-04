@@ -1,9 +1,11 @@
 import styles from './OrdersCard.module.css';
-import { FC, useCallback, useEffect, useState } from 'react';
+import { FC, useCallback, useEffect, useState, useMemo } from 'react';
 import { useAppSelector } from '../../utils/hooks/ReduxTypedHook';
 import { IOrderCardProps } from '../../types/ordersTypes';
 import { FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import { TIngredientCard } from '../../types/ingredientsTypes';
+import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Link } from 'react-router-dom';
 const classNames = require('classnames');
 
 const OrderCard: FC<IOrderCardProps> = ({ item }) => {
@@ -17,12 +19,11 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
       } else if (status === 'pending') {
         return 'Готовится';
       } else {
-        return 'Готов';
+        return 'Выполнен';
       }
     },
     [item.status],
   );
-  let array;
 
   const getIngredients = (ingredients: string[]) => {
     let ingredient: TIngredientCard[] = [];
@@ -36,44 +37,72 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
     return ingredient;
   };
 
-  console.log(orderIngredients);
+  const ingredientImages = orderIngredients?.map((item, index) => {
+    return (
+      <ul className={styles.list} key={index}>
+        <li className={styles.item}>
+          <img className={styles.images} src={item.image_mobile}></img>
+        </li>
+      </ul>
+    );
+  });
+
+  const totalPrice = useMemo<number | undefined>(() => {
+    if (orderIngredients) {
+      return orderIngredients.reduce((acc, item) => {
+        return acc + item.price;
+      }, 0);
+    }
+  }, [orderIngredients]);
+
   useEffect(() => {
     addOrderIngredients(getIngredients(item.ingredients));
   }, [item.ingredients]);
 
   return (
-    <div className={styles.card}>
-      <div className={styles.idAndTime}>
-        <p className={classNames('text text_type_main-default', styles.id)}>
-          #{item.number}
-        </p>
-        <p
-          className={classNames(
-            'text text_type_main-default text_color_inactive',
-            styles.time,
-          )}
-        >
-          <FormattedDate date={new Date(item.createdAt)} />
-        </p>
+    <Link
+      to={`/profile/orders/${item._id}`}
+      state={{ backgroundLocation: location }}
+      className={styles.link}
+    >
+      <div className={styles.card}>
+        <div className={styles.idAndTime}>
+          <p className={classNames('text text_type_main-default', styles.id)}>
+            #0{item.number}
+          </p>
+          <p
+            className={classNames(
+              'text text_type_main-default text_color_inactive',
+              styles.time,
+            )}
+          >
+            <FormattedDate date={new Date(item.createdAt)} />
+          </p>
+        </div>
+        <div className={styles.info}>
+          <p className={classNames('text text_type_main-medium', styles.name)}>
+            Наименование бургера
+          </p>
+          <p
+            className={classNames(
+              'text text_type_main-small',
+              item.status === 'done' && styles.status,
+            )}
+          >
+            {getStatus(item.status)}
+          </p>
+        </div>
+        <div className={styles.componentsAndPrice}>
+          <div className={styles.ingredietnts}>{ingredientImages}</div>
+          <span
+            className={classNames('text text_type_main-medium', styles.price)}
+          >
+            {totalPrice}
+            <CurrencyIcon type='primary' />
+          </span>
+        </div>
       </div>
-      <div className={styles.info}>
-        <p className={classNames('text text_type_main-medium', styles.name)}>
-          Наименование бургера
-        </p>
-        <p
-          className={classNames(
-            'text text_type_main-small',
-            item.status === 'done' && styles.status,
-          )}
-        >
-          {getStatus(item.status)}
-        </p>
-      </div>
-      <div className={styles.componentsAndPrice}>
-        <p className={styles.name}></p>
-        <p className={styles.status}></p>
-      </div>
-    </div>
+    </Link>
   );
 };
 
