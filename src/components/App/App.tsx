@@ -20,8 +20,9 @@ import OrderDetails from '../OrderDetails/OrderDetails';
 import Modal from '../Modal/Modal';
 import IngredientPage from '../../pages/Ingredient';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import OrderCard from '../OrdersCard';
+import CurrentOrderDetails from '../CurrentOrderDetails';
 import { IOrderPayload } from '../../types/ingredientsTypes';
+import { IOrderItem } from '../../types/ordersTypes';
 import {
   getIngredients,
   addCurrentIngredient,
@@ -37,6 +38,7 @@ import {
 function App() {
   const { order } = useAppSelector((state) => state.ingredients);
   const [info, setInfo] = useState<IOrderPayload | object>({});
+  const [currentOrder, setCurrentOrder] = useState<IOrderItem | object>({});
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -122,6 +124,10 @@ function App() {
               path='profile/orders'
               element={<ProtectedRoute children={<Profile />} />}
             />
+            <Route
+              path='profile/orders/:number'
+              element={<CurrentOrderDetails />}
+            />
 
             <Route
               path='ingredients/:id'
@@ -136,6 +142,21 @@ function App() {
         </main>
       </DndProvider>
 
+      {backgroundLocation && (
+        <Routes>
+          <Route
+            path='profile/orders/:number'
+            element={
+              <Modal
+                onClose={handleCloseCurrentModal}
+                currentObject={currentOrder}
+              >
+                <CurrentOrderDetails />
+              </Modal>
+            }
+          />
+        </Routes>
+      )}
       {backgroundLocation && (
         <Routes>
           <Route

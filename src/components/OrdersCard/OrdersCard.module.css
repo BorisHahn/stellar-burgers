@@ -83,3 +83,12 @@
   align-items: center;
   gap: 8px;
 }
+
+.link {
+  text-decoration: none;
+  color: #f2f2f3;
+}
+
+.link:hover {
+  color: #f2f2f3;
+}

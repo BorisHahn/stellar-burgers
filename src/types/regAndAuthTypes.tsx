@@ -6,7 +6,7 @@ export interface IUserInfoState {
   userInfo: IUserInfo;
   isLogin: boolean;
   error: { message?: string } | null;
-  loadingStatus: boolean;
+  loadingStatus: boolean | undefined;
 }
 
 export interface IChangeProfileInfoPayload {

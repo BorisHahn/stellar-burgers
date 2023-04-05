@@ -5,10 +5,14 @@ import { IOrderCardProps } from '../../types/ordersTypes';
 import { FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import { TIngredientCard } from '../../types/ingredientsTypes';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { addCurrentOrder } from '../../redux/slices/ordersSlice';
+import { useAppDispatch } from '../../utils/hooks/ReduxTypedHook';
 const classNames = require('classnames');
 
 const OrderCard: FC<IOrderCardProps> = ({ item }) => {
+  const dispatch = useAppDispatch();
+  const location = useLocation();
   const { allIngredients } = useAppSelector((state) => state.ingredients);
   const [orderIngredients, addOrderIngredients] = useState<TIngredientCard[]>();
 
@@ -29,12 +33,15 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
     let ingredient: TIngredientCard[] = [];
     ingredients.forEach((item) => {
       const f = allIngredients.find((ingr) => ingr._id === item);
-      console.log(f, item, allIngredients);
       if (f != null) {
         ingredient.push(f);
       }
     });
     return ingredient;
+  };
+
+  const onClick = () => {
+    dispatch(addCurrentOrder(item));
   };
 
   const ingredientImages = orderIngredients?.map((item, index) => {
@@ -61,11 +68,11 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
 
   return (
     <Link
-      to={`/profile/orders/${item._id}`}
+      to={`/profile/orders/${item.number}`}
       state={{ backgroundLocation: location }}
       className={styles.link}
     >
-      <div className={styles.card}>
+      <div className={styles.card} onClick={onClick}>
         <div className={styles.idAndTime}>
           <p className={classNames('text text_type_main-default', styles.id)}>
             #0{item.number}
