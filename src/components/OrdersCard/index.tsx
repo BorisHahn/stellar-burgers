@@ -8,6 +8,7 @@ import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components
 import { Link, useLocation } from 'react-router-dom';
 import { addCurrentOrder } from '../../redux/slices/ordersSlice';
 import { useAppDispatch } from '../../utils/hooks/ReduxTypedHook';
+import IngredientIcon from '../IngredientIcon';
 const classNames = require('classnames');
 
 const OrderCard: FC<IOrderCardProps> = ({ item }) => {
@@ -46,11 +47,12 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
 
   const ingredientImages = orderIngredients?.map((item, index) => {
     return (
-      <ul className={styles.list} key={index}>
-        <li className={styles.item}>
-          <img className={styles.images} src={item.image_mobile}></img>
-        </li>
-      </ul>
+      <IngredientIcon
+        src={item.image_mobile}
+        srcSet={item.image_mobile}
+        overflow={!index ? 6 : 0}
+        extraClass={styles.items_picture}
+      />
     );
   });
 
@@ -74,7 +76,7 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
     >
       <div className={styles.card} onClick={onClick}>
         <div className={styles.idAndTime}>
-          <p className={classNames('text text_type_main-default', styles.id)}>
+          <p className={classNames('text text_type_digits-default', styles.id)}>
             #0{item.number}
           </p>
           <p
@@ -96,7 +98,7 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
               item.status === 'done' && styles.status,
             )}
           >
-            {getStatus(item.status)}
+            {location.pathname === '/profile/orders' && getStatus(item.status)}
           </p>
         </div>
         <div className={styles.componentsAndPrice}>

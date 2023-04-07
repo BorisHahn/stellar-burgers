@@ -4,7 +4,7 @@ import OrderCard from '../OrdersCard';
 import { FC } from 'react';
 
 const Orders: FC = () => {
-  const myOrders = orders.map((card, index) => {
+  const myOrders = orders.orders.map((card, index) => {
     return (
       <OrderCard key={index} item={card} />
     )

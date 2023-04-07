@@ -21,6 +21,7 @@ import Modal from '../Modal/Modal';
 import IngredientPage from '../../pages/Ingredient';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import CurrentOrderDetails from '../CurrentOrderDetails';
+import Feed from '../../pages/Feed';
 import { IOrderPayload } from '../../types/ingredientsTypes';
 import { IOrderItem } from '../../types/ordersTypes';
 import {
@@ -126,7 +127,7 @@ function App() {
             />
             <Route
               path='profile/orders/:number'
-              element={<CurrentOrderDetails />}
+              element={<ProtectedRoute children={<CurrentOrderDetails />} />}
             />
 
             <Route
@@ -137,6 +138,8 @@ function App() {
                 </IngredientPage>
               }
             />
+
+            <Route path='feed' element={<Feed />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </main>

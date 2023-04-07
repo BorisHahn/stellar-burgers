@@ -7,34 +7,39 @@ const failedStatus = 'failed';
 const bun = 'bun';
 const sauce = 'sauce';
 const main = 'main';
-const orders = [
-  {
-    ingredients: [
-      '60d3b41abdacab0026a733c6',
-      '60d3b41abdacab0026a733c8',
-      '60d3b41abdacab0026a733d1',
-      '60d3b41abdacab0026a733cc',
-    ],
-    _id: '',
-    status: 'done',
-    number: 34538,
-    createdAt: '2023-04-03T15:22:01.403Z',
-    updatedAt: '2021-06-23T20:11:01.406Z',
-  },
-  {
-    ingredients: [
-      '60d3b41abdacab0026a733c6',
-      '60d3b41abdacab0026a733c8',
-      '60d3b41abdacab0026a733d1',
-      '60d3b41abdacab0026a733cc',
-    ],
-    _id: '',
-    status: 'done',
-    number: 34537,
-    createdAt: '2021-06-23T20:11:01.403Z',
-    updatedAt: '2021-06-23T20:11:01.406Z',
-  },
-];
+const orders = {
+  success: true,
+  orders: [
+    {
+      ingredients: [
+        '60d3b41abdacab0026a733c6',
+        '60d3b41abdacab0026a733c8',
+        '60d3b41abdacab0026a733c6',
+      ],
+      _id: '',
+      status: 'done',
+      number: 34535,
+      createdAt: '2021-06-23T20:11:01.403Z',
+      updatedAt: '2021-06-23T20:11:01.406Z',
+    },
+    {
+      ingredients: [
+        '60d3b41abdacab0026a733c6',
+        '60d3b41abdacab0026a733c8',
+        '60d3b41abdacab0026a733d1',
+        '60d3b41abdacab0026a733c6',
+      ],
+      _id: '',
+      status: 'done',
+      number: 34536,
+      createdAt: '2021-06-23T20:13:23.654Z',
+      updatedAt: '2021-06-23T20:13:23.657Z',
+    },
+  ],
+  total: 2,
+  totalToday: 2,
+};
+
 export {
   bunImage,
   BASE_URL,
