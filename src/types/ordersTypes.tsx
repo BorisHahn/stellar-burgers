@@ -1,3 +1,5 @@
+import {TIngredientCard} from '../types/ingredientsTypes';
+
 export interface IOrderItem {
   ingredients: string[];
   _id: string;
@@ -14,4 +16,5 @@ export interface IOrderCardProps {
 export interface IOrderInitialState {
   orders: IOrderItem[];
   orderDetails: IOrderItem | null;
+  currentOrderIngredients: TIngredientCard[];
 }

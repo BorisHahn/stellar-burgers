@@ -10,18 +10,18 @@ const Feed: FC = () => {
 
   const doneOrders = orders.orders
     .filter((order) => order.status === 'done')
-    .map((item) => {
+    .map((item, index) => {
       return (
-        <li className={styles.doneItem}>
+        <li className={styles.doneItem} key={index}>
           <p className='text text_type_digits-default'>0{item.number}</p>
         </li>
       );
     });
   const inWorkOrders = orders.orders
     .filter((order) => order.status === 'pending')
-    .map((item) => {
+    .map((item, index) => {
       return (
-        <li className={styles.doneItem}>
+        <li className={styles.doneItem} key={index}>
           <p className='text text_type_digits-default'>0{item.number}</p>
         </li>
       );

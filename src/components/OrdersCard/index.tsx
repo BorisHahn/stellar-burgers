@@ -48,6 +48,7 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
   const ingredientImages = orderIngredients?.map((item, index) => {
     return (
       <IngredientIcon
+        key={index}
         src={item.image_mobile}
         srcSet={item.image_mobile}
         overflow={!index ? 6 : 0}

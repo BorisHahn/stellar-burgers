@@ -6,7 +6,7 @@
 }
 
 .id {
-align-self: center;
+  align-self: center;
 }
 
 .info {
@@ -18,4 +18,52 @@ align-self: center;
 
 .status {
   color: #00cccc;
+}
+
+.ingrList {
+  width: 100%;
+  margin: 0;
+  margin-bottom: 40px;
+  padding: 0;
+  list-style: none;
+  max-height: 312px;
+  overflow: auto;
+}
+
+.ingrItem {
+  width: 608px;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ingrItem:last-of-type {
+  margin-bottom: 0;
+}
+
+.name {
+  margin: 0;
+  margin-right: auto;
+  padding: 0;
+}
+
+.priceBlock {
+  justify-self: flex-end;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: auto;
+}
+
+.nameAndIcon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  margin-right: auto;
 }
