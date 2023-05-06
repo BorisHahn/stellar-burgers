@@ -6,7 +6,6 @@ import { FormattedDate } from '@ya.praktikum/react-developer-burger-ui-component
 import { TIngredientCard } from '../../types/ingredientsTypes';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useLocation } from 'react-router-dom';
-import { addCurrentOrder } from '../../redux/slices/ordersSlice';
 import { useAppDispatch } from '../../utils/hooks/ReduxTypedHook';
 import IngredientIcon from '../IngredientIcon';
 const classNames = require('classnames');
@@ -41,9 +40,7 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
     return ingredient;
   };
 
-  const onClick = () => {
-    dispatch(addCurrentOrder(item));
-  };
+  
 
   const ingredientImages = orderIngredients?.map((item, index) => {
     return (
@@ -75,7 +72,7 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
       state={{ backgroundLocation: location }}
       className={styles.link}
     >
-      <div className={styles.card} onClick={onClick}>
+      <div className={styles.card} >
         <div className={styles.idAndTime}>
           <p className={classNames('text text_type_digits-default', styles.id)}>
             #0{item.number}

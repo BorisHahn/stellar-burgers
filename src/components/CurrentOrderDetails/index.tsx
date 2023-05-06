@@ -11,34 +11,16 @@ import { IOrderItem } from '../../types/ordersTypes';
 import { useParams } from 'react-router-dom';
 import { TIngredientCard } from '../../types/ingredientsTypes';
 import IngredientIcon from '../IngredientIcon';
-import {
-  addCurrentOrderIngredients,
-  addCurrentOrder,
-} from '../../redux/slices/ordersSlice';
-import { BASE_URL } from '../../utils/const';
-import checkResponse from '../../utils/helpers/checkResponse';
+import { getOrder } from '../../redux/slices/ordersSlice';
 
 const CurrentOrderDetails: FC = () => {
-  const { orderDetails, orders, currentOrderIngredients } = useAppSelector(
-    (state) => state.orders,
-  );
+  const { orders, currentOrder } = useAppSelector((state) => state.orders);
   const { allIngredients } = useAppSelector((state) => state.ingredients);
   const [order, setOrder] = useState<IOrderItem | null>(null);
   const [orderArray, setOrderArray] = useState<any>([]);
   const params = useParams();
   const dispatch = useAppDispatch();
-
-  const getCurrentOrder = () => {
-    return fetch(`${BASE_URL}/orders/${3257}`)
-      .then(checkResponse)
-      .then((res) => {
-        if (res.success === true) {
-          dispatch(addCurrentOrder(res.orders[0]));
-          setOrder(res.orders[0]);
-        }
-      });
-  };
-
+  console.log(params);
   const getStatus = useCallback(
     (status: string | undefined): string => {
       if (status === 'created') {
@@ -58,7 +40,7 @@ const CurrentOrderDetails: FC = () => {
       ingredients.forEach((item) => {
         const f = allIngredients.find((ingr) => ingr._id === item);
         const equals = (element: any): boolean => element?._id === f?._id;
-        if (f != null && !currentOrderIngredients?.some(equals)) {
+        if (f != null) {
           ingredient.push(f);
         }
       });
@@ -111,11 +93,11 @@ const CurrentOrderDetails: FC = () => {
               'mr-2',
             )}
           >
-            {getAllIndexes(order?.ingredients, item._id) +
+            {getAllIndexes(currentOrder?.orders[0].ingredients, item._id) +
               ' ' +
               'x ' +
               totalPrice(
-                getAllIndexes(order?.ingredients, item._id),
+                getAllIndexes(currentOrder?.orders[0].ingredients, item._id),
                 item.price,
               )}
           </p>
@@ -126,11 +108,12 @@ const CurrentOrderDetails: FC = () => {
   });
 
   useEffect(() => {
-    getCurrentOrder();
+    // dispatch(getOrder(params.number!))
+    dispatch(getOrder('3277'));
   }, []);
   useEffect(() => {
-    setOrderArray(getIngredients(order?.ingredients));
-  }, [order]);
+    setOrderArray(getIngredients(currentOrder?.orders[0].ingredients));
+  }, [currentOrder]);
 
   return (
     <div className={styles.wrapper}>
@@ -141,16 +124,16 @@ const CurrentOrderDetails: FC = () => {
           'mb-10',
         )}
       >
-        #0{orderDetails?.number}
+        #0{currentOrder?.orders[0].number}
       </p>
       <div className={styles.info}>
         <p className={classNames('text text_type_main-medium', styles.name)}>
-          {orderDetails?.name}
+          {currentOrder?.orders[0].name}
         </p>
         <p
           className={classNames(
             'text text_type_main-small',
-            orderDetails?.status === 'done' && styles.status,
+            currentOrder?.orders[0].status === 'done' && styles.status,
           )}
         >
           {getStatus(order?.status)}
@@ -166,7 +149,7 @@ const CurrentOrderDetails: FC = () => {
         Состав:
       </p>
       <ul className={styles.ingrList}>{orderItems}</ul>
-      <FormattedDate date={new Date(order?.createdAt!)}/>
+      <FormattedDate date={new Date(currentOrder?.orders[0].createdAt!)} />
     </div>
   );
 };
