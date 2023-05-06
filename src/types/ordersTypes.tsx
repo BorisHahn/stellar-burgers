@@ -7,6 +7,7 @@ export interface IOrderItem {
   number: number | string | undefined;
   createdAt: string;
   updatedAt: string;
+  name?: string;
 }
 
 export interface IOrderCardProps {
@@ -18,3 +19,4 @@ export interface IOrderInitialState {
   orderDetails: IOrderItem | null;
   currentOrderIngredients: TIngredientCard[];
 }
+

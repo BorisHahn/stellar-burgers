@@ -2,6 +2,7 @@ import styles from './CurrentOrderDetails.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import classNames from 'classnames';
 import { FC, useState, useEffect, useCallback } from 'react';
+import { FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import {
   useAppSelector,
   useAppDispatch,
@@ -10,7 +11,12 @@ import { IOrderItem } from '../../types/ordersTypes';
 import { useParams } from 'react-router-dom';
 import { TIngredientCard } from '../../types/ingredientsTypes';
 import IngredientIcon from '../IngredientIcon';
-import { addCurrentOrderIngredients } from '../../redux/slices/ordersSlice';
+import {
+  addCurrentOrderIngredients,
+  addCurrentOrder,
+} from '../../redux/slices/ordersSlice';
+import { BASE_URL } from '../../utils/const';
+import checkResponse from '../../utils/helpers/checkResponse';
 
 const CurrentOrderDetails: FC = () => {
   const { orderDetails, orders, currentOrderIngredients } = useAppSelector(
@@ -18,18 +24,19 @@ const CurrentOrderDetails: FC = () => {
   );
   const { allIngredients } = useAppSelector((state) => state.ingredients);
   const [order, setOrder] = useState<IOrderItem | null>(null);
+  const [orderArray, setOrderArray] = useState<any>([]);
   const params = useParams();
   const dispatch = useAppDispatch();
 
   const getCurrentOrder = () => {
-    if (orderDetails != null) {
-      setOrder(orderDetails);
-    } else {
-      const currentOrder = orders.filter(
-        (order) => order.number === params.number,
-      );
-      setOrder(currentOrder[0]);
-    }
+    return fetch(`${BASE_URL}/orders/${3257}`)
+      .then(checkResponse)
+      .then((res) => {
+        if (res.success === true) {
+          dispatch(addCurrentOrder(res.orders[0]));
+          setOrder(res.orders[0]);
+        }
+      });
   };
 
   const getStatus = useCallback(
@@ -50,7 +57,8 @@ const CurrentOrderDetails: FC = () => {
       let ingredient: TIngredientCard[] = [];
       ingredients.forEach((item) => {
         const f = allIngredients.find((ingr) => ingr._id === item);
-        if (f != null) {
+        const equals = (element: any): boolean => element?._id === f?._id;
+        if (f != null && !currentOrderIngredients?.some(equals)) {
           ingredient.push(f);
         }
       });
@@ -81,7 +89,7 @@ const CurrentOrderDetails: FC = () => {
     }
   };
 
-  const orderItems = currentOrderIngredients?.map((item, index) => {
+  const orderItems = orderArray?.map((item: any, index: number) => {
     return (
       <li className={styles.ingrItem} key={index}>
         <div className={styles.nameAndIcon}>
@@ -99,7 +107,8 @@ const CurrentOrderDetails: FC = () => {
           <p
             className={classNames(
               'text text_type_digits-default',
-              styles.count,'mr-2'
+              styles.count,
+              'mr-2',
             )}
           >
             {getAllIndexes(order?.ingredients, item._id) +
@@ -117,12 +126,11 @@ const CurrentOrderDetails: FC = () => {
   });
 
   useEffect(() => {
-    dispatch(addCurrentOrderIngredients(getIngredients(order?.ingredients)));
-  }, [order]);
-
-  useEffect(() => {
     getCurrentOrder();
   }, []);
+  useEffect(() => {
+    setOrderArray(getIngredients(order?.ingredients));
+  }, [order]);
 
   return (
     <div className={styles.wrapper}>
@@ -133,16 +141,16 @@ const CurrentOrderDetails: FC = () => {
           'mb-10',
         )}
       >
-        #0{order?.number}
+        #0{orderDetails?.number}
       </p>
       <div className={styles.info}>
         <p className={classNames('text text_type_main-medium', styles.name)}>
-          Наименование бургера
+          {orderDetails?.name}
         </p>
         <p
           className={classNames(
             'text text_type_main-small',
-            order?.status === 'done' && styles.status,
+            orderDetails?.status === 'done' && styles.status,
           )}
         >
           {getStatus(order?.status)}
@@ -158,6 +166,7 @@ const CurrentOrderDetails: FC = () => {
         Состав:
       </p>
       <ul className={styles.ingrList}>{orderItems}</ul>
+      <FormattedDate date={new Date(order?.createdAt!)}/>
     </div>
   );
 };

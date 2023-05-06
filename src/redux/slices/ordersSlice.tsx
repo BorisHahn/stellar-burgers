@@ -1,10 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { BASE_URL } from '../../utils/const';
 import { IOrderInitialState } from '../../types/ordersTypes';
+import checkResponse from '../../utils/helpers/checkResponse';
 const initialState: IOrderInitialState = {
   orders: [],
   orderDetails: null,
   currentOrderIngredients: [],
 };
+
 const ordersSlice = createSlice({
   name: 'orders',
   initialState: initialState,
@@ -16,6 +19,7 @@ const ordersSlice = createSlice({
       state.currentOrderIngredients = action.payload;
     },
   },
+  extraReducers: (builder) => {},
 });
 
 export default ordersSlice.reducer;
