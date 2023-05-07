@@ -1,9 +1,21 @@
 import styles from './Feed.module.css';
 import { orders } from '../../utils/const';
 import OrderCard from '../../components/OrdersCard';
-import { FC } from 'react';
+import { FC, useEffect } from 'react';
+import { useAppDispatch } from '../../utils/hooks/ReduxTypedHook';
+import { connect, disconnect } from '../../redux/actions/wsActions';
+import { ALL_ORDERS_URL } from '../../utils/const';
 import classNames from 'classnames';
 const Feed: FC = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(connect(ALL_ORDERS_URL));
+    return () => {
+      dispatch(disconnect());
+    };
+  },[]);
+
   const allOrders = orders.orders.map((card, index) => {
     return <OrderCard key={index} item={card} />;
   });
