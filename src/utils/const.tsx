@@ -1,6 +1,7 @@
 const bunImage = 'https://code.s3.yandex.net/react/code/bun-02.png';
 const BASE_URL = 'https://norma.nomoreparties.space/api';
 const ALL_ORDERS_URL = 'wss://norma.nomoreparties.space/orders/all';
+const ORDERS_URL = 'wss://norma.nomoreparties.space/orders';
 export const emailRegExp = '[A-z0-9_.-]{1,}@[A-z0-9_.-]{1,}[.][A-z]{2,6}';
 const loadingStatus = 'loading';
 const idleStatus = 'idle';
@@ -45,6 +46,7 @@ export {
   bunImage,
   BASE_URL,
   ALL_ORDERS_URL,
+  ORDERS_URL,
   loadingStatus,
   idleStatus,
   failedStatus,

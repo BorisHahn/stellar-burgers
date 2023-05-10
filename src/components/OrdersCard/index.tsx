@@ -40,18 +40,28 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
     return ingredient;
   };
 
-  
-
-  const ingredientImages = orderIngredients?.map((item, index) => {
-    return (
-      <IngredientIcon
-        key={index}
-        src={item.image_mobile}
-        srcSet={item.image_mobile}
-        overflow={!index ? 6 : 0}
-        extraClass={styles.items_picture}
-      />
-    );
+  const ingredientImages = orderIngredients?.slice(0, 6).map((item, index) => {
+    if (index != 5) {
+      return (
+        <IngredientIcon
+          key={index}
+          src={item.image_mobile}
+          srcSet={item.image_mobile}
+          overflow={!index ? (orderIngredients?.length - 6) : 0}
+          extraClass={styles.items_picture}
+        />
+      );
+    } else {
+      return (
+        <IngredientIcon
+          key={index}
+          src={item.image_mobile}
+          srcSet={item.image_mobile}
+          // overflow={!index ? 6 : 0}
+          extraClass={styles.items_picture}
+        />
+      );
+    }
   });
 
   const totalPrice = useMemo<number | undefined>(() => {
@@ -72,7 +82,7 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
       state={{ backgroundLocation: location }}
       className={styles.link}
     >
-      <div className={styles.card} >
+      <div className={styles.card}>
         <div className={styles.idAndTime}>
           <p className={classNames('text text_type_digits-default', styles.id)}>
             #0{item.number}
@@ -88,7 +98,7 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
         </div>
         <div className={styles.info}>
           <p className={classNames('text text_type_main-medium', styles.name)}>
-            Наименование бургера
+            {item.name}
           </p>
           <p
             className={classNames(

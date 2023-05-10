@@ -1,7 +1,7 @@
 import styles from './CurrentOrderDetails.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import classNames from 'classnames';
-import { FC, useState, useEffect, useCallback } from 'react';
+import { FC, useState, useEffect, useCallback, useMemo } from 'react';
 import { FormattedDate } from '@ya.praktikum/react-developer-burger-ui-components';
 import {
   useAppSelector,
@@ -20,7 +20,7 @@ const CurrentOrderDetails: FC = () => {
   const [orderArray, setOrderArray] = useState<any>([]);
   const params = useParams();
   const dispatch = useAppDispatch();
-  console.log(params);
+  
   const getStatus = useCallback(
     (status: string | undefined): string => {
       if (status === 'created') {
@@ -38,10 +38,12 @@ const CurrentOrderDetails: FC = () => {
     if (ingredients != undefined) {
       let ingredient: TIngredientCard[] = [];
       ingredients.forEach((item) => {
-        const f = allIngredients.find((ingr) => ingr._id === item);
-        const equals = (element: any): boolean => element?._id === f?._id;
-        if (f != null) {
-          ingredient.push(f);
+        const f = allIngredients.filter((ingr) => ingr._id === item);
+        console.log(f);
+        if (ingredient.includes(f[0])) {
+          return;
+        } else {
+          ingredient.push(f[0]);
         }
       });
       return ingredient;
@@ -61,15 +63,17 @@ const CurrentOrderDetails: FC = () => {
       return indexes.length;
     }
   };
-
-  const totalPrice = (
-    count: number | undefined,
-    price: number,
-  ): number | undefined => {
-    if (count != undefined) {
-      return count * price;
+  const totalPrice = useMemo<number | undefined>(() => {
+    if (orderArray) {
+      return orderArray.reduce((acc: number, item: TIngredientCard) => {
+        if (item.type === 'bun') {
+          return acc + item.price * 2;
+        } else {
+          return acc + item.price * getAllIndexes(currentOrder?.orders[0].ingredients, item._id)!;
+        }
+      }, 0);
     }
-  };
+  }, [orderArray]);
 
   const orderItems = orderArray?.map((item: any, index: number) => {
     return (
@@ -95,11 +99,8 @@ const CurrentOrderDetails: FC = () => {
           >
             {getAllIndexes(currentOrder?.orders[0].ingredients, item._id) +
               ' ' +
-              'x ' +
-              totalPrice(
-                getAllIndexes(currentOrder?.orders[0].ingredients, item._id),
-                item.price,
-              )}
+              'x '}
+            {item.price}
           </p>
           <CurrencyIcon type='primary' />
         </div>
@@ -108,8 +109,7 @@ const CurrentOrderDetails: FC = () => {
   });
 
   useEffect(() => {
-    // dispatch(getOrder(params.number!))
-    dispatch(getOrder('3277'));
+    dispatch(getOrder(params.number!));
   }, []);
   useEffect(() => {
     setOrderArray(getIngredients(currentOrder?.orders[0].ingredients));
@@ -149,7 +149,22 @@ const CurrentOrderDetails: FC = () => {
         Состав:
       </p>
       <ul className={styles.ingrList}>{orderItems}</ul>
-      <FormattedDate date={new Date(currentOrder?.orders[0].createdAt!)} />
+      <span className={styles.dateAndPrice}>
+        <p
+          className={classNames(
+            'text text_type_main-default text_color_inactive',
+            styles.caption,
+          )}
+        >
+          <FormattedDate date={new Date(currentOrder?.orders[0].createdAt!)} />
+        </p>
+        <span
+          className={classNames('text text_type_main-medium', styles.price)}
+        >
+          {totalPrice}
+          <CurrencyIcon type='primary' />
+        </span>
+      </span>
     </div>
   );
 };

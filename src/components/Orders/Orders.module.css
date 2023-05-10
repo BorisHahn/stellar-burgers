@@ -8,3 +8,8 @@
   justify-content: flex-start;
   gap: 24px;
 }
+
+.spinner {
+  align-self: center;
+  margin-top: 30vh;
+}

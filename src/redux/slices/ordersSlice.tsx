@@ -7,6 +7,7 @@ const initialState: IOrderInitialState = {
   orders: null,
   currentOrder: null,
   connectionError: '',
+  loadingStatus: true
 };
 
 export const getOrder = createAsyncThunk<
@@ -25,16 +26,21 @@ const ordersSlice = createSlice({
       .addCase(getOrder.fulfilled, (state, action) => {
         state.currentOrder = action.payload;
       })
-      .addCase(wsOpen, (state) => state)
+      .addCase(wsOpen, (state) => {
+        state.loadingStatus = true;
+      })
       .addCase(wsClose, (state) => {
         state.orders = null;
         state.connectionError = '';
+        state.loadingStatus = true;
       })
       .addCase(wsError, (state, action) => {
         state.connectionError = action.payload;
+        state.loadingStatus = false;
       })
       .addCase(wsMessage, (state, action) => {
         state.orders = action.payload;
+        state.loadingStatus = false;
       });
   },
 });

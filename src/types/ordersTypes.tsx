@@ -24,4 +24,5 @@ export interface IOrderInitialState {
   orders: IOrders | null;
   currentOrder: { success: boolean; orders: IOrderItem[] } | null;
   connectionError: string;
+  loadingStatus: boolean;
 }
