@@ -33,7 +33,7 @@ const Profile: FC = () => {
   const handleLogout = () => {
     dispatch(signOut());
   };
-
+  
   const handleChange = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const token = localStorage.getItem('accessToken');

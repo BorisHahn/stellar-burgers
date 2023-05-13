@@ -6,12 +6,10 @@ import { FormattedDate } from '@ya.praktikum/react-developer-burger-ui-component
 import { TIngredientCard } from '../../types/ingredientsTypes';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link, useLocation } from 'react-router-dom';
-import { useAppDispatch } from '../../utils/hooks/ReduxTypedHook';
 import IngredientIcon from '../IngredientIcon';
 const classNames = require('classnames');
 
 const OrderCard: FC<IOrderCardProps> = ({ item }) => {
-  const dispatch = useAppDispatch();
   const location = useLocation();
   const { allIngredients } = useAppSelector((state) => state.ingredients);
   const [orderIngredients, addOrderIngredients] = useState<TIngredientCard[]>();
@@ -47,7 +45,7 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
           key={index}
           src={item.image_mobile}
           srcSet={item.image_mobile}
-          overflow={!index ? (orderIngredients?.length - 6) : 0}
+          overflow={!index ? orderIngredients?.length - 6 : 0}
           extraClass={styles.items_picture}
         />
       );
@@ -57,7 +55,6 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
           key={index}
           src={item.image_mobile}
           srcSet={item.image_mobile}
-          // overflow={!index ? 6 : 0}
           extraClass={styles.items_picture}
         />
       );
@@ -78,7 +75,7 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
 
   return (
     <Link
-      to={`/profile/orders/${item.number}`}
+      to={`${location.pathname}/${item.number}`}
       state={{ backgroundLocation: location }}
       className={styles.link}
     >

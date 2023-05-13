@@ -4,15 +4,11 @@ const classNames = require('classnames');
 
 interface IModalOverlayProps {
   onClose: () => void;
-  isOpen: boolean;
 }
 
-const ModalOverlay: FC<IModalOverlayProps> = ({ onClose, isOpen }) => {
+const ModalOverlay: FC<IModalOverlayProps> = ({ onClose }) => {
   return (
-    <div
-      className={classNames(isOpen && style.overlay)}
-      onClick={() => onClose()}
-    ></div>
+    <div className={classNames(style.overlay)} onClick={() => onClose()}></div>
   );
 };
 

@@ -22,8 +22,6 @@ import IngredientPage from '../../pages/Ingredient';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import CurrentOrderDetails from '../CurrentOrderDetails';
 import Feed from '../../pages/Feed';
-import { IOrderPayload } from '../../types/ingredientsTypes';
-import { IOrderItem } from '../../types/ordersTypes';
 import {
   getIngredients,
   addCurrentIngredient,
@@ -38,14 +36,10 @@ import {
 } from '../../redux/slices/regAndAuthSlice';
 function App() {
   const { order } = useAppSelector((state) => state.ingredients);
-  const [info, setInfo] = useState<IOrderPayload | object>({});
-  const [currentOrder, setCurrentOrder] = useState<IOrderItem | object>({});
-
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useAppDispatch();
-  const backgroundLocation =
-    location.state && location.state.backgroundLocation;
+  let background = location.state && location.state.background;
 
   useEffect(() => {
     dispatch(getIngredients());
@@ -86,7 +80,7 @@ function App() {
       <AppHeader />
       <DndProvider backend={HTML5Backend}>
         <main className={style.main}>
-          <Routes location={backgroundLocation || location}>
+          <Routes location={location.state  || location}>
             <Route
               path='/'
               element={<Main handleOpenModal={handleOpenModal} />}
@@ -119,7 +113,12 @@ function App() {
 
             <Route
               path='profile'
-              element={<ProtectedRoute children={<Profile />} />}
+              element={
+                <ProtectedRoute
+                  children={<Profile />}
+                  background={background}
+                />
+              }
             />
             <Route
               path='profile/orders'
@@ -127,7 +126,20 @@ function App() {
             />
             <Route
               path='profile/orders/:number'
-              element={<ProtectedRoute children={<CurrentOrderDetails />} />}
+              element={
+                <ProtectedRoute
+                  children={<CurrentOrderDetails />}
+                  background={background}
+                />
+              }
+            />
+            <Route
+              path='feed/:number'
+              element={
+                <ProtectedRoute
+                  children={<CurrentOrderDetails />}
+                />
+              }
             />
 
             <Route
@@ -145,29 +157,29 @@ function App() {
         </main>
       </DndProvider>
 
-      {backgroundLocation && (
+      {location.state != null && (
         <Routes>
           <Route
             path='profile/orders/:number'
             element={
-              <Modal
-                onClose={handleCloseCurrentModal}
-                currentObject={currentOrder}
-              >
+              <Modal onClose={handleCloseCurrentModal}>
                 <CurrentOrderDetails />
               </Modal>
             }
           />
-        </Routes>
-      )}
-      {backgroundLocation && (
-        <Routes>
+          <Route
+            path='feed/:number'
+            element={
+              <Modal onClose={handleCloseCurrentModal}>
+                <CurrentOrderDetails />
+              </Modal>
+            }
+          />
           <Route
             path='ingredients/:id'
             element={
               <Modal
                 onClose={handleCloseCurrentModal}
-                objectInStore={info}
                 title='Детали ингредиента'
               >
                 <IngredientDetails />
@@ -176,9 +188,11 @@ function App() {
           />
         </Routes>
       )}
-      <Modal onClose={handleCloseOrderModal} objectInStore={order}>
-        <OrderDetails />
-      </Modal>
+      {order && (
+        <Modal onClose={handleCloseOrderModal}>
+          <OrderDetails />
+        </Modal>
+      )}
     </div>
   );
 }

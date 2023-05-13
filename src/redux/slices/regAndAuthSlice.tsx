@@ -123,7 +123,7 @@ const regAndAuthSlice = createSlice({
   name: 'accessProcedure',
   initialState: initialState as IUserInfoState,
   reducers: {
-    setLoadingStatus: (state:any):any => {
+    setLoadingStatus: (state) => {
       state.loadingStatus = false;
     },
     setError: (state) => {

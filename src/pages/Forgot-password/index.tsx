@@ -6,7 +6,6 @@ import { emailRegExp } from '../../utils/const';
 import { useRef, FormEvent, FC } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { IValues } from '../../utils/hooks/ValidationHook';
-import {TForgotAndResetPasswordResponse} from '../../types/regAndAuthTypes';
 import {
   forgotPassword,
   setLoadingStatus,
@@ -20,7 +19,6 @@ import {
   Input,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { PayloadAction } from '@reduxjs/toolkit';
 const ForgotPassword: FC = () => {
   const { error, loadingStatus } = useAppSelector(
     (state) => state.accessProcedure,

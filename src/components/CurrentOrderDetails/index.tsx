@@ -17,10 +17,12 @@ const CurrentOrderDetails: FC = () => {
   const { orders, currentOrder } = useAppSelector((state) => state.orders);
   const { allIngredients } = useAppSelector((state) => state.ingredients);
   const [order, setOrder] = useState<IOrderItem | null>(null);
-  const [orderArray, setOrderArray] = useState<any>([]);
+  const [orderArray, setOrderArray] = useState<TIngredientCard[] | undefined>(
+    [],
+  );
   const params = useParams();
   const dispatch = useAppDispatch();
-  
+
   const getStatus = useCallback(
     (status: string | undefined): string => {
       if (status === 'created') {
@@ -39,7 +41,6 @@ const CurrentOrderDetails: FC = () => {
       let ingredient: TIngredientCard[] = [];
       ingredients.forEach((item) => {
         const f = allIngredients.filter((ingr) => ingr._id === item);
-        console.log(f);
         if (ingredient.includes(f[0])) {
           return;
         } else {
@@ -65,17 +66,21 @@ const CurrentOrderDetails: FC = () => {
   };
   const totalPrice = useMemo<number | undefined>(() => {
     if (orderArray) {
-      return orderArray.reduce((acc: number, item: TIngredientCard) => {
+      return orderArray.reduce((acc, item) => {
         if (item.type === 'bun') {
           return acc + item.price * 2;
         } else {
-          return acc + item.price * getAllIndexes(currentOrder?.orders[0].ingredients, item._id)!;
+          return (
+            acc +
+            item.price *
+              getAllIndexes(currentOrder?.orders[0].ingredients, item._id)!
+          );
         }
       }, 0);
     }
   }, [orderArray]);
 
-  const orderItems = orderArray?.map((item: any, index: number) => {
+  const orderItems = orderArray?.map((item, index) => {
     return (
       <li className={styles.ingrItem} key={index}>
         <div className={styles.nameAndIcon}>

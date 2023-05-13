@@ -3,17 +3,13 @@ import { useEffect, FC, ReactNode } from 'react';
 import styles from './Modal.module.css';
 import { CloseIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import ModalOverlay from '../ModalOverlay/ModalOverlay';
-import { IOrderPayload } from '../../types/ingredientsTypes';
-import { IOrderItem } from '../../types/ordersTypes';
 const classNames = require('classnames');
-const portal = document.getElementById('modals');
+const portal = document.getElementById('modal');
 
 interface IModalProps {
   children?: ReactNode;
   onClose: () => void;
   title?: string;
-  objectInStore?: IOrderPayload | object | null;
-  currentObject?: IOrderItem | object;
 }
 
 interface KeyboardEvent {
@@ -23,8 +19,6 @@ interface KeyboardEvent {
 const Modal: FC<IModalProps> = ({
   children,
   onClose,
-  objectInStore,
-  currentObject,
   title,
 }) => {
   const handleCloseByEsc = (e: KeyboardEvent) => {
@@ -39,20 +33,9 @@ const Modal: FC<IModalProps> = ({
   });
 
   return ReactDOM.createPortal(
-    <div
-      className={classNames(
-        styles.wrapper,
-        !(currentObject || objectInStore) && styles.hiddenWrapper,
-      )}
-    >
-      <ModalOverlay onClose={onClose} isOpen={!!(currentObject || objectInStore)} />
-      <div
-        className={classNames(
-          'pt-10 pl-10 pr-10',
-          styles.modal,
-          (currentObject || objectInStore) && styles.opened,
-        )}
-      >
+    <div className={classNames(styles.wrapper)}>
+      <ModalOverlay onClose={onClose} />
+      <div className={classNames('pt-10 pl-10 pr-10', styles.modal)}>
         <div className={styles.header}>
           <h1
             className={classNames(
