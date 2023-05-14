@@ -37,8 +37,8 @@ import {
 function App() {
   const { order } = useAppSelector((state) => state.ingredients);
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useAppDispatch();
+  const location = useLocation();
   let background = location.state && location.state.background;
 
   useEffect(() => {
@@ -80,10 +80,41 @@ function App() {
       <AppHeader />
       <DndProvider backend={HTML5Backend}>
         <main className={style.main}>
-          <Routes location={location.state  || location}>
+          <Routes location={background || location}>
             <Route
               path='/'
               element={<Main handleOpenModal={handleOpenModal} />}
+            />
+            <Route
+              path='profile'
+              element={<ProtectedRoute children={<Profile />} />}
+            />
+            <Route
+              path='profile/orders'
+              element={<ProtectedRoute children={<Profile />} />}
+            />
+            <Route
+              path='profile/orders/:number'
+              element={
+                <ProtectedRoute
+                  children={<CurrentOrderDetails />}
+                  background={background}
+                />
+              }
+            />
+            <Route path='feed' element={<Feed />} />
+            <Route
+              path='feed/:number'
+              element={<ProtectedRoute children={<CurrentOrderDetails />} />}
+            />
+
+            <Route
+              path='ingredients/:id'
+              element={
+                <IngredientPage>
+                  <IngredientDetails />
+                </IngredientPage>
+              }
             />
             <Route
               path='login'
@@ -110,48 +141,6 @@ function App() {
                 <ProtectedRoute children={<ResetPassword />} anonymous={true} />
               }
             />
-
-            <Route
-              path='profile'
-              element={
-                <ProtectedRoute
-                  children={<Profile />}
-                  background={background}
-                />
-              }
-            />
-            <Route
-              path='profile/orders'
-              element={<ProtectedRoute children={<Profile />} />}
-            />
-            <Route
-              path='profile/orders/:number'
-              element={
-                <ProtectedRoute
-                  children={<CurrentOrderDetails />}
-                  background={background}
-                />
-              }
-            />
-            <Route
-              path='feed/:number'
-              element={
-                <ProtectedRoute
-                  children={<CurrentOrderDetails />}
-                />
-              }
-            />
-
-            <Route
-              path='ingredients/:id'
-              element={
-                <IngredientPage>
-                  <IngredientDetails />
-                </IngredientPage>
-              }
-            />
-
-            <Route path='feed' element={<Feed />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </main>
