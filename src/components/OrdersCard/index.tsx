@@ -76,7 +76,7 @@ const OrderCard: FC<IOrderCardProps> = ({ item }) => {
   return (
     <Link
       to={`${location.pathname}/${item.number}`}
-      state={{ backgroundLocation: location }}
+      state={{ background: location }}
       className={styles.link}
     >
       <div className={styles.card}>

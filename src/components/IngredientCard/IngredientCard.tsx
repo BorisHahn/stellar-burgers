@@ -38,7 +38,7 @@ const IngridientCard: FC<IIngridientCardProps> = ({ card, handleOpen }) => {
     <Link
       key={card._id}
       to={`/ingredients/${card._id}`}
-      state={{ backgroundLocation: location }}
+      state={{ background: location }}
       className={styles.link}
     >
       <div className={styles.card} onClick={onClick} ref={dragRef}>

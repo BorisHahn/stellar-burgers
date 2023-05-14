@@ -151,9 +151,13 @@ function App() {
           <Route
             path='profile/orders/:number'
             element={
-              <Modal onClose={handleCloseCurrentModal}>
-                <CurrentOrderDetails />
-              </Modal>
+              <ProtectedRoute
+                children={
+                  <Modal onClose={handleCloseCurrentModal}>
+                    <CurrentOrderDetails />
+                  </Modal>
+                }
+              />
             }
           />
           <Route
