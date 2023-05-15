@@ -103,10 +103,7 @@ function App() {
               }
             />
             <Route path='feed' element={<Feed />} />
-            <Route
-              path='feed/:number'
-              element={<ProtectedRoute children={<CurrentOrderDetails />} />}
-            />
+            <Route path='feed/:number' element={<CurrentOrderDetails />} />
 
             <Route
               path='ingredients/:id'
