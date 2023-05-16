@@ -20,7 +20,8 @@ import OrderDetails from '../OrderDetails/OrderDetails';
 import Modal from '../Modal/Modal';
 import IngredientPage from '../../pages/Ingredient';
 import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-import { IOrderPayload } from '../../types/ingredientsTypes';
+import CurrentOrderDetails from '../CurrentOrderDetails';
+import Feed from '../../pages/Feed';
 import {
   getIngredients,
   addCurrentIngredient,
@@ -35,13 +36,10 @@ import {
 } from '../../redux/slices/regAndAuthSlice';
 function App() {
   const { order } = useAppSelector((state) => state.ingredients);
-  const [info, setInfo] = useState<IOrderPayload | object>({});
-
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useAppDispatch();
-  const backgroundLocation =
-    location.state && location.state.backgroundLocation;
+  const location = useLocation();
+  let background = location.state && location.state.background;
 
   useEffect(() => {
     dispatch(getIngredients());
@@ -82,10 +80,38 @@ function App() {
       <AppHeader />
       <DndProvider backend={HTML5Backend}>
         <main className={style.main}>
-          <Routes location={backgroundLocation || location}>
+          <Routes location={background || location}>
             <Route
               path='/'
               element={<Main handleOpenModal={handleOpenModal} />}
+            />
+            <Route
+              path='profile'
+              element={<ProtectedRoute children={<Profile />} />}
+            />
+            <Route
+              path='profile/orders'
+              element={<ProtectedRoute children={<Profile />} />}
+            />
+            <Route
+              path='profile/orders/:number'
+              element={
+                <ProtectedRoute
+                  children={<CurrentOrderDetails />}
+                  background={background}
+                />
+              }
+            />
+            <Route path='feed' element={<Feed />} />
+            <Route path='feed/:number' element={<CurrentOrderDetails />} />
+
+            <Route
+              path='ingredients/:id'
+              element={
+                <IngredientPage>
+                  <IngredientDetails />
+                </IngredientPage>
+              }
             />
             <Route
               path='login'
@@ -112,33 +138,38 @@ function App() {
                 <ProtectedRoute children={<ResetPassword />} anonymous={true} />
               }
             />
-
-            <Route
-              path='profile'
-              element={<ProtectedRoute children={<Profile />} />}
-            />
-
-            <Route
-              path='ingredients/:id'
-              element={
-                <IngredientPage>
-                  <IngredientDetails />
-                </IngredientPage>
-              }
-            />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </main>
       </DndProvider>
 
-      {backgroundLocation && (
+      {location.state != null && (
         <Routes>
+          <Route
+            path='profile/orders/:number'
+            element={
+              <ProtectedRoute
+                children={
+                  <Modal onClose={handleCloseCurrentModal}>
+                    <CurrentOrderDetails />
+                  </Modal>
+                }
+              />
+            }
+          />
+          <Route
+            path='feed/:number'
+            element={
+              <Modal onClose={handleCloseCurrentModal}>
+                <CurrentOrderDetails />
+              </Modal>
+            }
+          />
           <Route
             path='ingredients/:id'
             element={
               <Modal
                 onClose={handleCloseCurrentModal}
-                objectInStore={info}
                 title='Детали ингредиента'
               >
                 <IngredientDetails />
@@ -147,9 +178,11 @@ function App() {
           />
         </Routes>
       )}
-      <Modal onClose={handleCloseOrderModal} objectInStore={order}>
-        <OrderDetails />
-      </Modal>
+      {order && (
+        <Modal onClose={handleCloseOrderModal}>
+          <OrderDetails />
+        </Modal>
+      )}
     </div>
   );
 }

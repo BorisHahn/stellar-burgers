@@ -5,6 +5,7 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import classNames from 'classnames';
 import Spinner from 'react-bootstrap/Spinner';
+import Orders from '../../components/Orders';
 import { emailRegExp } from '../../utils/const';
 import { useState, FormEvent, SyntheticEvent, FC } from 'react';
 import {
@@ -32,7 +33,7 @@ const Profile: FC = () => {
   const handleLogout = () => {
     dispatch(signOut());
   };
-
+  
   const handleChange = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const token = localStorage.getItem('accessToken');
@@ -97,7 +98,7 @@ const Profile: FC = () => {
           to={'/profile/orders'}
           className={classNames(
             styles.link,
-            location.pathname === '/profile/order'
+            location.pathname === '/profile/orders'
               ? ['text text_type_main-medium', styles.linkActive]
               : 'text text_type_main-medium text_color_inactive',
           )}
@@ -123,81 +124,87 @@ const Profile: FC = () => {
             styles.caption,
           )}
         >
-          В этом разделе вы можете изменить свои персональные данные
+          {location.pathname === '/profile'
+            ? 'В этом разделе вы можете изменить свои персональные данные'
+            : 'В этом разделе вы можете просмотреть свою историю заказов'}
         </p>
       </nav>
-      <form onSubmit={handleChange}>
-        <Input
-          type={'text'}
-          placeholder={'Имя'}
-          onChange={(e) => setNameValue(e.target.value)}
-          value={nameValue}
-          name={'name'}
-          error={false}
-          minLength={2}
-          errorText={'Ошибка'}
-          size={'default'}
-          icon={'EditIcon'}
-          extraClass='mb-6'
-          autoComplete='off'
-          required
-        />
-        <Input
-          type={'email'}
-          placeholder={'Логин'}
-          onChange={(e) => setEmailValue(e.target.value)}
-          value={emailValue}
-          name={'email'}
-          error={false}
-          pattern={emailRegExp}
-          errorText={'Ошибка'}
-          size={'default'}
-          icon={'EditIcon'}
-          extraClass='mb-6'
-          autoComplete='off'
-          required
-        />
-        <Input
-          type={'password'}
-          placeholder={'Пароль'}
-          onChange={(e) => setPasswordValue(e.target.value)}
-          value={passwordValue}
-          name={'password'}
-          error={false}
-          errorText={'Ошибка'}
-          size={'default'}
-          icon={'EditIcon'}
-          extraClass='mb-6'
-          minLength={8}
-          autoComplete='off'
-        />
-        <span className={classNames(styles.buttonBar, saveBtnClass)}>
-          <Button
-            htmlType='button'
-            type='secondary'
-            size='large'
-            onClick={resetProfileValues}
-          >
-            Отмена
-          </Button>
-          <Button htmlType='submit' type='primary' size='large'>
-            {loadingStatus ? (
-              <>
-                <Spinner
-                  as='span'
-                  animation='border'
-                  size='sm'
-                  role='status'
-                  aria-hidden='true'
-                />{' '}
-                Сохранение...
-              </>
-            ) : (
-              'Сохранить'
-            )}
-          </Button>
-        </span>
-      </form>
+      {location.pathname === '/profile' ? (
+        <form onSubmit={handleChange} className={styles.form}>
+          <Input
+            type={'text'}
+            placeholder={'Имя'}
+            onChange={(e) => setNameValue(e.target.value)}
+            value={nameValue}
+            name={'name'}
+            error={false}
+            minLength={2}
+            errorText={'Ошибка'}
+            size={'default'}
+            icon={'EditIcon'}
+            extraClass='mb-6'
+            autoComplete='off'
+            required
+          />
+          <Input
+            type={'email'}
+            placeholder={'Логин'}
+            onChange={(e) => setEmailValue(e.target.value)}
+            value={emailValue}
+            name={'email'}
+            error={false}
+            pattern={emailRegExp}
+            errorText={'Ошибка'}
+            size={'default'}
+            icon={'EditIcon'}
+            extraClass='mb-6'
+            autoComplete='off'
+            required
+          />
+          <Input
+            type={'password'}
+            placeholder={'Пароль'}
+            onChange={(e) => setPasswordValue(e.target.value)}
+            value={passwordValue}
+            name={'password'}
+            error={false}
+            errorText={'Ошибка'}
+            size={'default'}
+            icon={'EditIcon'}
+            extraClass='mb-6'
+            minLength={8}
+            autoComplete='off'
+          />
+          <div className={classNames(styles.buttonBar, saveBtnClass)}>
+            <Button
+              htmlType='button'
+              type='secondary'
+              size='large'
+              onClick={resetProfileValues}
+            >
+              Отмена
+            </Button>
+            <Button htmlType='submit' type='primary' size='large'>
+              {loadingStatus ? (
+                <>
+                  <Spinner
+                    as='span'
+                    animation='border'
+                    size='sm'
+                    role='status'
+                    aria-hidden='true'
+                  />{' '}
+                  Сохранение...
+                </>
+              ) : (
+                'Сохранить'
+              )}
+            </Button>
+          </div>
+        </form>
+      ) : (
+        <Orders />
+      )}
     </section>
   );
 };

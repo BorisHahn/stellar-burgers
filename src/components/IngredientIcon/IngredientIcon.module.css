@@ -1,0 +1,26 @@
+.container {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  border-radius: 100px;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  background: linear-gradient(#1c1c21, #1c1c21) content-box,
+    linear-gradient(#4c4cff, #801ab2) border-box;
+}
+
+.picture {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.overflow {
+  background: rgba(0, 0, 0, 0.6) content-box;
+}
+
+.image {
+  width: 112px;
+  height: 56px;
+}

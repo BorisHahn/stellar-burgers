@@ -26,8 +26,6 @@
   box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04),
     0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
     0px 0px 1px rgba(0, 0, 0, 0.04);
-  visibility: hidden;
-  opacity: 0;
   top: 10px;
   z-index: 100;
 }
@@ -36,15 +34,6 @@
   display: grid;
   grid-template-areas: 'a b';
   grid-template-columns: 1fr auto;
-}
-
-.hide {
-  visibility: hidden;
-}
-
-.opened {
-  visibility: visible;
-  opacity: 1;
 }
 
 .text {

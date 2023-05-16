@@ -6,16 +6,23 @@ import { FC } from 'react';
 export type ProtectedRouteProps = {
   children: JSX.Element;
   anonymous?: boolean;
+  background?: Location;
 } & RouteProps;
 
 export const ProtectedRoute: FC<ProtectedRouteProps> = ({
   children,
   anonymous = false,
+  background = null,
 }) => {
   const { isLogin } = useAppSelector((state) => state.accessProcedure);
 
   const location = useLocation();
   const from = location.state?.from || '/';
+
+  if (background && !isLogin) {
+    return null;
+  }
+  
   if (anonymous && isLogin) {
     return <Navigate to={from} />;
   }

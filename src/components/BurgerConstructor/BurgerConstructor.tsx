@@ -72,7 +72,7 @@ const BurgerConstructor: FC = () => {
                 ),
               )
               .finally(() => {
-                dispatch(setLoadingStatus(loadingStatus));
+                dispatch(setLoadingStatus());
               });
           });
       } else {

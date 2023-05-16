@@ -1,0 +1,84 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.id {
+  align-self: center;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 68px;
+}
+
+.status {
+  color: #00cccc;
+}
+
+.ingrList {
+  width: 100%;
+  margin: 0;
+  margin-bottom: 40px;
+  padding: 0;
+  list-style: none;
+  max-height: 312px;
+  overflow: auto;
+}
+
+.ingrItem {
+  width: 608px;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ingrItem:last-of-type {
+  margin-bottom: 0;
+}
+
+.name {
+  margin: 0;
+  margin-right: auto;
+  padding: 0;
+}
+
+.priceBlock {
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin-left: auto;
+}
+
+.nameAndIcon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+  margin-right: auto;
+}
+
+.price {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.dateAndPrice {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}

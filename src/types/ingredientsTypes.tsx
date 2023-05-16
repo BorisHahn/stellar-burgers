@@ -14,7 +14,7 @@ export type TIngredientCard = {
   id?: string;
   index: number;
   dragId?: number;
-}
+};
 
 export interface IOrderResponse {
   ingredients: string[];
@@ -34,4 +34,12 @@ export interface IInitialState {
   order: IOrderPayload | null;
   loadingStatus: boolean;
   error: object | null;
+}
+
+export interface IngredientIconProps {
+  srcSet: string;
+  src: string;
+  alt?: string;
+  overflow?: number;
+  extraClass?: string;
 }

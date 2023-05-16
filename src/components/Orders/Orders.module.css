@@ -1,0 +1,15 @@
+.wrapper {
+  margin-top: 40px;
+  max-height: 800px;
+  overflow: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 24px;
+}
+
+.spinner {
+  align-self: center;
+  margin-top: 30vh;
+}
