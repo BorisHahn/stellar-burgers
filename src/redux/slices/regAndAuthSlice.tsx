@@ -112,11 +112,13 @@ export const changeProfileInfo = createAsyncThunk<
   }).then(checkResponse);
 });
 
-const initialState = {
+export const initialState = {
   userInfo: {},
   isLogin: false,
   error: {},
   loadingStatus: false,
+  refreshToken: null,
+  accessToken: null,
 };
 
 const regAndAuthSlice = createSlice({
@@ -163,6 +165,8 @@ const regAndAuthSlice = createSlice({
           };
           localStorage.setItem('refreshToken', action.payload.refreshToken);
           localStorage.setItem('accessToken', action.payload.accessToken);
+          state.accessToken = action.payload.accessToken;
+          state.refreshToken = action.payload.refreshToken;
           state.isLogin = true;
           state.error = null;
         }

@@ -5,7 +5,6 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.2",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/classnames": "^2.3.1",
     "@types/jest": "^27.5.2",
@@ -55,6 +54,12 @@
     ]
   },
   "devDependencies": {
-    "@types/uuid": "^9.0.1"
+    "@testing-library/react": "^14.0.0",
+    "@types/uuid": "^9.0.1",
+    "cypress": "^12.13.0",
+    "fetch-mock": "^9.11.0",
+    "jest": "^27.5.1",
+    "react-test-renderer": "^18.2.0",
+    "redux-mock-store": "^1.5.4"
   }
 }
