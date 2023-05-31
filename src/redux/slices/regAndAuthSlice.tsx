@@ -113,9 +113,9 @@ export const changeProfileInfo = createAsyncThunk<
 });
 
 export const initialState = {
-  userInfo: {},
+  userInfo: { name: '', email: '' },
   isLogin: false,
-  error: {},
+  error: false,
   loadingStatus: false,
   refreshToken: null,
   accessToken: null,
@@ -129,7 +129,7 @@ const regAndAuthSlice = createSlice({
       state.loadingStatus = false;
     },
     setError: (state) => {
-      state.error = null;
+      state.error = false;
     },
     setIsLogin: (state) => {
       state.isLogin = false;
@@ -141,39 +141,33 @@ const regAndAuthSlice = createSlice({
         state.loadingStatus = true;
       })
       .addCase(signUp.fulfilled, (state, action) => {
-        if (action.payload.success === false) {
-        } else {
-          state.loadingStatus = false;
-          state.error = null;
-        }
+        state.loadingStatus = false;
+        state.error = false;
       })
       .addCase(signUp.rejected, (state, action) => {
         state.loadingStatus = false;
-        state.error = action.error;
+        state.error = true;
       })
 
       .addCase(signIn.pending, (state) => {
         state.loadingStatus = true;
       })
       .addCase(signIn.fulfilled, (state, action) => {
-        if (action.payload.success === false) {
-        } else {
-          state.loadingStatus = false;
-          state.userInfo = {
-            name: action.payload.user.name,
-            email: action.payload.user.email,
-          };
-          localStorage.setItem('refreshToken', action.payload.refreshToken);
-          localStorage.setItem('accessToken', action.payload.accessToken);
-          state.accessToken = action.payload.accessToken;
-          state.refreshToken = action.payload.refreshToken;
-          state.isLogin = true;
-          state.error = null;
-        }
+        state.loadingStatus = false;
+        state.userInfo = {
+          name: action.payload.user.name,
+          email: action.payload.user.email,
+        };
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+        localStorage.setItem('accessToken', action.payload.accessToken);
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
+        state.isLogin = true;
+        state.error = false;
       })
       .addCase(signIn.rejected, (state, action) => {
+        state.error = true;
         state.loadingStatus = false;
-        state.error = action.error;
       })
 
       .addCase(getProfileInfo.pending, (state) => {
@@ -189,7 +183,7 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(getProfileInfo.rejected, (state, action) => {
         state.loadingStatus = false;
-        state.error = action.error;
+        state.error = true;
       })
 
       .addCase(signOut.pending, (state, action) => {
@@ -202,7 +196,7 @@ const regAndAuthSlice = createSlice({
       })
       .addCase(signOut.rejected, (state, action) => {
         state.loadingStatus = false;
-        state.error = action.error;
+        state.error = true;
       })
 
       .addCase(changeProfileInfo.pending, (state, action) => {
@@ -218,56 +212,46 @@ const regAndAuthSlice = createSlice({
         }
       })
       .addCase(changeProfileInfo.rejected, (state, action) => {
-        state.error = action.error;
+        state.error = true;
       })
 
       .addCase(resetPassword.pending, (state, action) => {
         state.loadingStatus = true;
       })
       .addCase(resetPassword.fulfilled, (state, action) => {
-        if (action.payload.success === false) {
-          state.error = action.payload;
-        } else {
-          state.loadingStatus = false;
-          state.error = null;
-        }
+        state.loadingStatus = false;
+        state.error = false;
       })
       .addCase(resetPassword.rejected, (state, action) => {
         state.loadingStatus = false;
-        state.error = action.error;
+        state.error = true;
       })
       .addCase(forgotPassword.pending, (state, action) => {
         state.loadingStatus = true;
       })
       .addCase(forgotPassword.fulfilled, (state, action) => {
-        if (action.payload.success === false) {
-          state.error = action.payload;
-        } else {
-          state.loadingStatus = false;
-          state.error = null;
-        }
+        state.loadingStatus = false;
+        state.error = false;
       })
       .addCase(forgotPassword.rejected, (state, action) => {
         state.loadingStatus = false;
-        state.error = action.error;
+        state.error = true;
       })
 
       .addCase(updateAccessToken.pending, (state, action) => {
         state.loadingStatus = true;
       })
       .addCase(updateAccessToken.fulfilled, (state, action) => {
-        if (action.payload.success === false) {
-          state.error = action.payload.message;
-        } else {
-          localStorage.setItem('accessToken', action.payload.accessToken);
-          localStorage.setItem('refreshToken', action.payload.refreshToken);
-          state.loadingStatus = false;
-          state.error = null;
-        }
+        localStorage.setItem('accessToken', action.payload.accessToken);
+        localStorage.setItem('refreshToken', action.payload.refreshToken);
+        state.accessToken = action.payload.accessToken;
+        state.refreshToken = action.payload.refreshToken;
+        state.loadingStatus = false;
+        state.error = false;
       })
       .addCase(updateAccessToken.rejected, (state, action) => {
         state.loadingStatus = false;
-        state.error = action.error;
+        state.error = true;
       });
   },
 });

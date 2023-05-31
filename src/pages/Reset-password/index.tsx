@@ -101,7 +101,7 @@ const ResetPassword: FC = () => {
             'Сохранить'
           )}
         </Button>
-        <p className={styles.error}>{error?.message}</p>
+        <p className={styles.error}></p>
         <p
           className={classNames(
             'text text_type_main-default text_color_inactive',

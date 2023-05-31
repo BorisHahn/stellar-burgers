@@ -5,7 +5,7 @@ interface IUserInfo {
 export interface IUserInfoState {
   userInfo: IUserInfo;
   isLogin: boolean;
-  error: { message?: string } | null;
+  error: boolean;
   loadingStatus: boolean | undefined;
   accessToken: string | null;
   refreshToken: string | null;

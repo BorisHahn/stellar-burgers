@@ -33,7 +33,7 @@ export interface IInitialState {
   ingredientDetails: TIngredientCard | null;
   order: IOrderPayload | null;
   loadingStatus: boolean;
-  error: object | null;
+  error: boolean;
 }
 
 export interface IngredientIconProps {

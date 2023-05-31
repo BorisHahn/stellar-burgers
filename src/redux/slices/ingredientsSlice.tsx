@@ -25,13 +25,13 @@ export const makeAnOrder = createAsyncThunk<IOrderPayload, IOrderResponse>(
   },
 );
 
-const initialState: IInitialState = {
+export const initialState: IInitialState = {
   allIngredients: [],
   constructorElements: [],
   ingredientDetails: null,
   order: null,
   loadingStatus: false,
-  error: null,
+  error: false,
 };
 
 const ingredientsSlice = createSlice({
@@ -43,7 +43,7 @@ const ingredientsSlice = createSlice({
     },
 
     setError: (state) => {
-      state.error = null;
+      state.error = false;
     },
 
     addCurrentIngredient: (state, action) => {
@@ -93,30 +93,30 @@ const ingredientsSlice = createSlice({
     builder
       .addCase(getIngredients.pending, (state) => {
         state.loadingStatus = true;
-        state.error = null;
+        state.error = false;
       })
       .addCase(getIngredients.fulfilled, (state, action) => {
         state.allIngredients = action.payload.data;
         state.loadingStatus = false;
-        state.error = null;
+        state.error = false;
       })
       .addCase(getIngredients.rejected, (state, action) => {
         state.loadingStatus = false;
-        state.error = action.error;
+        state.error = true;
       })
       .addCase(makeAnOrder.pending, (state) => {
         state.loadingStatus = true;
-        state.error = null;
+        state.error = false;
       })
       .addCase(makeAnOrder.fulfilled, (state, action) => {
         state.order = action.payload;
         state.constructorElements = [];
         state.loadingStatus = false;
-        state.error = null;
+        state.error = false;
       })
       .addCase(makeAnOrder.rejected, (state, action) => {
         state.loadingStatus = false;
-        state.error = action.error;
+        state.error = true;
       });
   },
 });
