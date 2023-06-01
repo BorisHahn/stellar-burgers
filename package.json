@@ -57,6 +57,7 @@
     "@testing-library/react": "^14.0.0",
     "@types/uuid": "^9.0.1",
     "cypress": "^12.13.0",
+    "cypress-localstorage-commands": "^2.2.3",
     "fetch-mock": "^9.11.0",
     "jest": "^27.5.1",
     "react-test-renderer": "^18.2.0",
