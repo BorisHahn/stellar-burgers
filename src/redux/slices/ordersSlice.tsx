@@ -6,8 +6,8 @@ import { wsOpen, wsClose, wsMessage, wsError } from '../actions/wsActions';
 export const initialState: IOrderInitialState = {
   orders: null,
   currentOrder: null,
-  connectionError: '',
-  loadingStatus: true
+  connectionError: null,
+  loadingStatus: true,
 };
 
 export const getOrder = createAsyncThunk<
@@ -31,7 +31,7 @@ const ordersSlice = createSlice({
       })
       .addCase(wsClose, (state) => {
         state.orders = null;
-        state.connectionError = '';
+        state.connectionError = null;
         state.loadingStatus = true;
       })
       .addCase(wsError, (state, action) => {
