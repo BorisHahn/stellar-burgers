@@ -11,3 +11,6 @@
 `npm i` — установка зависимостей
 `npm run start` — запускает сервер в dev-режиме   
 `npm run build` — собирает приложение
+
+### Демо:
+https://borishahn.github.io/stellar-burgers/
