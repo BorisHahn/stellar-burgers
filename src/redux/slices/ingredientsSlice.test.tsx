@@ -5,12 +5,16 @@ import ingredientsReduser, {
   setLoadingStatus,
   setError,
   addCurrentIngredient,
+  addConstructorElements,
+  replaceConstructorElements,
+  removeConstructorElements,
   cleanCurrent,
   cleanOrder,
 } from './ingredientsSlice';
 import { TIngredientCard, IOrderPayload } from '../../types/ingredientsTypes';
+import { ConstructorElement } from '@ya.praktikum/react-developer-burger-ui-components';
 describe('ingredientsSlice', () => {
-  const ingredient: TIngredientCard = {
+  const bun: TIngredientCard = {
     _id: '123456',
     name: 'Test',
     type: 'bun',
@@ -27,6 +31,7 @@ describe('ingredientsSlice', () => {
     index: 2,
     dragId: 567,
   };
+  const souse = { ...bun, type: 'souse' };
   it('should handle setLoadingStatus', () => {
     const state = {
       ...initialState,
@@ -44,13 +49,10 @@ describe('ingredientsSlice', () => {
     expect(result).toEqual(initialState);
   });
   it('should handle addCurrentIngredient', () => {
-    const result = ingredientsReduser(
-      initialState,
-      addCurrentIngredient(ingredient),
-    );
+    const result = ingredientsReduser(initialState, addCurrentIngredient(bun));
     expect(result).toEqual({
       ...initialState,
-      ingredientDetails: ingredient,
+      ingredientDetails: bun,
     });
   });
   it('should handle cleanCurrent', () => {
@@ -59,6 +61,62 @@ describe('ingredientsSlice', () => {
       ...initialState,
       ingredientDetails: null,
     });
+  });
+  it('should handle addConstructorElements', () => {
+    const result = ingredientsReduser(
+      {
+        ...initialState,
+        constructorElements: [bun, souse, bun],
+      },
+      addConstructorElements(bun),
+    );
+
+    expect(result).toEqual({
+      ...initialState,
+      constructorElements: [bun, souse, bun],
+    });
+
+    const result2 = ingredientsReduser(
+      initialState,
+      addConstructorElements(souse),
+    );
+
+    expect(result2).toEqual({
+      ...initialState,
+      constructorElements: [],
+    });
+
+    const result3 = ingredientsReduser(
+      { ...initialState, constructorElements: [bun] },
+      addConstructorElements(souse),
+    );
+
+    expect(result3).toEqual({
+      ...initialState,
+      constructorElements: [bun, souse],
+    });
+  });
+  it('should handle replaceConstructorElements', () => {
+    const main = { ...bun, type: 'main' };
+    const result = ingredientsReduser(
+      {
+        ...initialState,
+        constructorElements: [bun, souse, main],
+      },
+      replaceConstructorElements({ dragIndex: 1, hoverIndex: 2 }),
+    );
+    expect(result).toEqual({
+      ...initialState,
+      constructorElements: [bun, main, souse],
+    });
+  });
+  it('should handle removeConstructorElements', () => {
+    const state = {
+      ...initialState,
+      constructorElements: [bun],
+    };
+    const result = ingredientsReduser(state, removeConstructorElements(bun));
+    expect(result).toEqual(state);
   });
   it('should handle cleanOrder', () => {
     const result = ingredientsReduser(initialState, cleanOrder());
@@ -86,7 +144,7 @@ describe('ingredientsSlice', () => {
       data: TIngredientCard[];
     } = {
       success: true,
-      data: [ingredient],
+      data: [bun],
     };
     const state = {
       ...initialState,

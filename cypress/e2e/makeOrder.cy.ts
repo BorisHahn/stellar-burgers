@@ -1,6 +1,9 @@
 describe('template spec', () => {
   beforeEach(() => {
-    cy.intercept('GET', 'api/auth/user', { fixture: 'user.json' });
+    cy.viewport(1920, 1080);
+    cy.intercept('GET', 'https://norma.nomoreparties.space/api/auth/user', {
+      fixture: 'user.json',
+    });
     cy.seedAndVisit();
 
     window.localStorage.setItem(
@@ -32,6 +35,15 @@ describe('template spec', () => {
     cy.get(
       "[data-test='Биокотлета из марсианской Магнолии'] [data-test='counter']",
     ).should('have.text', '1');
+    cy.intercept('POST', 'https://norma.nomoreparties.space/api/orders', {
+      fixture: 'order',
+    });
     cy.get("[data-test='button-createOrder']").click();
+    cy.get("[data-test='order-number']").should('have.text', '6772');
+    cy.get("[data-test='modal-header'] > svg").click();
+    cy.get("[data-test='ingredients-title']").should(
+      'have.text',
+      'Соберите бургер',
+    );
   });
 });

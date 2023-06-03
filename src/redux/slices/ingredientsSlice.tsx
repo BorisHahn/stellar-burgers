@@ -76,10 +76,9 @@ const ingredientsSlice = createSlice({
 
     replaceConstructorElements: (state, action) => {
       const { dragIndex, hoverIndex } = action.payload;
-      const ingredients = state.constructorElements;
-      const dragCard = ingredients[dragIndex];
-      ingredients.splice(dragIndex, 1);
-      ingredients.splice(hoverIndex, 0, dragCard);
+      const dragCard = state.constructorElements[dragIndex];
+      state.constructorElements.splice(dragIndex, 1);
+      state.constructorElements.splice(hoverIndex, 0, dragCard);
     },
 
     cleanCurrent: (state) => {
