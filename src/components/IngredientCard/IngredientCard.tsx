@@ -40,6 +40,7 @@ const IngridientCard: FC<IIngridientCardProps> = ({ card, handleOpen }) => {
       to={`/ingredients/${card._id}`}
       state={{ background: location }}
       className={styles.link}
+      data-test={name}
     >
       <div className={styles.card} onClick={onClick} ref={dragRef}>
         <div className={styles.imageWrapper}>
@@ -50,6 +51,7 @@ const IngridientCard: FC<IIngridientCardProps> = ({ card, handleOpen }) => {
             styles.counter,
             counter > 0 && styles.counterVisible,
           )}
+          data-test={'counter'}
         >
           <Counter count={counter} size='default' extraClass='m-1' />
         </span>

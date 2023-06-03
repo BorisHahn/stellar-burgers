@@ -16,11 +16,7 @@ interface KeyboardEvent {
   code: string;
 }
 
-const Modal: FC<IModalProps> = ({
-  children,
-  onClose,
-  title,
-}) => {
+const Modal: FC<IModalProps> = ({ children, onClose, title }) => {
   const handleCloseByEsc = (e: KeyboardEvent) => {
     if (e.code === 'Escape') {
       onClose();
@@ -36,7 +32,7 @@ const Modal: FC<IModalProps> = ({
     <div className={classNames(styles.wrapper)}>
       <ModalOverlay onClose={onClose} />
       <div className={classNames('pt-10 pl-10 pr-10', styles.modal)}>
-        <div className={styles.header}>
+        <div className={styles.header} data-test={'modal-header'}>
           <h1
             className={classNames(
               'text text_type_main-medium',

@@ -42,6 +42,7 @@ const IngredientDetails: FC = () => {
           styles.name,
           'mb-8',
         )}
+        data-test={"card-name"}
       >
         {card?.name}
       </p>

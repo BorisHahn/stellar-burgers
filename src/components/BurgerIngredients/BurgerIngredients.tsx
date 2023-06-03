@@ -67,8 +67,8 @@ const BurgerIngredients: FC<IBurgerIngredientsProps> = ({
   const cardOfMain = getCards(arrayOfMain);
 
   return (
-    <section className='burger-ingridients'>
-      <h1 className={classNames('text text_type_main-large', style.title)}>
+    <section className='burger-ingredients'>
+      <h1 className={classNames('text text_type_main-large', style.title)} data-test={"ingredients-title"}>
         Соберите бургер
       </h1>
       <nav className={classNames(style.navigation)}>
@@ -106,7 +106,7 @@ const BurgerIngredients: FC<IBurgerIngredientsProps> = ({
             ref={refBun}
             className={classNames(
               'text text_type_main-medium',
-              'burger-ingridients__menu-title',
+              'burger-ingredients__menu-title',
             )}
           >
             Булки
@@ -120,7 +120,7 @@ const BurgerIngredients: FC<IBurgerIngredientsProps> = ({
           ref={refSauce}
           className={classNames(
             'text text_type_main-medium',
-            'burger-ingridients__menu-title',
+            'burger-ingredients__menu-title',
           )}
         >
           Соусы
@@ -134,7 +134,7 @@ const BurgerIngredients: FC<IBurgerIngredientsProps> = ({
           ref={refMain}
           className={classNames(
             'text text_type_main-medium',
-            'burger-ingridients__menu-title',
+            'burger-ingrideents__menu-title',
           )}
         >
           Начинки

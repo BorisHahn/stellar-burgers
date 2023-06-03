@@ -100,6 +100,7 @@ const BurgerConstructor: FC = () => {
         )}
         style={{ minHeight: '664px' }}
         ref={dropTarget}
+        data-test='drop-area'
       >
         {constructorElements.length > 0 ? (
           <>
@@ -110,6 +111,7 @@ const BurgerConstructor: FC = () => {
                   <div
                     className={classNames(style.card, style.top)}
                     key={index}
+                    data-test={'top-bun'}
                   >
                     <ConstructorElement
                       type='top'
@@ -143,6 +145,7 @@ const BurgerConstructor: FC = () => {
                   <div
                     className={classNames(style.card, style.bottom)}
                     key={index}
+                    data-test={'bottom-bun'}
                   >
                     <ConstructorElement
                       type='bottom'
@@ -172,6 +175,7 @@ const BurgerConstructor: FC = () => {
           type='primary'
           size='medium'
           onClick={handleOpenCard}
+          data-test={"button-createOrder"}
         >
           {loadingStatus ? (
             <>

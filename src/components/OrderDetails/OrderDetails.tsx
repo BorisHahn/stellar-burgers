@@ -15,6 +15,7 @@ const OrderDetails:FC = () => {
           styles.title,
           'mb-8',
         )}
+        data-test={"order-number"}
       >
         {order?.order?.number}
       </p>
