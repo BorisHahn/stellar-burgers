@@ -37,8 +37,9 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "src/**/*.tsx",
-      "!**/node_modules/**"
+      "**/*.{js,jsx,ts,tsx,json}",
+      "!**/node_modules/**",
+      "!**/vendor/**"
     ]
   },
   "eslintConfig": {
